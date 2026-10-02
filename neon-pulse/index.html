@@ -14,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="effects.css">
+    <script src="effects.js"></script>
     <style>
         body { 
             margin: 0; padding: 0; overflow: hidden; 
@@ -249,11 +251,23 @@
 
             // --- BGM 背景音樂管理核心 ---
             const bgmRef = useRef(null);
+            const analyserRef = useRef(null);
+            const mediaSourceRef = useRef(null);
+            const visualBurstRef = useRef(0);
+            const [fxBurstId, setFxBurstId] = useState(0);
+
+            const setupMusicAnalyser = () => window.NeonPulseFX.setupAnalyser(
+                bgmRef.current, AudioEngine.ctx, analyserRef, mediaSourceRef
+            );
+            const triggerVisualBurst = (strength = 0.6) => window.NeonPulseFX.triggerBurst(
+                visualBurstRef, setFxBurstId, strength
+            );
 
             // 全局隱形觸發器：隨意點選或按鍵即可解鎖音效權限並開始播放選單音樂
             useEffect(() => {
                 const handleFirstInteraction = () => {
                     AudioEngine.init();
+                    setupMusicAnalyser();
                     if (bgmRef.current && bgmRef.current.paused) {
                         bgmRef.current.play().catch(e => console.log("BGM 播放等待使用者互動解鎖..."));
                     }
@@ -278,6 +292,8 @@
                     // ★ BGM 音量設定為 24% (0.24)
                     bgmRef.current.volume = 0.24; 
                 }
+
+                if (AudioEngine.ctx) setupMusicAnalyser();
                 
                 if (!bgmRef.current.src.endsWith(encodeURIComponent(srcFile)) && !bgmRef.current.src.endsWith(srcFile)) {
                     bgmRef.current.src = srcFile;
@@ -363,6 +379,7 @@
                     if (expectedLevel > level) {
                         setLevel(expectedLevel); 
                         AudioEngine.play('levelup');
+                        triggerVisualBurst(0.82);
                         triggerEpicText("SPEED UP!", "from-red-500 to-orange-500");
                     }
                 }
@@ -437,7 +454,7 @@
             };
 
             const hardDrop = () => {
-                AudioEngine.play('drop'); triggerShake(); let d = 0;
+                AudioEngine.play('drop'); triggerShake(); triggerVisualBurst(0.42); let d = 0;
                 while (!checkCollision(player, board, { x: 0, y: d + 1 })) d++;
                 lastAction.current = 'drop';
                 setPlayer(p => ({ ...p, pos: { ...p.pos, y: p.pos.y + d }, collided: true }));
@@ -483,6 +500,7 @@
                     
                     setClearingRows(fullRows);
                     setCombo(nextCombo);
+                    triggerVisualBurst(Math.min(1, 0.38 + fullRows.length * 0.14 + nextCombo * 0.045));
                     
                     setTimeout(() => {
                         const finalBoard = newBoard.filter((_, i) => !fullRows.includes(i));
@@ -495,6 +513,7 @@
                                 const newLevel = Math.floor(nL / 10) + 1; 
                                 if (newLevel > level) {
                                     setLevel(newLevel); AudioEngine.play('levelup');
+                                    triggerVisualBurst(0.86);
                                     triggerEpicText("LEVEL UP!", "from-fuchsia-400 to-purple-600");
                                 }
                                 return nL; 
@@ -524,6 +543,7 @@
                             finalScore = basePoints * level + (3000 * level);
                             actionName = "PERFECT CLEAR!";
                             AudioEngine.play('perfect_clear');
+                            triggerVisualBurst(1);
                             triggerEpicText("PERFECT CLEAR!!", "from-yellow-300 to-orange-500");
                         } else {
                             const multiplier = nextCombo; 
@@ -540,7 +560,7 @@
                 } else {
                     setCombo(0);
                     if (isTSpin) {
-                        AudioEngine.play('tspin'); triggerShake();
+                        AudioEngine.play('tspin'); triggerShake(); triggerVisualBurst(0.76);
                         const earnedScore = 400 * level;
                         setScore(s => s + earnedScore);
                         setLastScoreInfo({ id: Date.now(), points: earnedScore, mult: 1, b2b: false, action: "T-SPIN" });
@@ -618,9 +638,11 @@
             if (sysState === 'menu') {
                 return (
                     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+                        <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode="menu" playing={true} />
                         <div className="bg-grid"></div>
+                        <div className="menu-orbit" aria-hidden="true"></div>
                         <h1 className="text-6xl md:text-8xl font-black mb-2 tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 via-purple-500 to-red-500 drop-shadow-[0_0_25px_rgba(236,72,153,0.8)] z-10">NEON PULSE</h1>
-                        <p className="text-cyan-300 font-mono tracking-widest mb-10 z-10 opacity-80">TRIPLE MODES EDITION</p>
+                        <p className="text-cyan-300 font-mono tracking-widest mb-10 z-10 opacity-80">TRIPLE MODES • AUDIO-REACTIVE EDITION</p>
                         
                         <div className="flex flex-col md:flex-row gap-8 items-start z-10 w-full max-w-4xl px-6 justify-center">
                             {/* 左側：模式選擇 */}
@@ -692,7 +714,8 @@
             }
 
             return (
-                <div className="min-h-screen relative flex flex-col items-center justify-center font-sans transition-colors duration-1000" style={{ backgroundColor: getBgColor() }}>
+                <div className="min-h-screen relative flex flex-col items-center justify-center font-sans transition-colors duration-1000 overflow-hidden" style={{ backgroundColor: getBgColor() }}>
+                    <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode={gameMode} playing={isPlaying && !isPaused && !gameOver} />
                     <div className="bg-grid"></div>
 
                     {epicText && (
@@ -751,7 +774,9 @@
                             )}
                         </div>
 
-                        <div className={`relative bg-black/40 backdrop-blur-sm p-3 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex-shrink-0 ${isShaking ? 'shake' : ''}`}>
+                        <div className={`board-shell relative bg-black/40 backdrop-blur-sm p-3 rounded-3xl border border-white/10 flex-shrink-0 ${isShaking ? 'shake' : ''}`}>
+                            <div className="music-sync-chip"><span className="music-sync-dot"></span> YOUR BGM • LIVE VISUAL SYNC</div>
+                            {fxBurstId > 0 && <div key={fxBurstId} className="impact-wave" aria-hidden="true"></div>}
                             <div className="md:hidden flex justify-between items-center mb-3 px-1">
                                 <div className="text-left">
                                     <p className="text-slate-400 text-[10px] tracking-widest font-black uppercase">Score</p>
@@ -797,7 +822,7 @@
                                         cls += `border-2 border-dashed ${s.border} opacity-40 bg-white/5`;
                                     } else if (c !== 0) {
                                         const s = TETROMINOES[c];
-                                        cls += `${s.color} border border-${s.border} ${s.glow} rounded-[3px]`;
+                                        cls += `${s.color} ${s.border} ${s.glow} rounded-[3px] tetra-cell`;
                                     }
                                     return <div key={`${y}-${x}`} className={cls} />;
                                 }))}
