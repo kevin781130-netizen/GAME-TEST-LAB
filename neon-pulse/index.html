@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON PULSE - 極致專業版</title>
+    
+    <!-- 社交媒體分享標籤 -->
+    <meta property="og:title" content="NEON PULSE - 極致專業版">
+    <meta property="og:description" content="包含三種極致模式、連擊音效與專業 T-Spin 系統的電子競技方塊遊戲。">
+    <meta property="og:type" content="website">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            margin: 0; padding: 0; overflow: hidden; 
+            background: #020617; color: white;
+            user-select: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #root { height: 100vh; }
+        
+        .bg-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0; pointer-events: none;
+            transition: background-color 1.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(1px, -2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            80% { transform: translate(2px, 2px) rotate(1deg); }
+        }
+        .shake { animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both; }
+
+        @keyframes clearFlash {
+            0% { transform: scale(1.1); background-color: #fff; box-shadow: 0 0 30px #fff; opacity: 1; z-index: 20; }
+            100% { transform: scale(0.8); opacity: 0; }
+        }
+        .anim-clear { animation: clearFlash 0.4s ease-out forwards; }
+
+        @keyframes comboPop {
+            0% { transform: scale(0.3) rotate(-15deg); opacity: 0; filter: hue-rotate(0deg); }
+            50% { transform: scale(1.4) rotate(5deg); opacity: 1; filter: hue-rotate(90deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: hue-rotate(0deg); }
+        }
+        .combo-text { animation: comboPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes scoreFloat {
+            0% { transform: translateY(10px) scale(0.8); opacity: 0; }
+            15% { transform: translateY(0px) scale(1.2); opacity: 1; }
+            85% { transform: translateY(-15px) scale(1); opacity: 1; }
+            100% { transform: translateY(-25px) scale(0.9); opacity: 0; }
+        }
+        .score-float { animation: scoreFloat 1.8s ease-out forwards; }
+
+        @keyframes centerEpicPop {
+            0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; filter: blur(10px); }
+            30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; filter: blur(0px); text-shadow: 0 0 40px currentColor; }
+            70% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; filter: blur(5px); }
+        }
+        .epic-text {
+            position: absolute; top: 50%; left: 50%;
+            animation: centerEpicPop 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            pointer-events: none; z-index: 50; white-space: nowrap;
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { color: #f87171; text-shadow: 0 0 10px #ef4444; }
+            50% { color: #fff; text-shadow: 0 0 30px #dc2626, 0 0 50px #991b1b; }
+        }
+        .timer-warning { animation: pulseRed 0.5s infinite; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useRef } = React;
+
+        // --- 音效引擎 (調整旋轉與觸碰音效，使其更現代且清脆) ---
+        const AudioEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            play(type, params = {}) {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+
+                const createOsc = (type, freq, vol, dur) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type; osc.frequency.setValueAtTime(freq, now);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    gain.gain.setValueAtTime(vol, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+                    osc.start(now); osc.stop(now + dur);
+                    return { osc, gain };
+                };
+
+                if (type === 'move') {
+                    const { osc } = createOsc('triangle', 600, 0.05, 0.05); 
+                    osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                } else if (type === 'rotate') {
+                    const { osc } = createOsc('sine', 880, 0.08, 0.08);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.08);
+                } else if (type === 'clear') {
+                    const comboCount = params.combo || 1;
+                    const baseFreq = Math.min(400 + (comboCount * 80), 1200);
+                    const peakFreq = Math.min(800 + (comboCount * 150), 2400);
+                    const { osc, gain } = createOsc('triangle', baseFreq, 0.3, 0.3);
+                    osc.frequency.exponentialRampToValueAtTime(peakFreq, now + 0.2);
+                } else if (type === 'combo_high') {
+                    const base = 440 + (Math.min(params.combo - 5, 10) * 50); 
+                    const dur = 0.5;
+                    const osc1 = this.ctx.createOscillator(); const gain1 = this.ctx.createGain();
+                    const osc2 = this.ctx.createOscillator(); const gain2 = this.ctx.createGain();
+                    const osc3 = this.ctx.createOscillator(); const gain3 = this.ctx.createGain();
+                    
+                    osc1.type = 'sawtooth'; osc2.type = 'square'; osc3.type = 'sine';
+                    osc1.frequency.setValueAtTime(base, now);
+                    osc1.frequency.setValueAtTime(base * 1.25, now + 0.1); 
+                    osc1.frequency.setValueAtTime(base * 1.5, now + 0.2);  
+                    osc1.frequency.setValueAtTime(base * 2, now + 0.3);    
+                    osc2.frequency.setValueAtTime(base * 1.5, now);
+                    osc3.frequency.setValueAtTime(base * 2, now);
+
+                    [ {o:osc1, g:gain1}, {o:osc2, g:gain2}, {o:osc3, g:gain3} ].forEach(({o, g}) => {
+                        o.connect(g); g.connect(this.ctx.destination);
+                        g.gain.setValueAtTime(0.2, now); 
+                        g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+                        o.start(now); o.stop(now + dur);
+                    });
+                } else if (type === 'tspin' || type === 'b2b') {
+                    const { osc, gain } = createOsc('sine', 800, 0.3, 0.4);
+                    osc.frequency.setValueAtTime(1200, now + 0.1);
+                    osc.frequency.setValueAtTime(1600, now + 0.2);
+                } else if (type === 'perfect_clear') {
+                    createOsc('sine', 1046.50, 0.4, 2.0); 
+                    createOsc('triangle', 1318.51, 0.3, 2.0); 
+                    createOsc('sine', 1567.98, 0.3, 2.0); 
+                } else if (type === 'drop') {
+                    const { osc } = createOsc('square', 150, 0.3, 0.1); 
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.1);
+                } else if (type === 'levelup') {
+                    const { osc, gain } = createOsc('square', 300, 0.3, 0.6);
+                    osc.frequency.setValueAtTime(450, now + 0.1);
+                    osc.frequency.setValueAtTime(600, now + 0.2);
+                    osc.frequency.setValueAtTime(900, now + 0.3);
+                } else if (type === 'gameover') {
+                    const { osc, gain } = createOsc('sawtooth', 200, 0.4, 1.0);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 1);
+                }
+            }
+        };
+
+        // --- 圖示 ---
+        const PlayIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>);
+        const PauseIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>);
+        const RotateIcon = ({ size = 20, className = "" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>);
+        const ArrowUpIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>);
+        const ArrowDownIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>);
+        const ArrowLeftIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>);
+        const ArrowRightIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>);
+        const ClockIcon = ({ size = 24, className = "" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>);
+        const TrophyIcon = ({ size = 24, className = "" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>);
+        const ShieldIcon = ({ size = 24, className = "" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>);
+
+        const BOARD_WIDTH = 10;
+        const BOARD_HEIGHT = 20;
+        const TIME_ATTACK_MAX = 180; // 3分鐘
+
+        const TETROMINOES = {
+            0: { matrix: [[0]], color: 'bg-transparent', border: 'border-transparent', glow: '' },
+            I: { matrix: [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]], color: 'bg-cyan-400', border: 'border-cyan-200', glow: 'shadow-[0_0_12px_#22d3ee,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            J: { matrix: [[0, 1, 0], [0, 1, 0], [1, 1, 0]], color: 'bg-blue-500', border: 'border-blue-300', glow: 'shadow-[0_0_12px_#3b82f6,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            L: { matrix: [[0, 1, 0], [0, 1, 0], [0, 1, 1]], color: 'bg-orange-500', border: 'border-orange-300', glow: 'shadow-[0_0_12px_#f97316,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            O: { matrix: [[1, 1], [1, 1]], color: 'bg-yellow-400', border: 'border-yellow-200', glow: 'shadow-[0_0_12px_#facc15,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            S: { matrix: [[0, 1, 1], [1, 1, 0], [0, 0, 0]], color: 'bg-green-500', border: 'border-green-300', glow: 'shadow-[0_0_12px_#22c55e,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            T: { matrix: [[0, 0, 0], [1, 1, 1], [0, 1, 0]], color: 'bg-fuchsia-500', border: 'border-fuchsia-300', glow: 'shadow-[0_0_12px_#d946ef,inset_0_0_8px_rgba(255,255,255,0.8)]' },
+            Z: { matrix: [[1, 1, 0], [0, 1, 1], [0, 0, 0]], color: 'bg-red-500', border: 'border-red-300', glow: 'shadow-[0_0_12px_#ef4444,inset_0_0_8px_rgba(255,255,255,0.8)]' }
+        };
+        const SHAPES = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+        const LINE_POINTS = [100, 300, 500, 800];
+
+        const createEmptyBoard = () => Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(0));
+        const randomTetromino = () => {
+            const randShape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+            return { type: randShape, ...TETROMINOES[randShape] };
+        };
+
+        function useInterval(callback, delay) {
+            const savedCallback = useRef();
+            useEffect(() => { savedCallback.current = callback; }, [callback]);
+            useEffect(() => {
+                function tick() { savedCallback.current(); }
+                if (delay !== null) {
+                    const id = setInterval(tick, delay);
+                    return () => clearInterval(id);
+                }
+            }, [delay]);
+        }
+
+        function App() {
+            const [sysState, setSysState] = useState('menu'); 
+            const [gameMode, setGameMode] = useState('level'); 
+            
+            const [board, setBoard] = useState(createEmptyBoard());
+            const [player, setPlayer] = useState({ pos: { x: 0, y: 0 }, tetromino: TETROMINOES[0], type: 0, collided: false });
+            const [nextPiece, setNextPiece] = useState(randomTetromino());
+            const [heldPiece, setHeldPiece] = useState(null);
+            const [canHold, setCanHold] = useState(true);
+            const lastAction = useRef('spawn');
+
+            const [score, setScore] = useState(0);
+            
+            const [highScoreLevel, setHighScoreLevel] = useState(Number(localStorage.getItem('tetris_hs_level')) || 0);
+            const [maxSurvivalTime, setMaxSurvivalTime] = useState(Number(localStorage.getItem('tetris_hs_survival_time')) || 0);
+            const [highScoreSprint, setHighScoreSprint] = useState(Number(localStorage.getItem('tetris_hs_sprint')) || 0);
+            
+            const [lines, setLines] = useState(0);
+            const [level, setLevel] = useState(1);
+            
+            const [timeLeft, setTimeLeft] = useState(TIME_ATTACK_MAX);
+            const [survivalTime, setSurvivalTime] = useState(0);
+            
+            const [combo, setCombo] = useState(0);
+            const [isB2B, setIsB2B] = useState(false); 
+            
+            const [lastScoreInfo, setLastScoreInfo] = useState(null); 
+            const [epicText, setEpicText] = useState(null); 
+
+            const [gameOver, setGameOver] = useState(false);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [isPaused, setIsPaused] = useState(false);
+            const [clearingRows, setClearingRows] = useState([]);
+            const [isShaking, setIsShaking] = useState(false);
+
+            // --- BGM 背景音樂管理核心 ---
+            const bgmRef = useRef(null);
+
+            // 全局隱形觸發器：隨意點選或按鍵即可解鎖音效權限並開始播放選單音樂
+            useEffect(() => {
+                const handleFirstInteraction = () => {
+                    AudioEngine.init();
+                    if (bgmRef.current && bgmRef.current.paused) {
+                        bgmRef.current.play().catch(e => console.log("BGM 播放等待使用者互動解鎖..."));
+                    }
+                    window.removeEventListener('click', handleFirstInteraction);
+                    window.removeEventListener('keydown', handleFirstInteraction);
+                };
+                window.addEventListener('click', handleFirstInteraction);
+                window.addEventListener('keydown', handleFirstInteraction);
+                
+                playMusic('menu.mp3');
+                
+                return () => {
+                    window.removeEventListener('click', handleFirstInteraction);
+                    window.removeEventListener('keydown', handleFirstInteraction);
+                };
+            }, []);
+
+            const playMusic = (srcFile) => {
+                if (!bgmRef.current) {
+                    bgmRef.current = new Audio();
+                    bgmRef.current.loop = true;
+                    // ★ BGM 音量設定為 24% (0.24)
+                    bgmRef.current.volume = 0.24; 
+                }
+                
+                if (!bgmRef.current.src.endsWith(encodeURIComponent(srcFile)) && !bgmRef.current.src.endsWith(srcFile)) {
+                    bgmRef.current.src = srcFile;
+                }
+                
+                bgmRef.current.play().catch(e => console.log("BGM 播放等待使用者互動解鎖..."));
+            };
+
+            const stopMusic = () => {
+                if (bgmRef.current) bgmRef.current.pause();
+            };
+
+            useEffect(() => {
+                if (!bgmRef.current || sysState !== 'playing') return;
+                if (isPaused || gameOver) {
+                    stopMusic();
+                } else {
+                    playMusic(bgmRef.current.src); 
+                }
+            }, [isPaused, gameOver, sysState]);
+
+            const dropTime = (isPlaying && !isPaused && clearingRows.length === 0) ? Math.max(50, 800 - (level - 1) * 75) : null;
+
+            const triggerEpicText = (text, colorClass) => {
+                setEpicText({ text, colorClass, id: Date.now() });
+            };
+
+            const triggerShake = () => { setIsShaking(true); setTimeout(() => setIsShaking(false), 250); };
+
+            const startGame = (mode) => {
+                AudioEngine.init();
+                setGameMode(mode); 
+                setSysState('playing');
+                resetGameValues();
+                
+                let targetMusic = 'level.mp3';
+                if (mode === 'survival') targetMusic = 'survival.mp3';
+                if (mode === 'sprint') targetMusic = 'sprint.mp3';
+                
+                playMusic(targetMusic);
+            };
+
+            const backToMenu = () => {
+                setSysState('menu');
+                playMusic('menu.mp3');
+            };
+
+            const resetGameValues = () => {
+                setBoard(createEmptyBoard());
+                setScore(0); setLines(0); setLevel(1); setCombo(0); setIsB2B(false);
+                setTimeLeft(TIME_ATTACK_MAX); setSurvivalTime(0);
+                setLastScoreInfo(null); setEpicText(null);
+                setGameOver(false); setIsPlaying(true); setIsPaused(false);
+                setHeldPiece(null); setCanHold(true); setClearingRows([]);
+                
+                const initialNext = randomTetromino();
+                setPlayer({ pos: { x: Math.floor(BOARD_WIDTH/2) - Math.floor(initialNext.matrix[0].length/2), y: 0 }, tetromino: initialNext, type: initialNext.type, collided: false });
+                lastAction.current = 'spawn';
+                setNextPiece(randomTetromino());
+            };
+
+            useEffect(() => {
+                if (isPlaying && !isPaused && !gameOver && sysState === 'playing') {
+                    const timer = setInterval(() => {
+                        if (gameMode === 'sprint') {
+                            setTimeLeft(prev => {
+                                if (prev <= 1) {
+                                    setGameOver(true); setIsPlaying(false); AudioEngine.play('gameover'); return 0;
+                                }
+                                return prev - 1;
+                            });
+                        } else if (gameMode === 'survival' || gameMode === 'level') {
+                            setSurvivalTime(prev => prev + 1);
+                        }
+                    }, 1000);
+                    return () => clearInterval(timer);
+                }
+            }, [gameMode, isPlaying, isPaused, gameOver, sysState]);
+
+            useEffect(() => {
+                if (gameMode === 'sprint' && timeLeft < TIME_ATTACK_MAX) {
+                    const expectedLevel = Math.floor((TIME_ATTACK_MAX - timeLeft) / 15) + 1;
+                    if (expectedLevel > level) {
+                        setLevel(expectedLevel); 
+                        AudioEngine.play('levelup');
+                        triggerEpicText("SPEED UP!", "from-red-500 to-orange-500");
+                    }
+                }
+            }, [timeLeft, gameMode, level]);
+
+            useEffect(() => {
+                if (gameOver) {
+                    if (gameMode === 'level' && score > highScoreLevel) { setHighScoreLevel(score); localStorage.setItem('tetris_hs_level', score); }
+                    if (gameMode === 'survival' && survivalTime > maxSurvivalTime) { setMaxSurvivalTime(survivalTime); localStorage.setItem('tetris_hs_survival_time', survivalTime); }
+                    if (gameMode === 'sprint' && score > highScoreSprint) { setHighScoreSprint(score); localStorage.setItem('tetris_hs_sprint', score); }
+                }
+            }, [gameOver, score, survivalTime, highScoreLevel, maxSurvivalTime, highScoreSprint, gameMode]);
+
+            const spawnPiece = useCallback(() => {
+                setPlayer({ pos: { x: Math.floor(BOARD_WIDTH/2) - Math.floor(nextPiece.matrix[0].length/2), y: 0 }, tetromino: nextPiece, type: nextPiece.type, collided: false });
+                lastAction.current = 'spawn';
+                setNextPiece(randomTetromino());
+                setCanHold(true);
+            }, [nextPiece]);
+
+            const holdPiece = useCallback(() => {
+                if (!canHold || player.type === 0 || clearingRows.length > 0) return;
+                AudioEngine.play('rotate');
+                if (!heldPiece) {
+                    setHeldPiece(player.type); spawnPiece();
+                } else {
+                    const cur = player.type;
+                    setPlayer({ pos: { x: Math.floor(BOARD_WIDTH/2) - Math.floor(TETROMINOES[heldPiece].matrix[0].length/2), y: 0 }, tetromino: { ...TETROMINOES[heldPiece] }, type: heldPiece, collided: false });
+                    lastAction.current = 'spawn'; setHeldPiece(cur);
+                }
+                setCanHold(false);
+            }, [canHold, player.type, heldPiece, spawnPiece, clearingRows.length]);
+
+            const checkCollision = (p, b, { x: mx, y: my }) => {
+                for (let y = 0; y < p.tetromino.matrix.length; y++) {
+                    for (let x = 0; x < p.tetromino.matrix[y].length; x++) {
+                        if (p.tetromino.matrix[y][x] !== 0) {
+                            const ny = y + p.pos.y + my; const nx = x + p.pos.x + mx;
+                            if (ny >= BOARD_HEIGHT || nx < 0 || nx >= BOARD_WIDTH || (ny >= 0 && b[ny][nx] !== 0)) return true;
+                        }
+                    }
+                } return false;
+            };
+
+            const playerRotate = (dir) => {
+                AudioEngine.play('rotate');
+                const cloned = JSON.parse(JSON.stringify(player));
+                const t = cloned.tetromino.matrix[0].map((_, i) => cloned.tetromino.matrix.map(c => c[i]));
+                cloned.tetromino.matrix = dir > 0 ? t.map(r => [...r].reverse()) : [...t].reverse();
+                const x = cloned.pos.x; let off = 1;
+                while (checkCollision(cloned, board, { x: 0, y: 0 })) {
+                    cloned.pos.x += off; off = -(off + (off > 0 ? 1 : -1));
+                    if (off > cloned.tetromino.matrix[0].length) { cloned.pos.x = x; return; }
+                }
+                lastAction.current = 'rotate'; setPlayer(cloned);
+            };
+
+            const movePlayer = (dir) => { 
+                if (!checkCollision(player, board, { x: dir, y: 0 })) {
+                    AudioEngine.play('move'); lastAction.current = 'move';
+                    setPlayer(p => ({ ...p, pos: { ...p.pos, x: p.pos.x + dir } })); 
+                }
+            };
+
+            const drop = () => {
+                if (checkCollision(player, board, { x: 0, y: 1 })) {
+                    if (player.pos.y < 1) { AudioEngine.play('gameover'); setGameOver(true); setIsPlaying(false); return; }
+                    setPlayer(p => ({ ...p, collided: true }));
+                } else {
+                    lastAction.current = 'drop'; setPlayer(p => ({ ...p, pos: { ...p.pos, y: p.pos.y + 1 } }));
+                }
+            };
+
+            const hardDrop = () => {
+                AudioEngine.play('drop'); triggerShake(); let d = 0;
+                while (!checkCollision(player, board, { x: 0, y: d + 1 })) d++;
+                lastAction.current = 'drop';
+                setPlayer(p => ({ ...p, pos: { ...p.pos, y: p.pos.y + d }, collided: true }));
+            };
+
+            useEffect(() => {
+                if (!player.collided) return;
+
+                let isTSpin = false;
+                if (player.type === 'T' && lastAction.current === 'rotate') {
+                    let blocks = 0;
+                    [{x:0,y:0}, {x:2,y:0}, {x:0,y:2}, {x:2,y:2}].forEach(c => {
+                        const nx = player.pos.x + c.x; const ny = player.pos.y + c.y;
+                        if (nx<0 || nx>=BOARD_WIDTH || ny>=BOARD_HEIGHT || (ny>=0 && board[ny][nx] !== 0)) blocks++;
+                    });
+                    if (blocks >= 3) isTSpin = true;
+                }
+
+                const newBoard = board.map(r => [...r]);
+                player.tetromino.matrix.forEach((r, y) => {
+                    r.forEach((v, x) => {
+                        if (v !== 0) {
+                            const bY = y + player.pos.y; const bX = x + player.pos.x;
+                            if (bY >= 0 && bY < BOARD_HEIGHT) newBoard[bY][bX] = player.type;
+                        }
+                    });
+                });
+
+                const fullRows = [];
+                newBoard.forEach((row, y) => { if (row.every(c => c !== 0)) fullRows.push(y); });
+
+                setBoard(newBoard);
+                setPlayer(p => ({ ...p, collided: false, type: 0 }));
+
+                if (fullRows.length > 0) {
+                    const nextCombo = combo + 1;
+                    if (nextCombo >= 5) {
+                        AudioEngine.play('combo_high', { combo: nextCombo });
+                    } else {
+                        AudioEngine.play(isTSpin ? 'tspin' : 'clear', { combo: nextCombo });
+                    }
+                    if (fullRows.length >= 4 || isTSpin) triggerShake();
+                    
+                    setClearingRows(fullRows);
+                    setCombo(nextCombo);
+                    
+                    setTimeout(() => {
+                        const finalBoard = newBoard.filter((_, i) => !fullRows.includes(i));
+                        for(let i = 0; i < fullRows.length; i++) finalBoard.unshift(Array(BOARD_WIDTH).fill(0));
+                        setBoard(finalBoard);
+                        
+                        if (gameMode === 'level' || gameMode === 'survival') {
+                            setLines(l => { 
+                                const nL = l + fullRows.length; 
+                                const newLevel = Math.floor(nL / 10) + 1; 
+                                if (newLevel > level) {
+                                    setLevel(newLevel); AudioEngine.play('levelup');
+                                    triggerEpicText("LEVEL UP!", "from-fuchsia-400 to-purple-600");
+                                }
+                                return nL; 
+                            });
+                        } else {
+                            setLines(l => l + fullRows.length);
+                        }
+                        
+                        const isHardClear = isTSpin || fullRows.length === 4;
+                        const activeB2B = (isB2B && isHardClear); 
+                        
+                        let basePoints = 0; let actionName = "";
+                        if (isTSpin) {
+                            if (fullRows.length === 1) { basePoints = 800; actionName = "T-SPIN SINGLE"; }
+                            else if (fullRows.length === 2) { basePoints = 1200; actionName = "T-SPIN DOUBLE"; }
+                            else if (fullRows.length === 3) { basePoints = 1600; actionName = "T-SPIN TRIPLE"; }
+                        } else {
+                            basePoints = LINE_POINTS[Math.min(fullRows.length - 1, 3)];
+                            if (fullRows.length === 4) actionName = "TETRIS!";
+                            else actionName = `CLEAR ${fullRows.length}`;
+                        }
+
+                        const isPerfectClear = finalBoard.every(r => r.every(c => c === 0));
+                        let finalScore = 0;
+
+                        if (isPerfectClear) {
+                            finalScore = basePoints * level + (3000 * level);
+                            actionName = "PERFECT CLEAR!";
+                            AudioEngine.play('perfect_clear');
+                            triggerEpicText("PERFECT CLEAR!!", "from-yellow-300 to-orange-500");
+                        } else {
+                            const multiplier = nextCombo; 
+                            const b2bMult = activeB2B ? 1.5 : 1;
+                            finalScore = Math.floor(basePoints * level * multiplier * b2bMult);
+                        }
+
+                        setScore(s => s + finalScore);
+                        setLastScoreInfo({ id: Date.now(), points: finalScore, mult: nextCombo, b2b: activeB2B, action: actionName });
+                        
+                        setIsB2B(isHardClear);
+                        setClearingRows([]); spawnPiece();
+                    }, 400);
+                } else {
+                    setCombo(0);
+                    if (isTSpin) {
+                        AudioEngine.play('tspin'); triggerShake();
+                        const earnedScore = 400 * level;
+                        setScore(s => s + earnedScore);
+                        setLastScoreInfo({ id: Date.now(), points: earnedScore, mult: 1, b2b: false, action: "T-SPIN" });
+                        setIsB2B(true); 
+                    } else {
+                        setIsB2B(false); 
+                    }
+                    spawnPiece();
+                }
+
+            }, [player.collided, player.pos, player.tetromino, player.type, board, combo, level, isB2B, gameMode, spawnPiece]);
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (sysState !== 'playing' || !isPlaying || isPaused || gameOver || clearingRows.length > 0) return;
+                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'z', 'Z', 'x', 'X'].includes(e.key)) e.preventDefault();
+                    switch (e.key.toLowerCase()) {
+                        case 'arrowleft': movePlayer(-1); break;
+                        case 'arrowright': movePlayer(1); break;
+                        case 'arrowdown': drop(); break;
+                        case 'arrowup': holdPiece(); break;
+                        case ' ': hardDrop(); break;
+                        case 'z': playerRotate(-1); break;
+                        case 'x': playerRotate(1); break;
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [sysState, isPlaying, isPaused, gameOver, player, board, canHold, heldPiece, clearingRows]);
+
+            useInterval(() => drop(), dropTime);
+
+            const getGhostY = () => {
+                if (player.type === 0) return 0;
+                let d = 0; while (!checkCollision(player, board, { x: 0, y: d + 1 })) d++;
+                return player.pos.y + d;
+            };
+
+            const renderBoard = () => {
+                let db = board.map(r => [...r]);
+                if (isPlaying && !isPaused && player.type !== 0 && clearingRows.length === 0) {
+                    const gy = getGhostY();
+                    player.tetromino.matrix.forEach((r, y) => {
+                        r.forEach((v, x) => {
+                            if (v !== 0) {
+                                if (y+gy < BOARD_HEIGHT && db[y+gy][x+player.pos.x] === 0) db[y+gy][x+player.pos.x] = `Ghost-${player.type}`;
+                                if (y+player.pos.y < BOARD_HEIGHT) db[y+player.pos.y][x+player.pos.x] = player.type;
+                            }
+                        });
+                    });
+                } return db;
+            };
+
+            const renderPreview = (t) => {
+                if (!t) return <div className="w-10 h-10 border border-dashed border-slate-700/50 rounded-lg opacity-30"></div>;
+                const p = TETROMINOES[t];
+                return (
+                    <div className="grid gap-[2px]" style={{ gridTemplateRows: `repeat(${p.matrix.length}, 1rem)`, gridTemplateColumns: `repeat(${p.matrix[0].length}, 1rem)` }}>
+                        {p.matrix.map((r, y) => r.map((c, x) => <div key={`${y}-${x}`} className={`w-4 h-4 ${c ? `${p.color} border border-${p.border} ${p.glow} rounded-sm` : 'bg-transparent'}`} />))}
+                    </div>
+                );
+            };
+
+            const formatTime = (seconds) => {
+                const m = Math.floor(seconds / 60); const s = seconds % 60;
+                return `${m}:${s < 10 ? '0' : ''}${s}`;
+            };
+
+            const getBgColor = () => {
+                const colors = ['rgba(6,182,212,0.08)', 'rgba(59,130,246,0.08)', 'rgba(139,92,246,0.08)', 'rgba(217,70,239,0.08)', 'rgba(244,63,94,0.08)', 'rgba(239,68,68,0.08)', 'rgba(249,115,22,0.08)', 'rgba(234,179,8,0.08)', 'rgba(34,197,94,0.08)', 'rgba(16,185,129,0.08)'];
+                const offset = gameMode === 'sprint' ? 4 : (gameMode === 'survival' ? 2 : 0);
+                return colors[(level + offset - 1) % colors.length];
+            };
+
+            if (sysState === 'menu') {
+                return (
+                    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+                        <div className="bg-grid"></div>
+                        <h1 className="text-6xl md:text-8xl font-black mb-2 tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 via-purple-500 to-red-500 drop-shadow-[0_0_25px_rgba(236,72,153,0.8)] z-10">NEON PULSE</h1>
+                        <p className="text-cyan-300 font-mono tracking-widest mb-10 z-10 opacity-80">TRIPLE MODES EDITION</p>
+                        
+                        <div className="flex flex-col md:flex-row gap-8 items-start z-10 w-full max-w-4xl px-6 justify-center">
+                            {/* 左側：模式選擇 */}
+                            <div className="flex flex-col gap-4 w-full max-w-sm">
+                                <button onClick={() => startGame('level')} className="group relative w-full bg-slate-900 border-2 border-yellow-500/50 p-5 rounded-2xl hover:bg-yellow-950 hover:border-yellow-400 transition-all overflow-hidden shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-400/10 to-yellow-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                    <div className="flex items-center gap-4">
+                                        <TrophyIcon className="text-yellow-400" size={32}/>
+                                        <div className="text-left">
+                                            <h3 className="text-xl font-black text-white tracking-widest">LEVEL 經典計分</h3>
+                                            <p className="text-slate-400 text-xs mt-1">極致連段拚高分。最高分：<span className="text-yellow-400">{highScoreLevel}</span></p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onClick={() => startGame('survival')} className="group relative w-full bg-slate-900 border-2 border-cyan-500/50 p-5 rounded-2xl hover:bg-cyan-950 hover:border-cyan-400 transition-all overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                    <div className="flex items-center gap-4">
+                                        <ShieldIcon className="text-cyan-400" size={32}/>
+                                        <div className="text-left">
+                                            <h3 className="text-xl font-black text-white tracking-widest">SURVIVAL 極限生存</h3>
+                                            <p className="text-slate-400 text-xs mt-1">無限挑戰極限。最佳時間：<span className="text-cyan-400">{formatTime(maxSurvivalTime)}</span></p>
+                                        </div>
+                                    </div>
+                                </button>
+                                
+                                <button onClick={() => startGame('sprint')} className="group relative w-full bg-slate-900 border-2 border-fuchsia-500/50 p-5 rounded-2xl hover:bg-fuchsia-950 hover:border-fuchsia-400 transition-all overflow-hidden shadow-[0_0_20px_rgba(217,70,239,0.2)]">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/0 via-fuchsia-400/10 to-fuchsia-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                    <div className="flex items-center gap-4">
+                                        <ClockIcon className="text-fuchsia-400" size={32}/>
+                                        <div className="text-left">
+                                            <h3 className="text-xl font-black text-white tracking-widest">SPRINT 3分鐘競速</h3>
+                                            <p className="text-slate-400 text-xs mt-1">180秒強制加速。最高分：<span className="text-fuchsia-400">{highScoreSprint}</span></p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+
+                            {/* 右側：操作說明 */}
+                            <div className="w-full max-w-xs bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-3xl self-stretch flex flex-col">
+                                <h3 className="text-cyan-400 font-black text-sm tracking-[0.2em] mb-6 border-b border-white/10 pb-2">HOW TO PLAY / 操作說明</h3>
+                                <div className="flex flex-col gap-4 flex-1 justify-around">
+                                    <div className="flex justify-between items-center group">
+                                        <span className="text-slate-400 text-xs font-bold group-hover:text-white transition-colors">保存方塊</span>
+                                        <div className="bg-yellow-500/20 px-3 py-1 rounded-lg border border-yellow-500/30 text-yellow-400 font-black text-xs">↑ 方向鍵上</div>
+                                    </div>
+                                    <div className="flex justify-between items-center group">
+                                        <span className="text-slate-400 text-xs font-bold group-hover:text-white transition-colors">方塊旋轉</span>
+                                        <div className="bg-cyan-500/20 px-3 py-1 rounded-lg border border-cyan-500/30 text-cyan-400 font-black text-xs uppercase tracking-tighter">Z / X 鍵</div>
+                                    </div>
+                                    <div className="flex justify-between items-center group">
+                                        <span className="text-slate-400 text-xs font-bold group-hover:text-white transition-colors">左右移動</span>
+                                        <div className="bg-white/10 px-3 py-1 rounded-lg border border-white/20 text-white font-black text-xs uppercase">← → 方向鍵</div>
+                                    </div>
+                                    <div className="flex justify-between items-center group">
+                                        <span className="text-slate-400 text-xs font-bold group-hover:text-white transition-colors">加速下落</span>
+                                        <div className="bg-white/10 px-3 py-1 rounded-lg border border-white/20 text-white font-black text-xs uppercase">↓ 方向鍵下</div>
+                                    </div>
+                                    <div className="flex justify-between items-center group">
+                                        <span className="text-slate-400 text-xs font-bold group-hover:text-white transition-colors">瞬間掉落</span>
+                                        <div className="bg-red-500/20 px-3 py-1 rounded-lg border border-red-500/30 text-red-400 font-black text-xs uppercase tracking-widest">SPACE 空白鍵</div>
+                                    </div>
+                                </div>
+                                <p className="mt-6 text-[10px] text-slate-500 text-center font-medium opacity-60">※ 提示：T-Spin 旋轉轉入可獲得爆擊分數！</p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen relative flex flex-col items-center justify-center font-sans transition-colors duration-1000" style={{ backgroundColor: getBgColor() }}>
+                    <div className="bg-grid"></div>
+
+                    {epicText && (
+                        <h2 key={epicText.id} className={`epic-text text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br ${epicText.colorClass} italic tracking-tighter`}>
+                            {epicText.text}
+                        </h2>
+                    )}
+
+                    <div className="flex flex-col md:flex-row gap-6 items-start z-10 w-full max-w-5xl justify-center px-4">
+                        
+                        <div className="hidden md:flex flex-col gap-4 w-48 relative">
+                            <button onClick={backToMenu} className="bg-slate-900/60 border border-slate-700 text-slate-400 p-2 rounded-xl text-xs hover:text-white hover:bg-slate-800 transition-all mb-2 flex items-center justify-center gap-2">
+                                <ArrowLeftIcon size={14}/> BACK TO MENU
+                            </button>
+
+                            <div className={`bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-xl transition-all ${!canHold && isPlaying ? 'opacity-30 grayscale' : 'shadow-cyan-500/10'}`}>
+                                <h2 className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4 flex justify-between">Hold <span className="text-yellow-500">↑</span></h2>
+                                {renderPreview(heldPiece)}
+                            </div>
+                            
+                            {gameMode === 'sprint' && (
+                                <div className={`bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-xl ${timeLeft <= 10 ? 'border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]' : ''}`}>
+                                    <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2"><ClockIcon size={12}/> Time Left</h2>
+                                    <p className={`text-3xl font-mono font-black ${timeLeft <= 10 ? 'timer-warning' : 'text-fuchsia-400'}`}>{formatTime(timeLeft)}</p>
+                                </div>
+                            )}
+                            {gameMode === 'survival' && (
+                                <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-xl">
+                                    <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2"><ShieldIcon size={12}/> Time Alive</h2>
+                                    <p className="text-3xl font-mono font-black text-cyan-400">{formatTime(survivalTime)}</p>
+                                </div>
+                            )}
+                            {gameMode === 'level' && (
+                                <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-xl">
+                                    <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2"><TrophyIcon size={12}/> High Score</h2>
+                                    <p className="text-2xl font-mono font-bold text-yellow-400">{highScoreLevel}</p>
+                                </div>
+                            )}
+
+                            {lastScoreInfo && lastScoreInfo.points > 0 && (
+                                <div key={lastScoreInfo.id} className="flex flex-col gap-3 mt-4">
+                                    {lastScoreInfo.mult > 1 && (
+                                        <div className="combo-text bg-gradient-to-r from-orange-600 to-red-600 p-3 rounded-xl text-center shadow-[0_0_20px_rgba(239,68,68,0.5)] border border-red-400 transform -rotate-2">
+                                            <p className="text-white font-black italic text-xl drop-shadow-md">COMBO x{lastScoreInfo.mult}</p>
+                                        </div>
+                                    )}
+                                    <div className="score-float text-center bg-slate-900/90 p-3 rounded-xl border border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                                        <p className="text-white font-black text-sm italic tracking-widest mb-1 opacity-90">{lastScoreInfo.action}</p>
+                                        <p className="text-yellow-400 font-black text-2xl drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]">+{lastScoreInfo.points}</p>
+                                        <div className="flex justify-center gap-2 mt-1">
+                                            {lastScoreInfo.mult > 1 && <span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-[10px] font-bold tracking-widest">x{lastScoreInfo.mult}</span>}
+                                            {lastScoreInfo.b2b && <span className="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-[10px] font-black tracking-widest">B2B 1.5x</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`relative bg-black/40 backdrop-blur-sm p-3 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex-shrink-0 ${isShaking ? 'shake' : ''}`}>
+                            <div className="md:hidden flex justify-between items-center mb-3 px-1">
+                                <div className="text-left">
+                                    <p className="text-slate-400 text-[10px] tracking-widest font-black uppercase">Score</p>
+                                    <p className="text-cyan-400 font-mono font-bold leading-none">{score}</p>
+                                </div>
+                                <div className={`text-right ${gameMode === 'sprint' && timeLeft <= 10 ? 'timer-warning' : ''}`}>
+                                    <p className="text-slate-400 text-[10px] tracking-widest font-black uppercase">{gameMode === 'sprint' ? 'Time' : 'Alive'}</p>
+                                    <p className="text-fuchsia-400 font-mono font-bold leading-none">{formatTime(gameMode === 'sprint' ? timeLeft : survivalTime)}</p>
+                                </div>
+                            </div>
+
+                            {(!isPlaying || isPaused || gameOver) && (
+                                <div className="absolute inset-0 z-30 rounded-2xl backdrop-blur-xl bg-slate-950/80 flex flex-col items-center justify-center p-6 border border-white/5 text-center">
+                                    {gameOver ? (
+                                        <>
+                                            <h2 className="text-5xl font-black text-red-500 mb-2 tracking-tighter drop-shadow-[0_0_20px_rgba(239,68,68,0.8)]">
+                                                {gameMode === 'sprint' && timeLeft === 0 ? "TIME'S UP!" : "GAME OVER"}
+                                            </h2>
+                                            <p className="mb-8 text-slate-400 text-lg">Score: <span className="text-cyan-400 font-mono font-bold text-3xl">{score}</span></p>
+                                            <div className="flex gap-4">
+                                                <button onClick={() => startGame(gameMode)} className="bg-white text-black px-8 py-3 rounded-full font-black uppercase tracking-widest hover:bg-cyan-400 transition-all active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.4)]">Restart</button>
+                                                <button onClick={backToMenu} className="bg-slate-800 text-white px-6 py-3 rounded-full font-black uppercase tracking-widest hover:bg-slate-700 transition-all active:scale-95">Menu</button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <button onClick={() => { isPaused ? setIsPaused(false) : startGame(gameMode); }} className="bg-gradient-to-br from-cyan-400 to-blue-600 text-white px-12 py-5 rounded-full font-black text-2xl uppercase tracking-widest shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:scale-105 active:scale-95 transition-all flex items-center gap-4">
+                                            <PlayIcon size={28}/> {isPaused ? 'Continue' : 'Start'}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                            
+                            <div className="grid bg-slate-950/90 border border-white/5 rounded-xl overflow-hidden" style={{ gridTemplateRows: `repeat(${BOARD_HEIGHT}, 1fr)`, gridTemplateColumns: `repeat(${BOARD_WIDTH}, 1fr)`, width: 'min(75vw, 320px)', height: 'min(150vw, 640px)' }}>
+                                {renderBoard().map((r, y) => r.map((c, x) => {
+                                    const isClearing = clearingRows.includes(y);
+                                    let cls = 'w-full h-full border-[1px] border-white/5 relative ';
+                                    
+                                    if (isClearing) {
+                                        cls += 'anim-clear';
+                                    } else if (typeof c === 'string' && c.startsWith('Ghost-')) {
+                                        const type = c.split('-')[1];
+                                        const s = TETROMINOES[type];
+                                        cls += `border-2 border-dashed ${s.border} opacity-40 bg-white/5`;
+                                    } else if (c !== 0) {
+                                        const s = TETROMINOES[c];
+                                        cls += `${s.color} border border-${s.border} ${s.glow} rounded-[3px]`;
+                                    }
+                                    return <div key={`${y}-${x}`} className={cls} />;
+                                }))}
+                            </div>
+                        </div>
+
+                        <div className="hidden md:flex flex-col gap-4 w-32">
+                            <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl flex flex-col items-center shadow-lg">
+                                <h2 className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4 self-start">Next</h2>
+                                {renderPreview(nextPiece.type)}
+                            </div>
+                            <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-lg">
+                                <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Score</h2>
+                                <p className="text-2xl font-mono font-bold text-cyan-400">{score}</p>
+                            </div>
+                            <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                                <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Level</h2>
+                                <p className="text-2xl font-mono font-bold text-fuchsia-400 relative z-10">{level}</p>
+                            </div>
+                            <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl shadow-lg">
+                                <h2 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Lines</h2>
+                                <p className="text-2xl font-mono font-bold text-green-400">{lines}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 手機控制器 */}
+                    <div className="md:hidden grid grid-cols-3 gap-3 mt-6 w-full max-w-[320px] px-4 relative z-20">
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:bg-yellow-500/50" onClick={holdPiece} disabled={!canHold}><ArrowUpIcon className="text-yellow-400"/></button>
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:bg-cyan-500/50" onClick={() => playerRotate(-1)}><RotateIcon/></button>
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:bg-cyan-500/50" onClick={() => playerRotate(1)}><RotateIcon className="scale-x-[-1]"/></button>
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:scale-95" onClick={() => movePlayer(-1)}><ArrowLeftIcon/></button>
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:scale-95" onClick={drop}><ArrowDownIcon/></button>
+                        <button className="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl flex justify-center border border-slate-600 active:scale-95" onClick={() => movePlayer(1)}><ArrowRightIcon/></button>
+                        <button className="col-span-3 bg-white/10 backdrop-blur-md py-4 rounded-2xl font-black tracking-widest text-white active:bg-white active:text-black transition-all border border-white/20" onClick={hardDrop}>HARD DROP</button>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
