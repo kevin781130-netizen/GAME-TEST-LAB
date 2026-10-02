@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V40</title>
+<title>台北極速傳說｜Taipei Sunset Drive V41</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -154,7 +154,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V40 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V41 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -167,7 +167,7 @@
 
     <div id="nitro-box" style="display:flex;flex-direction:column;gap:3px;background:rgba(5,15,30,.85);padding:5px 10px;border-radius:8px;border:1px solid #00e5ff">
       <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:900;color:#00e5ff;letter-spacing:.1em">
-        <span>甩尾能量 · Z → A</span><span id="nitro-num">0%</span>
+        <span>BOOST DRIFT · 邊噴邊集</span><span id="nitro-num">0%</span>
       </div>
       <div style="width:105px;height:9px;background:rgba(0,10,25,.8);border:1px solid #00e5ff;border-radius:4px;overflow:hidden">
         <div id="nitro-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#00b0ff,#00e5ff,#ff2d75);transition:width .08s"></div>
@@ -504,8 +504,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V40 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V40</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V41 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V41</span></h1>
       <div class="subtitle">V34 台北街景美術 × V39 立體道路/車體 × V40 重新校正甩尾。15 個街區一路從府城、水岸、高架跑到九份、101 與貓空。</div>
       
       
@@ -526,7 +526,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
         <span class="key">S / ↓ 煞車</span>
         <span class="key">← → / J L 轉向</span>
         <span class="key">A 前進 / Z 倒退 · Z → A 氮氣</span>
-        <span class="key">SHIFT 甩尾 · 有效滑行集氣 · T 路線圖</span>
+        <span class="key">SHIFT 甩尾 · 氮氣中仍可集氣 · T 路線圖</span>
         <span class="key">M 切換電台</span>
         <span class="key">P 暫停</span>
       </div>
@@ -694,8 +694,8 @@ const HUD_FONT = 'Impact, "Arial Black", sans-serif';
 // ============================================================
 const canvas = document.getElementById('gameCanvas');
 const displayCtx=canvas.getContext('2d');
-const arcadeBuffer=document.createElement('canvas');arcadeBuffer.width=480;arcadeBuffer.height=270;
-let ctx=arcadeBuffer.getContext('2d');ctx.scale(.5,.5);
+const arcadeBuffer=document.createElement('canvas');arcadeBuffer.width=960;arcadeBuffer.height=540;
+let ctx=arcadeBuffer.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
 const tachoCanvas = document.getElementById('tacho-gauge');
 const tachoCtx = tachoCanvas.getContext('2d');
 const hudTime = document.getElementById('hud-time');
@@ -1361,6 +1361,7 @@ let screenShake = 0, flash = 0, bestScore = 0;
 let stageLevel = 0, stageColumn = 0, currentNode = STAGES[0][0], routeHistory = [], stageChoices = [];
 let pendingChoice = 'left', choiceLocked = false, lastForkChoice = '';
 let stageEntryChoice = null, stageTransition = null;
+let stageVisualBlend=0,stageBlendPalette=null;
 let traffic = [], particles = [];
 let crashSequence = null, crashCount = 0;
 let lastTime = performance.now(), countdownTimer = 0, countdownValue = 3;
@@ -1429,7 +1430,8 @@ function transitionProgressNow(){
 function initTraffic(){
   trafficSeed=currentNode.seed*3251+stageLevel;
   traffic=[];
-  const typeKeys = Object.keys(TRAFFIC_TYPES);
+  const noScooters=currentNode.archetype==='expressway';
+  const typeKeys = Object.keys(TRAFFIC_TYPES).filter(key=>!(noScooters&&TRAFFIC_TYPES[key].scooter));
   const difficultyScale={easy:0.65,normal:1,hard:1.3}[dipSettings.difficulty]||1;
   const count=Math.round(currentNode.traffic*difficultyScale*(v34Mode==='cruise'?0.5:1));
   const usable = (FORK_WARN - 60) * SEGMENT_LENGTH;
@@ -1628,8 +1630,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V40',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V40</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V41',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V41</span>',
   subtitle: 'V34 台北街景美術 × V39 立體道路/車體 × V40 重新校正甩尾。15 個街區一路從府城、水岸、高架跑到九份、101 與貓空。',
   button: 'START / 選台出發 ↗'
 };
@@ -2253,6 +2255,7 @@ function update(dt){
   if(inRadioScreen) return;
   if(!gameStarted || gameOver || paused) return;
   simulationTime += dt;
+  stageVisualBlend=Math.max(0,stageVisualBlend-dt*.78);
   bubbleTimer = Math.max(0, bubbleTimer - dt); if(bubbleTimer === 0) bubble.classList.remove('show');
   styleTimer = Math.max(0, styleTimer - dt); if(styleTimer === 0) stylePop.classList.remove('show');
   stageCardTimer = Math.max(0, stageCardTimer - dt); if(stageCardTimer === 0) stageCard.classList.remove('show');
@@ -2298,7 +2301,7 @@ function update(dt){
   const segIndex=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,segments.length-1),seg=segments[segIndex];
   raceElapsed+=dt;stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,seg.curve);
   const nitroHeld=inputHeld('KeyN')||gamepadInput.nitro;
-  boosting=!!((nitroHeld||nitroLatch)&&driveGear==='D'&&motionDirection===1&&accelHeld&&!brakeHeld&&nitro>0&&helperPulse<=0);
+  boosting=!!((nitroHeld||nitroLatch)&&driveGear==='D'&&motionDirection===1&&accelHeld&&!brakeHeld&&nitro>0);
   if(nitroLatch&&(brakeHeld||driveGear!=='D'||nitro<=0))nitroLatch=false;
   if(boosting){nitro=Math.max(0,nitro-COMPETITION.nitroDrain*dt);if(nitro<1e-6)nitro=0;screenShake=Math.max(screenShake,1.0);}
   isDrafting=driveGear==='D'&&motionDirection===1&&traffic.some(car=>car.z-playerZ>1200&&car.z-playerZ<5500&&Math.abs(playerX-car.x)<.22&&speed>200);
@@ -2526,6 +2529,7 @@ function drawRoad(){
   projectRoad();
   prepareLandmarkFrame();
   drawSky(t);
+  drawStageBlendOverlay();
   const projected = projectedRoad;
 
   for(const seg of projected){
@@ -3054,6 +3058,7 @@ function prepareTrafficSprites(){
   for(const car of traffic){
     car.screenBox = null;
     const dz = car.z - playerZ;
+    if(currentNode.archetype==='expressway'&&car.spec?.scooter) continue;
     if(dz <= CAMERA_DEPTH || dz >= DRAW_DISTANCE * SEGMENT_LENGTH || car.z >= FORK_WARN * SEGMENT_LENGTH) continue;
     const idx = Math.floor(car.z / SEGMENT_LENGTH), seg = segments[idx];
     if(!seg || idx < Math.floor(playerZ / SEGMENT_LENGTH) || idx >= Math.floor(playerZ / SEGMENT_LENGTH) + DRAW_DISTANCE) continue;
@@ -3523,7 +3528,7 @@ function render(dt){
   presentArcade();
 }
 
-function presentArcade(){displayCtx.imageSmoothingEnabled=false;displayCtx.clearRect(0,0,W,H);displayCtx.drawImage(arcadeBuffer,0,0,W,H);}
+function presentArcade(){displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);displayCtx.drawImage(arcadeBuffer,0,0,W,H);}
 
 // Original architecture details with a restrained arcade palette.
 function arcadeFooting(w){
@@ -3784,7 +3789,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'40.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroDrain:25,nitroCharge:24,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'41.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroDrain:25,nitroCharge:24,hitHalfWidth:62});
 let helperWasHeld=false,helperPulse=0,counterTime=0,neutralTime=0;
 let driftRearmBlocked=false;
 let driftState='grip',brakeHoldTime=0,brakeLoss=0,driftAge=0,driftCooldown=0,brakeVisual=0;
@@ -3867,8 +3872,14 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT40.maxBodyYaw,DRIFT40.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
  slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT40.recoverSlipResponse:DRIFT40.slipResponse)));
- const genuineCorner=!nitroLatch&&!inputHeld('KeyN')&&!gamepadInput.nitro&&driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&helperPulse<=0&&Math.abs(slipAngle)>3.5&&Math.abs(curve)>.55&&Math.sign(curve)===driftDirection&&roadGrip>.8;
- if(genuineCorner){cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*1.4;nitro=clamp(nitro+COMPETITION.nitroCharge*dt,0,100);}
+ const nitroRequested=nitroLatch||inputHeld('KeyN')||gamepadInput.nitro;
+ const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&Math.abs(curve)>.55&&Math.sign(curve)===driftDirection&&roadGrip>.8;
+ if(genuineCorner){
+  cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.65:1.4);
+  const slipSkill=clamp((Math.abs(slipAngle)-2.5)/9,.55,1.15),speedSkill=.82+clamp(speed/COMPETITION.topSpeed,0,1)*.28;
+  const chargeFactor=nitroRequested?.64:1;
+  nitro=clamp(nitro+COMPETITION.nitroCharge*chargeFactor*slipSkill*speedSkill*dt,0,100);
+ }
  else{styleIdle+=dt;if(styleIdle>.60){if(styleBank>0)bankStyle();else driftTime=0;}}
  styleCombo=clamp(1+Math.floor(cleanDriftTime/.8)*.5,1,5);
  if(isDrifting&&Math.abs(slipAngle)>3&&Math.random()<dt*22){const p=vehicleProject([currentCar.isBike?1:driftDirection*(currentCar.isTruck?75:81),0,-66],driftAngle);addParticle(W/2+p.x,H-65+p.y,rand(-28,28)-lateralVelocity*24,rand(-24,-2),.42,rand(7,12),'smoke');}
@@ -4425,7 +4436,7 @@ function updateV39HUD(){
  const sc=scene(),state={grip:'GRIP 循跡',brake:'BRAKE 重心前移',armed:'READY 點煞・切彎',entry:'TURN IN 入彎',drift:'DRIFT 補油控線',recover:'EXIT 反打收尾'}[driftState];
  document.getElementById('street-name').textContent=`${currentNode.id} / ${sc.label}`;
  document.getElementById('street-detail').textContent=`${currentNode.id==='2B'?'高架橋面 · ':''}${sc.lanes} 線道 · 路寬 ${Math.round(sc.width*100)}% · ${autoGear?'AT 自排':'MT 手排'} · 競技同規格`;
- hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting?`NITRO 300 · 剩 ${Math.max(0,nitro/25).toFixed(1)} 秒`:roadGrip<.8?'OFF ROAD 回到路面':state;
+ hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting&&isDrifting?`BOOST DRIFT · 邊噴邊集 ${Math.round(nitro)}%`:boosting?`NITRO 300 · 剩 ${Math.max(0,nitro/25).toFixed(1)} 秒`:roadGrip<.8?'OFF ROAD 回到路面':state;
  const brake=inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0;
  const gas=(inputHeld('ArrowUp')||inputHeld('KeyW')||gamepadInput.gas||nitroLatch)&&!brake;
  document.getElementById('gas-fill').style.width=gas?'100%':'0';document.getElementById('brake-fill').style.width=brake?'100%':'0';
@@ -4434,6 +4445,237 @@ function updateV39HUD(){
 updateV39HUD();
 
 updateModeUI();updateRadioChoice();
+
+
+// ============================================================================
+// V41 CLEAR ARCADE ART + SEAMLESS ROUTE PASS
+// ============================================================================
+function v41Hash(n){
+  n=Math.imul((n|0)^0x9e3779b9,0x85ebca6b);n^=n>>>13;n=Math.imul(n,0xc2b2ae35);n^=n>>>16;
+  return (n>>>0)/4294967295;
+}
+function v41Pick(list,n){return list[Math.floor(v41Hash(n)*list.length)%list.length];}
+
+function drawStageBlendOverlay(){
+  if(stageVisualBlend<=0||!stageBlendPalette)return;
+  const a=stageVisualBlend;
+  ctx.save();
+  ctx.globalAlpha=a*.54;
+  const sky=ctx.createLinearGradient(0,0,0,H*.58);
+  sky.addColorStop(0,stageBlendPalette.sky[0]);sky.addColorStop(.62,stageBlendPalette.sky[1]);sky.addColorStop(1,stageBlendPalette.sky[2]);
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H*.58);
+  const ground=ctx.createLinearGradient(0,H*.48,0,H);
+  ground.addColorStop(0,stageBlendPalette.ground[0]);ground.addColorStop(1,stageBlendPalette.ground[1]);
+  ctx.globalAlpha=a*.34;ctx.fillStyle=ground;ctx.fillRect(0,H*.48,W,H*.52);
+  ctx.restore();
+}
+
+function finishStageTransition(){
+  if(!stageTransition)return;
+  const tr=stageTransition;
+  const remainder=playerZ-STAGE_SWITCH*SEGMENT_LENGTH;
+  const remainingCenter=transitionGeometry(STAGE_SWITCH,tr.choice).center-tr.lastCenter;
+  const oldArt=v40Art();
+  stageBlendPalette={sky:[...oldArt.sky],ground:[...oldArt.ground]};
+  stageVisualBlend=1;
+  playerX+=remainingCenter*roadFactor();
+  distanceOffset+=STAGE_SWITCH*SEGMENT_LENGTH;
+  setStage(tr.nextLevel,tr.nextColumn,false,tr.choice==='left'?'LEFT FLOW':'RIGHT FLOW',tr.choice,true);
+  playerZ=Math.max(0,remainder);
+  playerX=clamp(playerX,-drivableHalf()*.85,drivableHalf()*.85);
+  styleMessage('DISTRICT FLOW',tr.next.name+' · KEEP IT MOVING');
+}
+
+function drawV41TaipeiBlock(x,y,s,idx,variant=0){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const seed=idx*97+variant*331+currentNode.seed*17;
+  const floors=3+Math.floor(v41Hash(seed)*4);
+  const w=68+Math.floor(v41Hash(seed+1)*28);
+  const floorH=22+Math.floor(v41Hash(seed+2)*5),h=30+floors*floorH;
+  const facades=['#d3b08c','#b9c7bf','#d4c1b0','#a9b9c4','#c7b69d','#c1c7b1'];
+  const facade=v41Pick(facades,seed+3);
+  const depth=10+Math.floor(v41Hash(seed+4)*8);
+  ctx.fillStyle='#52616a';ctx.beginPath();ctx.moveTo(w/2,-h);ctx.lineTo(w/2+depth,-h-6);ctx.lineTo(w/2+depth,0);ctx.lineTo(w/2,0);ctx.closePath();ctx.fill();
+  const fg=ctx.createLinearGradient(-w/2,0,w/2,0);
+  fg.addColorStop(0,'#ffffff18');fg.addColorStop(.2,facade);fg.addColorStop(1,facade);
+  ctx.fillStyle=fg;ctx.fillRect(-w/2,-h,w,h);
+  ctx.strokeStyle='#263b4630';ctx.lineWidth=.55;
+  for(let yy=-h+6;yy<-30;yy+=7){ctx.beginPath();ctx.moveTo(-w/2,yy);ctx.lineTo(w/2,yy);ctx.stroke();}
+  ctx.fillStyle='#273844';ctx.fillRect(-w/2+3,-29,w-6,29);
+  ctx.fillStyle='#151f29';for(let px=-w/2+9;px<w/2-2;px+=24)ctx.fillRect(px,-27,4,27);
+  const shops=['牛肉麵','早餐店','機車行','茶飲','五金行','藥局','咖啡','便當'];
+  const shop=v41Pick(shops,seed+5),sign=v41Pick(['#d64c49','#178b89','#e79a3b','#8d4fa8','#2577a5'],seed+6);
+  ctx.fillStyle=sign;ctx.fillRect(-w/2+6,-34,w-12,13);
+  v40FitSignText(shop,-w/2+8,-33,w-16,11,8.5,'#fff8e8');
+  const aw=v41Pick(['#e7d3a8','#ef725d','#4f9ea0','#d8b855'],seed+7);
+  for(let ax=-w/2+6,k=0;ax<w/2-6;ax+=10,k++){ctx.fillStyle=k%2?aw:'#f1ead8';ctx.fillRect(ax,-20,10,6);}
+  for(let fl=0;fl<floors;fl++){
+    const fy=-37-fl*floorH;
+    const cols=w>82?3:2;
+    for(let c=0;c<cols;c++){
+      const px=-w/2+12+c*((w-24)/(Math.max(1,cols-1)));
+      const lit=skyMood!=='sunset'&&v41Hash(seed+fl*11+c*7)>.45;
+      ctx.fillStyle=lit?'#f5cf86':'#345764';ctx.fillRect(px-7,fy-floorH+7,14,13);
+      const wg=ctx.createLinearGradient(px-7,fy-floorH+7,px+7,fy-floorH+20);
+      wg.addColorStop(0,'#b8e0df55');wg.addColorStop(1,'#132c3c44');ctx.fillStyle=wg;ctx.fillRect(px-6,fy-floorH+8,12,11);
+      ctx.strokeStyle='#e2ddd0aa';ctx.lineWidth=.8;ctx.strokeRect(px-7,fy-floorH+7,14,13);
+      ctx.strokeStyle='#63757d';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(px,fy-floorH+7);ctx.lineTo(px,fy-floorH+20);ctx.stroke();
+      if((fl+c+idx)%3===0){ctx.fillStyle='#d8dddc';ctx.fillRect(px+8,fy-floorH+14,8,6);ctx.fillStyle='#6f7d80';ctx.fillRect(px+10,fy-floorH+16,4,2);}
+    }
+    if((fl+idx)%2===0){
+      ctx.fillStyle='#566a70';ctx.fillRect(-w/2+5,fy-3,w-10,3);
+      ctx.strokeStyle='#8a999a';ctx.lineWidth=.7;
+      for(let bx=-w/2+8;bx<w/2-5;bx+=8){ctx.beginPath();ctx.moveTo(bx,fy-3);ctx.lineTo(bx,fy+4);ctx.stroke();}
+    }
+  }
+  const signSide=v41Hash(seed+9)>.5?1:-1,nx=signSide*(w/2+7);
+  ctx.fillStyle='#17242d';ctx.fillRect(nx-5,-h+28,10,48);
+  const vertical=(shop+v41Pick([' 台北',' 老店',' 24H',' 專門'],seed+10)).replace(/\s/g,'').slice(0,4).split('');
+  for(let k=0;k<vertical.length;k++)v40FitSignText(vertical[k],nx-4,-h+29+k*11,8,10,7.5,v41Pick(['#ffe188','#66e7e3','#ff8e9e'],seed+k));
+  ctx.strokeStyle='#374951';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(-w/2,-h+18);ctx.quadraticCurveTo(0,-h+12,w/2,-h+23);ctx.stroke();
+  ctx.fillStyle='#6b7778';ctx.fillRect(-w*.25,-h-10,w*.43,10);
+  ctx.fillStyle='#d7dcda';ctx.beginPath();ctx.ellipse(w*.22,-h-15,7,8,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#4a5c61';ctx.beginPath();ctx.moveTo(-w*.1,-h-10);ctx.lineTo(-w*.1,-h-26);ctx.lineTo(-w*.18,-h-19);ctx.stroke();
+  if(currentNode.archetype!=='expressway'){
+    for(let m=0;m<2;m++){const sx=-18+m*32;ctx.fillStyle=m?'#eceff2':'#d83d4d';ctx.beginPath();ctx.arc(sx-6,-3,4,0,Math.PI*2);ctx.arc(sx+7,-3,4,0,Math.PI*2);ctx.fill();ctx.fillRect(sx-3,-11,8,5);ctx.strokeStyle='#27343d';ctx.beginPath();ctx.moveTo(sx+4,-10);ctx.lineTo(sx+10,-16);ctx.stroke();}
+  }
+  ctx.restore();
+}
+function drawTaipeiShophouse(x,y,s,idx){drawV41TaipeiBlock(x,y,s,idx,1);}
+function drawV40V34TaipeiShophouse(x,y,s,idx){drawV41TaipeiBlock(x,y,s,idx,2);}
+
+function drawTaipeiSkyscrapers(x,y,s,idx){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const seed=idx*71+currentNode.seed*31,w=52+Math.floor(v41Hash(seed)*30),h=92+Math.floor(v41Hash(seed+1)*85);
+  const glass=v41Pick(['#244f67','#315d73','#3f667a','#243f61','#456d72'],seed+2);
+  ctx.fillStyle='#152c3e';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h-8);ctx.lineTo(w/2+12,-7);ctx.lineTo(w/2,0);ctx.lineTo(-w/2,0);ctx.closePath();ctx.fill();
+  const g=ctx.createLinearGradient(-w/2,-h,w/2,0);g.addColorStop(0,'#b9e4e955');g.addColorStop(.26,glass);g.addColorStop(.72,'#17374d');g.addColorStop(1,'#92bdc733');
+  ctx.fillStyle=g;ctx.fillRect(-w/2,-h,w,h);
+  for(let yy=-h+10;yy<-8;yy+=12){
+    ctx.fillStyle='#d7f4ee22';ctx.fillRect(-w/2+4,yy,w-8,1);
+    for(let xx=-w/2+7;xx<w/2-5;xx+=11){if(v41Hash(seed+Math.round(xx+yy*3))>.26){ctx.fillStyle=skyMood==='sunset'?'#c6e5e3':'#e8c879';ctx.globalAlpha=skyMood==='sunset'?.38:.62;ctx.fillRect(xx,yy+3,4,5);}}
+  }
+  ctx.globalAlpha=1;ctx.fillStyle='#e5edf0';ctx.fillRect(-w/2,-h,w,3);
+  if(v41Hash(seed+5)>.55){ctx.fillStyle='#63777f';ctx.fillRect(-w*.2,-h-12,w*.38,12);ctx.fillStyle='#91a4a8';ctx.fillRect(-3,-h-22,6,10);}
+  ctx.restore();
+}
+
+function drawV40V34CityPanorama(base){
+  const night=skyMood!=='sunset';
+  ctx.save();
+  for(let layer=0;layer<3;layer++){
+    const step=[72,58,44][layer],speed=(layer+1)*.000024,alpha=[.55,.72,.93][layer];
+    for(let i=-3;i<Math.ceil(W/step)+4;i++){
+      const seed=i*61+layer*701+currentNode.seed*29;
+      const parallax=playerX*(8+layer*9)+playerZ*speed;
+      const x=((i*step+(layer*21)-parallax+W*4)%(W+step*4))-step*2;
+      const w=step*(.58+v41Hash(seed)*.35),h=24+v41Hash(seed+1)*(58+layer*54);
+      const cols=['#31506b','#29445f','#203850'];
+      ctx.globalAlpha=alpha;ctx.fillStyle=night?cols[layer]:v41Pick(['#587b88','#6a8790','#78959a'],seed+3);
+      ctx.fillRect(x,base-h,w,h);
+      if(v41Hash(seed+4)>.68){ctx.fillRect(x+w*.18,base-h-7,w*.58,7);}
+      ctx.fillStyle=night?'#f1c777':'#d9eef0';ctx.globalAlpha=night?.58:.30;
+      for(let yy=base-h+8;yy<base-5;yy+=11)for(let xx=x+6;xx<x+w-4;xx+=10)if(v41Hash(seed+Math.round(xx+yy*3))>.34)ctx.fillRect(xx,yy,3,4);
+    }
+  }
+  ctx.globalAlpha=1;ctx.restore();
+}
+
+function drawLandmarkDriveByContext(h,x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const name=h.name||'',night=skyMood!=='sunset';
+  ctx.fillStyle='#14232b44';ctx.beginPath();ctx.ellipse(0,4,125,12,0,0,Math.PI*2);ctx.fill();
+  if(name.includes('圓山大飯店')){
+    ctx.fillStyle='#2e593d';ctx.beginPath();ctx.moveTo(-155,4);ctx.quadraticCurveTo(-90,-64,0,-35);ctx.quadraticCurveTo(80,-70,160,4);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#315b3b';for(let k=-120;k<=120;k+=30){ctx.beginPath();ctx.arc(k,-10-Math.abs(k%55),14,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='#a9b6af';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-125,2);ctx.lineTo(-125,-36);ctx.lineTo(115,-36);ctx.lineTo(115,2);ctx.stroke();
+    ctx.fillStyle='#19724e';ctx.fillRect(-112,-58,64,22);ctx.fillRect(-42,-58,70,22);ctx.fillRect(34,-58,68,22);
+    ctx.fillStyle='#e9fff3';ctx.font='700 7px TaipeiText,sans-serif';ctx.textAlign='center';ctx.fillText('中山北路',-80,-46);ctx.fillText('大直 Dazhi',-7,-46);ctx.fillText('圓山 Yuanshan',68,-46);
+  }else if(name.includes('101')||name.includes('信義')){
+    ctx.fillStyle='#314b55';ctx.fillRect(-150,-26,300,26);
+    for(let b=-132;b<=110;b+=54){ctx.fillStyle=v41Pick(['#536f7e','#675c70','#4a6875'],b+currentNode.seed);ctx.fillRect(b,-72,44,46);ctx.fillStyle='#9fc7cf55';for(let yy=-66;yy<-30;yy+=10)for(let xx=b+6;xx<b+38;xx+=10)ctx.fillRect(xx,yy,5,6);}
+    ctx.fillStyle='#2f694e';for(let k=-135;k<=135;k+=45){ctx.fillRect(k-2,-24,4,23);ctx.beginPath();ctx.arc(k,-30,11,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='#4d5b5e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-90,0);ctx.lineTo(-90,-50);ctx.lineTo(-60,-50);ctx.stroke();ctx.fillStyle=night?'#5df08c':'#65bd79';ctx.beginPath();ctx.arc(-60,-50,5,0,Math.PI*2);ctx.fill();
+  }else if(name.includes('總統府')||name.includes('景福門')||name.includes('自由廣場')){
+    ctx.fillStyle='#45664e';for(let k=-130;k<=130;k+=43){ctx.beginPath();ctx.arc(k,-12,13,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='#b8b0a2';ctx.fillRect(-155,-5,310,5);
+    ctx.strokeStyle='#626d70';ctx.lineWidth=2;for(let k=-115;k<=115;k+=58){ctx.beginPath();ctx.moveTo(k,0);ctx.lineTo(k,-34);ctx.quadraticCurveTo(k+5,-40,k+10,-34);ctx.stroke();}
+  }else if(name.includes('故宮')){
+    ctx.fillStyle='#345c43';ctx.beginPath();ctx.moveTo(-160,3);ctx.quadraticCurveTo(-95,-60,-35,-37);ctx.quadraticCurveTo(45,-77,160,3);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#b9ad91';for(let k=0;k<4;k++)ctx.fillRect(-75-k*13,-4+k*3,150+k*26,3);
+  }else if(name.includes('美麗華')){
+    ctx.fillStyle='#455d67';ctx.fillRect(-145,-34,290,34);ctx.fillStyle='#78a9b355';for(let xx=-130;xx<130;xx+=24)ctx.fillRect(xx,-29,15,21);
+  }else if(name.includes('九份')||name.includes('茶樓')){
+    for(let k=-150;k<=150;k+=38){ctx.fillStyle=v41Pick(['#55453e','#665047','#71564a'],k);ctx.fillRect(k,-38-Math.abs(k%41),34,38+Math.abs(k%41));ctx.fillStyle='#d63c35';ctx.beginPath();ctx.ellipse(k+10,-42-Math.abs(k%41),4,7,0,0,Math.PI*2);ctx.fill();}
+  }else if(name.includes('橋')||name.includes('水岸')||name.includes('碼頭')){
+    ctx.fillStyle='#2d7592aa';ctx.fillRect(-165,-7,330,10);ctx.strokeStyle='#b7d9d0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-160,-8);ctx.lineTo(160,-8);ctx.stroke();
+  }else{
+    ctx.fillStyle='#3b6448';for(let k=-120;k<=120;k+=48){ctx.beginPath();ctx.arc(k,-9,10,0,Math.PI*2);ctx.fill();}
+  }
+  ctx.restore();
+}
+
+function drawLandmarkInstance(h,x,y,s,layer){
+  if(landmarkDrawLog.some(p=>p.id===h.id))return;
+  landmarkDrawLog.push({id:h.id,name:h.name,seg:h.seg,layer,x,y,scale:s,worldOffset:h.worldOffset,pixelWidth:h.sprite.width*s,pixelHeight:h.sprite.height*s});
+  drawLandmarkDriveByContext(h,x,y,s);
+  const art=h.sprite;
+  ctx.save();
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  ctx.shadowColor='rgba(6,14,20,.28)';ctx.shadowBlur=Math.min(18,Math.max(2,s*8));ctx.shadowOffsetY=Math.min(6,s*3);
+  ctx.drawImage(art.canvas,x+art.left*s,y+art.top*s,art.width*s,art.height*s);
+  ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+  const glow=ctx.createLinearGradient(x,y-art.height*s,x,y);
+  glow.addColorStop(0,skyMood==='sunset'?'rgba(255,226,184,.09)':'rgba(120,190,255,.08)');glow.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=glow;ctx.globalCompositeOperation='screen';ctx.fillRect(x-art.width*s*.55,y-art.height*s,art.width*s*1.1,art.height*s);
+  ctx.restore();
+}
+
+function drawCloudTower(x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(58);
+  ctx.fillStyle='#425b64';ctx.fillRect(-58,-40,116,40);
+  const pg=ctx.createLinearGradient(-55,-38,55,-2);pg.addColorStop(0,'#2b6273');pg.addColorStop(.5,'#79a9a4');pg.addColorStop(1,'#24495d');ctx.fillStyle=pg;ctx.fillRect(-53,-38,106,36);
+  for(let xx=-45;xx<46;xx+=12){ctx.fillStyle='#b9ded855';ctx.fillRect(xx,-34,7,27);}
+  ctx.fillStyle='#315468';ctx.fillRect(-28,-65,56,26);
+  for(let tier=0;tier<8;tier++){
+    const bottom=-65-tier*25,w=50-tier*.55,top=bottom-24;
+    const tg=ctx.createLinearGradient(-w/2,top,w/2,bottom);tg.addColorStop(0,'#b9ddd0');tg.addColorStop(.35,tier%2?'#4f948f':'#5ca19a');tg.addColorStop(1,'#24566c');
+    ctx.fillStyle=tg;ctx.beginPath();ctx.moveTo(-w/2+6,bottom);ctx.lineTo(-w/2,top+4);ctx.lineTo(-w*.38,top);ctx.lineTo(w*.38,top);ctx.lineTo(w/2,top+4);ctx.lineTo(w/2-6,bottom);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#d3e4d8';ctx.fillRect(-w/2-3,top+1,w+6,2);
+    ctx.fillStyle='#1f4b61';ctx.fillRect(-w/2+5,bottom-4,w-10,3);
+    ctx.strokeStyle='#a7d2c699';ctx.lineWidth=.65;for(let gx=-w/2+8;gx<w/2-6;gx+=8){ctx.beginPath();ctx.moveTo(gx,top+4);ctx.lineTo(gx,bottom-5);ctx.stroke();}
+  }
+  ctx.fillStyle='#447984';ctx.fillRect(-13,-277,26,12);ctx.fillStyle='#d5e0d7';ctx.fillRect(-16,-279,32,3);
+  ctx.fillStyle='#647c7f';ctx.fillRect(-6,-314,12,37);ctx.fillStyle='#d7ded8';ctx.fillRect(-2,-348,4,34);
+  ctx.strokeStyle='#e8f2e7';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,-348);ctx.lineTo(0,-372);ctx.stroke();
+  ctx.restore();
+}
+function drawTaipei101StreetLevel(x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  ctx.fillStyle='#4a5965';ctx.fillRect(-118,-34,236,34);
+  ctx.fillStyle='#749aa4';ctx.fillRect(-111,-31,103,28);ctx.fillStyle='#536c7c';ctx.fillRect(11,-31,100,28);
+  ctx.fillStyle='#d9e8e7';for(let xx=-101;xx<101;xx+=17)ctx.fillRect(xx,-27,9,20);
+  ctx.fillStyle='#426849';for(let xx=-120;xx<=120;xx+=40){ctx.beginPath();ctx.arc(xx,-38,10,0,Math.PI*2);ctx.fill();ctx.fillRect(xx-2,-35,4,31);}
+  ctx.restore();
+  drawCloudTower(x,y,s);
+}
+
+function drawGrandHotelPalace(x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(118);
+  ctx.fillStyle='#31533c';ctx.beginPath();ctx.moveTo(-145,2);ctx.quadraticCurveTo(-95,-45,-45,-20);ctx.quadraticCurveTo(25,-65,145,2);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#9b3130';ctx.beginPath();ctx.moveTo(90,-106);ctx.lineTo(116,-91);ctx.lineTo(116,0);ctx.lineTo(90,0);ctx.closePath();ctx.fill();
+  const body=ctx.createLinearGradient(-98,-104,92,0);body.addColorStop(0,'#f1d8b4');body.addColorStop(.58,'#dcb98f');body.addColorStop(1,'#bd8f72');ctx.fillStyle=body;ctx.fillRect(-98,-104,190,104);
+  for(let fl=0;fl<9;fl++){
+    const yy=-10-fl*10.2;ctx.fillStyle='#b93532';ctx.fillRect(-101,yy,196,3);ctx.fillStyle='#f0c470';ctx.fillRect(-100,yy,194,1);
+    for(let xx=-91;xx<91;xx+=14){ctx.fillStyle='#3a4145';ctx.fillRect(xx,yy-7,8,6);ctx.fillStyle='#cf4036';ctx.fillRect(xx-3,yy-8,3,10);}
+  }
+  ctx.fillStyle='#8e272b';ctx.beginPath();ctx.moveTo(-122,-106);ctx.quadraticCurveTo(-80,-100,-50,-139);ctx.quadraticCurveTo(0,-150,52,-139);ctx.quadraticCurveTo(82,-103,124,-108);ctx.lineTo(108,-99);ctx.lineTo(-108,-99);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#f0bd51';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-124,-107);ctx.quadraticCurveTo(-80,-100,-50,-139);ctx.quadraticCurveTo(0,-150,52,-139);ctx.quadraticCurveTo(82,-103,124,-108);ctx.stroke();
+  ctx.strokeStyle='#c04c3b';ctx.lineWidth=.8;for(let xx=-84;xx<=84;xx+=9){ctx.beginPath();ctx.moveTo(xx*.62,-140);ctx.lineTo(xx,-105);ctx.stroke();}
+  ctx.fillStyle='#7e2c2d';ctx.fillRect(-39,-34,78,34);ctx.fillStyle='#272f34';ctx.fillRect(-24,-26,48,26);
+  ctx.fillStyle='#efc56c';ctx.fillRect(-43,-38,86,4);
+  ctx.restore();
+}
 
 let accumulator = 0;
 function loop(now){
