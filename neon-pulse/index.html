@@ -638,11 +638,11 @@
             if (sysState === 'menu') {
                 return (
                     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
-                        <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode="menu" playing={true} />
+                        <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode="menu" playing={true} level={1} combo={0} lines={0} danger={false} />
                         <div className="bg-grid"></div>
                         <div className="menu-orbit" aria-hidden="true"></div>
                         <h1 className="text-6xl md:text-8xl font-black mb-2 tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 via-purple-500 to-red-500 drop-shadow-[0_0_25px_rgba(236,72,153,0.8)] z-10">NEON PULSE</h1>
-                        <p className="text-cyan-300 font-mono tracking-widest mb-10 z-10 opacity-80">TRIPLE MODES • AUDIO-REACTIVE EDITION</p>
+                        <p className="text-cyan-300 font-mono tracking-widest mb-10 z-10 opacity-80">TRIPLE MODES • SYNESTHETIC JOURNEY</p>
                         
                         <div className="flex flex-col md:flex-row gap-8 items-start z-10 w-full max-w-4xl px-6 justify-center">
                             {/* 左側：模式選擇 */}
@@ -715,7 +715,7 @@
 
             return (
                 <div className="min-h-screen relative flex flex-col items-center justify-center font-sans transition-colors duration-1000 overflow-hidden" style={{ backgroundColor: getBgColor() }}>
-                    <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode={gameMode} playing={isPlaying && !isPaused && !gameOver} />
+                    <ReactiveBackdrop analyserRef={analyserRef} burstRef={visualBurstRef} mode={gameMode} playing={isPlaying && !isPaused && !gameOver} level={level} combo={combo} lines={lines} danger={gameMode === 'sprint' && timeLeft <= 10 && isPlaying && !isPaused && !gameOver} />
                     <div className="bg-grid"></div>
 
                     {epicText && (
@@ -775,8 +775,13 @@
                         </div>
 
                         <div className={`board-shell relative bg-black/40 backdrop-blur-sm p-3 rounded-3xl border border-white/10 flex-shrink-0 ${isShaking ? 'shake' : ''}`}>
-                            <div className="music-sync-chip"><span className="music-sync-dot"></span> YOUR BGM • LIVE VISUAL SYNC</div>
+                            <div className="music-sync-chip"><span className="music-sync-dot"></span> YOUR BGM • SPECTRUM SYNC</div>
+                            <div className="journey-strip" aria-hidden="true">
+                                <span>STAGE <strong>{Math.min(5, Math.floor((Math.max(level, Math.floor(lines / 10) + 1) - 1) / 3) + 1)}</strong></span>
+                                <span className={combo >= 3 ? 'flow-hot' : ''}>FLOW <strong>{combo > 0 ? `x${combo}` : 'CALM'}</strong></span>
+                            </div>
                             {fxBurstId > 0 && <div key={fxBurstId} className="impact-wave" aria-hidden="true"></div>}
+                            {clearingRows.length > 0 && <div key={`clear-sweep-${fxBurstId}`} className="clear-sweep" aria-hidden="true"></div>}
                             <div className="md:hidden flex justify-between items-center mb-3 px-1">
                                 <div className="text-left">
                                     <p className="text-slate-400 text-[10px] tracking-widest font-black uppercase">Score</p>
