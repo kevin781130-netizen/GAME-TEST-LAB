@@ -152,7 +152,8 @@ body,html{font-family:'Courier UI Symbols','Noto Sans TC',system-ui,sans-serif}s
   #arcade-splash{top:68%}#arcade-splash-title{font-size:31px}
 }
 @media(max-height:520px) and (min-width:641px){
-  #phone-message{display:none}
+  #phone-message{display:flex;top:112px;left:112px;width:calc(100% - 322px);max-width:390px;max-height:145px;padding:8px;overflow-y:auto;pointer-events:auto}
+  #phone-message .phone-portrait,#phone-meta,#phone-event-tag{display:none}#phone-text{font-size:11px;line-height:1.4}.phone-actions{margin-top:4px;padding-top:4px}#rider-reply{margin-top:4px;padding:5px;font-size:10px}
   #hud-fare-box{top:10px;left:12px;min-width:145px;padding:10px}#hud-total-fare{font-size:32px}
   #hud-timer-container{top:10px;left:205px;min-width:70px;padding:8px;transform:translateX(-50%)}#hud-timer{font-size:35px}
   #nav-card{top:10px;left:254px;min-width:0;width:calc(100% - 472px);max-width:300px;transform:none;padding:7px}
@@ -265,6 +266,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;box-
 /* Text route instructions and a fixed-color GPS trail replace the giant arrow. */
 #arcade-arrow,#arcade-direction>small,#hud-compass{display:none!important}
 #arcade-direction{min-height:0;height:auto}
+
+/* Conversation remains readable in both phone orientations. */
+#phone-message{pointer-events:auto;overscroll-behavior:contain}#phone-message .phone-body{min-width:0}
+@media(max-width:760px){#phone-message{max-height:min(230px,calc(100dvh - 510px));overflow-y:auto}#phone-reply-button{min-height:36px}#hud.phone-active #hud-status-toast{opacity:0}}
+@media(max-height:520px) and (min-width:641px){#phone-reply-button{min-height:32px}#hud.phone-active #hud-status-toast{opacity:0}}
 </style><script>/* Three.js r128 — MIT License
 The MIT License
 
@@ -304,7 +310,7 @@ THE SOFTWARE.
 <div class="mode-card" data-mode="RUSH"><div class="mode-card-title">120 秒衝刺</div><div class="mode-card-desc">更長距離、更高張力。路線與手感的考驗。</div></div>
 <div class="mode-card" data-mode="PRACTICE"><div class="mode-card-title">自由練習</div><div class="mode-card-desc">不限班表時間。熟悉街道與取送流程。</div></div></div>
 <div class="district-row"><label for="start-district">起跑區域</label><select id="start-district" aria-label="選擇配送起點"></select><button id="city-map-button">台北路網 ↗</button></div><div class="selection-heading">02 / 選擇配送夥伴</div><div class="driver-select-grid">
-<div class="driver-card selected" data-driver="lin"><div class="driver-avatar" style="background:#bb852e">豪</div><div class="driver-name">阿豪</div><div class="driver-title">均衡快手</div><div class="driver-cab-name">都會輕型機車</div></div><div class="driver-card " data-driver="chen"><div class="driver-avatar" style="background:#31716a">福</div><div class="driver-name">阿福</div><div class="driver-title">長途快送</div><div class="driver-cab-name">長途快送機車</div></div><div class="driver-card " data-driver="mei"><div class="driver-avatar" style="background:#a35171">琪</div><div class="driver-name">小琪</div><div class="driver-title">彎道專家</div><div class="driver-cab-name">靈巧街頭機車</div></div><div class="driver-card " data-driver="zhou"><div class="driver-avatar" style="background:#456781">周</div><div class="driver-name">老周</div><div class="driver-title">穩健派送</div><div class="driver-cab-name">穩健載貨機車</div></div></div><button id="btn-start" class="arcade-btn-start">開始配送　→</button><div class="action-links-row"><button id="btn-skill-coach" class="text-link-btn">技巧教練</button><button id="btn-technique-profile" class="text-link-btn">操控：配送輔助</button><button id="btn-open-manual" class="text-link-btn">操作與規則</button><button id="btn-toggle-shift-mode" class="text-link-btn" >排檔：自排</button><button id="mute-button" class="text-link-btn">音效：開</button><button id="motion-button" class="text-link-btn">動態效果：完整</button><button id="voice-button" class="text-link-btn">客人語音：開</button><button id="fullscreen-button" class="text-link-btn">全螢幕</button></div><p id="record-line" class="record-line"></p><details class="scoreboard"><summary>本機 TOP 5 / 目前班表</summary><table aria-label="本機前五名"><tbody id="leaderboard-body"></tbody></table></details><p class="build-line">方向鍵 騎乘 · ↓ 煞停後自動倒車 · Space 起跳 · E 氮氣 · Shift 孤輪<br>獨立原創街機外送遊戲 · 街機技巧版 5.1.1 · 台北街道為遊戲化縮尺</p></main><div class="city-tag"><small>YOUR CITY. YOUR ROUTE.</small><strong>TAIPEI / 台北</strong></div></div>
+<div class="driver-card selected" data-driver="lin"><div class="driver-avatar" style="background:#bb852e">豪</div><div class="driver-name">阿豪</div><div class="driver-title">均衡快手</div><div class="driver-cab-name">都會輕型機車</div></div><div class="driver-card " data-driver="chen"><div class="driver-avatar" style="background:#31716a">福</div><div class="driver-name">阿福</div><div class="driver-title">長途快送</div><div class="driver-cab-name">長途快送機車</div></div><div class="driver-card " data-driver="mei"><div class="driver-avatar" style="background:#a35171">琪</div><div class="driver-name">小琪</div><div class="driver-title">彎道專家</div><div class="driver-cab-name">靈巧街頭機車</div></div><div class="driver-card " data-driver="zhou"><div class="driver-avatar" style="background:#456781">周</div><div class="driver-name">老周</div><div class="driver-title">穩健派送</div><div class="driver-cab-name">穩健載貨機車</div></div></div><button id="btn-start" class="arcade-btn-start">開始配送　→</button><div class="action-links-row"><button id="btn-skill-coach" class="text-link-btn">技巧教練</button><button id="btn-technique-profile" class="text-link-btn">操控：配送輔助</button><button id="btn-open-manual" class="text-link-btn">操作與規則</button><button id="btn-toggle-shift-mode" class="text-link-btn" >排檔：自排</button><button id="mute-button" class="text-link-btn">音效：開</button><button id="motion-button" class="text-link-btn">動態效果：完整</button><button id="voice-button" class="text-link-btn">客人語音：開</button><button id="fullscreen-button" class="text-link-btn">全螢幕</button></div><p id="record-line" class="record-line"></p><details class="scoreboard"><summary>本機 TOP 5 / 目前班表</summary><table aria-label="本機前五名"><tbody id="leaderboard-body"></tbody></table></details><p class="build-line">方向鍵 騎乘 · ↓ 煞停後自動倒車 · Space 起跳 · E 氮氣 · Shift 孤輪<br>獨立原創街機外送遊戲 · 街機技巧版 5.1.2 · 台北街道為遊戲化縮尺</p></main><div class="city-tag"><small>YOUR CITY. YOUR ROUTE.</small><strong>TAIPEI / 台北</strong></div></div>
 <div id="hud"><div id="hud-fare-box"><div class="hud-label-tag">本班收入 / NT$</div><div id="hud-total-fare">$0</div><div id="hud-current-fare">完成 0 單</div><span id="chain-value">0 連送</span></div><div id="hud-timer-container"><div id="hud-timer-label">班表剩餘</div><div id="hud-timer">105</div></div><div id="hud-customer-box"><div class="order-header"><span id="order-state">等待取貨</span><div id="hud-mode-badge">街機接力</div></div><div id="order-customer">下一站商家</div><div id="hud-customer-timer">30</div><div id="hud-destination">目的地</div><div id="hud-distance">0m</div><div class="delivery-track"><div id="delivery-progress"></div></div><button id="target-button">B 換單</button></div>
 <div id="hud-dash-cluster"><div id="hud-gear-shifter"><div id="gear-d" class="gear-item active-d">騎</div><div id="gear-r" class="gear-item">退</div></div><div id="hud-speed-gauge"><div id="hud-speed">0</div><div id="hud-speed-unit">KM / H</div><small id="gear-label">AUTO / 自排</small></div></div><div id="radar-container"><canvas id="radar-canvas" width="140" height="140"></canvas></div><div id="route-name">忠孝東西路</div><div id="nav-card"><div id="arcade-direction"><canvas id="arcade-arrow" width="240" height="120"></canvas><small>配送路線與樓層</small><span id="current-layer">TAIPEI / 地面</span></div><div id="hud-compass"><canvas id="hud-compass-canvas" width="240" height="240"></canvas></div><div class="nav-copy"><div class="nav-eyebrow"><span id="nav-phase">取貨</span><span id="nav-floor">地面 → 地面</span></div><div class="nav-main"><strong id="nav-instruction">直走</strong><b id="nav-turn-distance">0 m</b></div><p id="nav-next-road">跟隨路線</p><small id="nav-route-total">商家取貨</small></div></div><div id="hud-stunt-banner"><span id="stunt-text"></span><span id="hud-combo-counter"></span></div><div id="hud-status-toast" role="status"></div><div id="objective-box"><div id="objective-line">前往商家</div><div id="order-item">配送票牌取貨 · 停穩收單</div><div class="stop-track"><div id="stop-progress"></div></div><small id="air-state">Space 起跳 · Shift 孤輪</small><small id="combo-chip">技巧連段</small></div>
 <div id="technique-card" aria-hidden="true"><small>TAIPEI EXPRESS / STYLE</small><strong id="skill-feedback">技巧待命</strong><span id="skill-chain">技巧連段</span></div><div id="skill-coach-hud"><strong id="drill-title"></strong><p id="drill-hint"></p><button id="btn-drill-retry">重試</button> <button id="btn-drill-exit">回自由配送</button></div><div id="hud-controls-panel"><button id="btn-skill-coach-hud" class="hud-toggle-btn">技巧教練</button><button id="btn-weather" class="hud-toggle-btn">天氣：晴</button><button id="btn-daynight" class="hud-toggle-btn">時間：白天</button><button id="btn-quality" class="hud-toggle-btn">畫質：高</button></div><button id="hud-map-button" aria-label="開啟台北路網">路網</button><button id="pause-button" aria-label="暫停遊戲">Ⅱ 暫停</button><div id="resource-box"><div class="resource-label"><span id="boost-label">E 極速起步</span></div><div class="resource-track"><div id="boost-fill"></div></div><div class="resource-label"><span>貨物完整度</span><span id="cargo-value">—</span></div><div class="resource-track"><div id="cargo-fill"></div></div></div></div>
@@ -4392,6 +4398,120 @@ const COURIER_SKILL_DRILLS=[
   if(el('skill-coach-modal').style.display==='flex'){e.preventDefault?.();if(e.code==='Escape'&&!e.repeat)this.closeCourierCoach();return;}
   return old.handleKeyDown.call(this,e);
  };
+})();
+
+/* Independent usability / geometry corrections. Original city anchors, courier
+ * models, story data and assets remain owned by the existing project. */
+(()=>{
+ const P=TaipeiStreetCourier.prototype;
+ const oldInit=P.init,oldEffects=P.updateEffects,oldPhysics=P.updateVehiclePhysics;
+ const oldReserved=P.isReservedSite;
+ P.isReservedSite=function(o){if(oldReserved.call(this,o))return true;
+  // Leave space for the temple's existing model and its adjacent courtyard.
+  const temple=this.landmarkGroups?.find(g=>g.name==='艋舺龍山寺');if(!temple)return false;
+  if(!this.templeClearance){temple.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(temple);this.templeClearance={x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,w:b.max.x-b.min.x,d:b.max.z-b.min.z,angle:0};}
+  return this.rectsOverlap(o,this.templeClearance,30);
+ };
+ P.init=async function(){await oldInit.call(this);this.repairStreetGeometry();this.streetVersion='5.1.2';};
+ P.makeCourierRange=function(color){
+  const group=new THREE.Group(),material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9,depthWrite:false,side:THREE.DoubleSide});
+  group.name='courier-range-light';group.userData.rangeMaterial=material;return group;
+ };
+ P.projectCourierRange=function(vertices,origin,angle=0,below=false){
+  const c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<vertices.length;i+=3){const x=origin.x+vertices[i]*c+vertices[i+2]*s,z=origin.z-vertices[i]*s+vertices[i+2]*c;vertices[i+1]=(below?origin.y:this.getTerrainHeight(x,z))-origin.y+.2;}return vertices;
+ };
+ P.setCourierRange=function(group,vertices){
+  for(const m of [...group.children]){group.remove(m);m.geometry.dispose();}
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));group.add(new THREE.Mesh(geo,group.userData.rangeMaterial));
+ };
+ P.buildStopFrame=function(){
+  this.stopFrame=this.makeCourierRange(0xffc46b);this.scene.add(this.stopFrame);this.stopFrame.visible=false;
+  this.stopLabel=this.makeLabel('交付範圍\n停穩收單','#ffc46b');this.stopLabel.scale.set(7,2.2,1);this.scene.add(this.stopLabel);this.stopLabel.visible=false;
+  this.destBeam.children.forEach(m=>m.visible=false);
+ };
+ const decorate=P.decorateOrder;
+ P.decorateOrder=function(c){decorate.call(this,c);if(!c.pickupRange){c.pickupRange=this.makeCourierRange(0x83c8cf);c.group.add(c.pickupRange);}
+  const v=[],r=c.stopRadius||2.8,inner=r-.16;
+  // Interrupted mint dashes mark the actual circular interaction radius.
+  for(let i=0;i<32;i++){const a=i*Math.PI/16,b=a+Math.PI/16*.72;const p=(t,d)=>[Math.cos(t)*d,.09,Math.sin(t)*d];v.push(...p(a,inner),...p(a,r),...p(b,inner),...p(a,r),...p(b,r),...p(b,inner));}
+  this.setCourierRange(c.pickupRange,this.projectCourierRange(v,c.group.position));
+ };
+ P.updateStopFrame=function(){
+  if(!this.stopFrame||!this.stopLabel)return;
+  const s=this.activeCustomer?.destination,same=!!s&&this.isBelowGround(this.carPos)===(s.layer==='B1');this.stopFrame.visible=this.stopLabel.visible=same;this.destBeam.visible=false;if(!s)return;
+  if(this.stopFrame.userData.stop!==s){const v=[],w=s.stopW/2,d=s.stopD/2,t=.18;const quad=(x0,z0,x1,z1)=>v.push(x0,.09,z0,x1,.09,z0,x0,.09,z1,x1,.09,z0,x1,.09,z1,x0,.09,z1);
+   quad(-w,-d,w,-d+t);quad(-w,d-t,w,d);quad(-w,-d,-w+t,d);quad(w-t,-d,w,d);
+   this.setCourierRange(this.stopFrame,this.projectCourierRange(v,s.pos,s.angle,s.layer==='B1'));this.stopFrame.userData.stop=s;
+  }
+  this.stopFrame.position.copy(s.pos);this.stopFrame.rotation.y=s.angle||0;
+  this.stopLabel.scale.set(s.layer==='B1'?5:7,s.layer==='B1'?1.1:2.2,1);this.stopLabel.position.set(s.pos.x,s.pos.y+(s.layer==='B1'?2.85:4.3),s.pos.z);
+ };
+ P.updateEffects=function(dt){oldEffects.call(this,dt);for(const c of this.customers)if(c.pickupRange)c.pickupRange.visible=c.group.visible&&!this.activeCustomer&&Math.abs(this.carPos.y-c.group.position.y)<4;
+  if(this.stopFrame?.userData.rangeMaterial)this.stopFrame.userData.rangeMaterial.opacity=this.reducedMotion ? .9 : .82+.12*Math.sin(this.markerTime*2);
+ };
+ P.onOrdinaryRoad=function(o,padding=0){
+  return this.rawCitySegments.some(s=>this.rectsOverlap(o,{x:(s.a.x+s.b.x)/2,z:(s.a.z+s.b.z)/2,w:s.w+padding*2,d:s.len,angle:Math.atan2(s.b.x-s.a.x,s.b.z-s.a.z)},0));
+ };
+ P.repairStreetGeometry=function(){
+  const report=this.streetRepair={rampsRemoved:this.ramps.length,wavesRemoved:this.roadWaves.length,parkedRemoved:0,railingsRemoved:0,landmarkParts:0};
+  // Normal streets must remain normal roads: remove both render and physics.
+  for(const o of [...this.ramps,...this.roadWaves])if(o.group)this.scene.remove(o.group);this.ramps=[];this.roadWaves=[];
+  const removed=new Set();for(const o of this.parkedVehicles)if(this.onOrdinaryRoad(o,.65)){removed.add(o);this.scene.remove(o.group);report.parkedRemoved++;}
+  this.cityObstacles=this.cityObstacles.filter(o=>!removed.has(o));this.parkedVehicles=this.parkedVehicles.filter(o=>!removed.has(o));
+  // An enclosing landmark rectangle blocked courtyards and streets with no
+  // corresponding wall. Use actual visible pieces, with their own elevations.
+  const parts=[];for(const g of this.landmarkGroups){const old=this.streetSolids.find(o=>o.landmark===g.name);if(!old)continue;removed.add(old);g.updateMatrixWorld(true);
+   g.traverse(m=>{if(!m.isMesh||!m.geometry||m.isSprite)return;m.geometry.computeBoundingBox();const b=m.geometry.boundingBox,center=b.getCenter(new THREE.Vector3()).applyMatrix4(m.matrixWorld),size=b.getSize(new THREE.Vector3()),scale=new THREE.Vector3(),q=new THREE.Quaternion(),pos=new THREE.Vector3();m.matrixWorld.decompose(pos,q,scale);const e=new THREE.Euler().setFromQuaternion(q,'YXZ');
+    // Sloping ornament is not a full-height barrier below its visible base.
+    if(Math.abs(e.x)>.01||Math.abs(e.z)>.01){const aabb=new THREE.Box3().setFromObject(m);aabb.getCenter(center);aabb.getSize(size);scale.set(1,1,1);e.y=0;}
+    const o={x:center.x,z:center.z,y:center.y-size.y*scale.y/2,w:size.x*scale.x,d:size.z*scale.z,height:size.y*scale.y,angle:e.y,kind:'landmark-part',landmark:g.name};if(o.w>.01&&o.d>.01&&o.height>.01)parts.push(o);
+   });
+  }report.landmarkParts=parts.length;
+  // Bridge rails from one road must not fence across a crossing road.
+  for(const m of this.instanceMeshes.filter(m=>['bridgeRails','bridgePosts','riverwalls'].includes(m.name))){const matrix=new THREE.Matrix4(),pos=new THREE.Vector3(),scale=new THREE.Vector3(),q=new THREE.Quaternion();for(let i=0;i<m.count;i++){m.getMatrixAt(i,matrix);matrix.decompose(pos,q,scale);const angle=new THREE.Euler().setFromQuaternion(q,'YXZ').y,o={x:pos.x,z:pos.z,w:scale.x,d:scale.z,angle};
+    if(!this.onOrdinaryRoad(o,-.75))continue;for(const solid of this.streetSolids.filter(s=>s.kind==='railing'&&Math.hypot(s.x-pos.x,s.z-pos.z)<.02))removed.add(solid);matrix.makeScale(0,0,0);m.setMatrixAt(i,matrix);report.railingsRemoved++;
+   }m.instanceMatrix.needsUpdate=true;}
+  this.streetSolids=this.streetSolids.filter(o=>!removed.has(o));this.streetSolids.push(...parts);this.indexStreetSolids();this.alignLandmarkFootprints();
+  this.cutRiverGround();
+  // Revalidate stops after more precise colliders reveal previously untested parts.
+  this.arcadeDeliverySpots=this.arcadeDeliverySpots.filter(s=>(s.layer==='B1'||!this.overOpenWater(s.pos))&&!this.nearbySolids(s.pos).some(o=>this.verticalOverlap(s.pos,o)&&this.rectsOverlap({...s.pos,w:s.stopW,d:s.stopD,angle:s.angle},o,.55)));
+  for(const [i,c] of this.customers.entries())if(!this.arcadeDeliverySpots.includes(c.destination))c.destination=this.orderDestination(c,i);
+
+ };
+ P.alignLandmarkFootprints=function(){
+  this.streetRepair.landmarksAligned=[];this.streetRepair.landmarksUnresolved=[];
+  const inLane=o=>o.y<this.getTerrainHeight(o.x,o.z)+2.8&&o.y+o.height>this.getTerrainHeight(o.x,o.z)+.16&&this.onOrdinaryRoad(o,.7);
+  for(const g of this.landmarkGroups){const parts=this.streetSolids.filter(o=>o.kind==='landmark-part'&&o.landmark===g.name);if(!parts.some(inLane))continue;
+   const own=new Set(parts),groundParts=parts.filter(o=>o.y<g.position.y+2.8&&o.y+o.height>g.position.y+.16);let chosen=null;
+   // Local clearance correction only; geographic anchors and models stay intact.
+   search:for(let radius=4;radius<=100;radius+=4)for(let i=0;i<32;i++){
+    const dx=Math.cos(i*Math.PI/16)*radius,dz=Math.sin(i*Math.PI/16)*radius,dy=this.getTerrainHeight(g.position.x+dx,g.position.z+dz)-g.position.y;
+    const moved=groundParts.map(o=>({...o,x:o.x+dx,z:o.z+dz,y:o.y+dy}));
+    if(moved.some(o=>inLane(o)||this.riverDistance(o.x,o.z)<52||this.ugEntries.some(r=>this.rectsOverlap(o,r,.6))))continue;
+    if(moved.some(o=>[...this.nearbyRectSolids(o,.5)].some(b=>!own.has(b)&&o.y<b.y+b.height&&o.y+o.height>b.y&&this.rectsOverlap(o,b,.35))))continue;
+    chosen={dx,dz,dy,radius};break search;
+   }
+   if(!chosen){this.streetRepair.landmarksUnresolved.push(g.name);continue;}
+   const {dx,dz,dy}=chosen;g.position.add(new THREE.Vector3(dx,dy,dz));g.updateMatrixWorld(true);for(const o of parts){o.x+=dx;o.z+=dz;o.y+=dy;}
+   const anchor=this.landmarks.find(l=>l.name===g.name);if(anchor?.pos)anchor.pos.add(new THREE.Vector3(dx,dy,dz));
+   this.streetRepair.landmarksAligned.push({name:g.name,offsetMeters:chosen.radius});this.indexStreetSolids();
+  }
+ };
+ P.cutRiverGround=function(){
+  const cuts=[];for(const r of this.worldRivers())for(let i=1;i<r.nodes.length;i++){const a=r.nodes[i-1],b=r.nodes[i];cuts.push({x:(a.x+b.x)/2,z:(a.z+b.z)/2,w:r.width,d:Math.hypot(b.x-a.x,b.z-a.z)+.6,angle:Math.atan2(b.x-a.x,b.z-a.z)});}
+  // Cut only land. Road decks over water and existing B1 entrance holes stay.
+  const mesh=this.groundMesh,geo=mesh.geometry,attrs=geo.attributes,idx=geo.index,v=[],uv=[],colors=[],count=idx?idx.count:attrs.position.count;
+  for(let i=0;i<count;i+=3){let polys=[[]];for(let j=0;j<3;j++){const n=idx?idx.getX(i+j):i+j,p=attrs.position;polys[0].push({x:p.getX(n),y:p.getY(n),z:p.getZ(n),u:attrs.uv?.getX(n)||0,v:attrs.uv?.getY(n)||0,r:attrs.color?.getX(n)||0,g:attrs.color?.getY(n)||0,b:attrs.color?.getZ(n)||0});}
+   const xs=polys[0].map(p=>p.x),zs=polys[0].map(p=>p.z),minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
+   for(const c of cuts){const radius=Math.hypot(c.w,c.d)/2;if(c.x+radius<minX||c.x-radius>maxX||c.z+radius<minZ||c.z-radius>maxZ)continue;polys=polys.flatMap(poly=>this.subtractPortal(poly,c));}
+   for(const poly of polys)for(let j=1;j<poly.length-1;j++)for(const p of [poly[0],poly[j],poly[j+1]]){v.push(p.x,p.y,p.z);uv.push(p.u,p.v);colors.push(p.r,p.g,p.b);}
+  }
+  const next=new THREE.BufferGeometry();next.setAttribute('position',new THREE.Float32BufferAttribute(v,3));next.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));next.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));next.computeVertexNormals();geo.dispose();mesh.geometry=next;mesh.userData.riverHoles=true;
+  // Fill joints between independently drawn water strips.
+  for(const r of this.worldRivers())for(const p of r.nodes){const joint=new THREE.Mesh(new THREE.CircleGeometry(r.width/2,32).rotateX(-Math.PI/2),this.riverMesh.material);joint.position.set(p.x,-.905,p.z);joint.name='river-water-joint';this.scene.add(joint);}
+ };
+ P.overOpenWater=function(p){if(this.rampAt(p)||this.undergroundAt(p)&&p.y<0)return false;const r=this.riverSample(p.x,p.z);return r.distance<r.width/2-1&&!this.rawCitySegments.some(s=>{const dx=s.b.x-s.a.x,dz=s.b.z-s.a.z,t=Math.max(0,Math.min(1,((p.x-s.a.x)*dx+(p.z-s.a.z)*dz)/(s.len*s.len)));return Math.hypot(p.x-s.a.x-t*dx,p.z-s.a.z-t*dz)<s.w/2+.9;});};
+ P.updateVehiclePhysics=function(dt){oldPhysics.call(this,dt);if(this.isGrounded&&this.overOpenWater(this.carPos)){this.celebrationTime=0;this.rescue();this.showStatusToast('河面不能行駛 · 已返回道路，請走橋面');}};
 })();
 </script></body></html>
 
