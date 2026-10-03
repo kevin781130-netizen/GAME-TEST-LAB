@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V50</title>
+<title>台北極速傳說｜Taipei Sunset Drive V51</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -158,7 +158,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V50 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V51 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -508,8 +508,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V50 · CLEAN ROOM 3D FEEL</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V50</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V51 · CLEAN ROOM 3D FEEL</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V51</span></h1>
       <div class="subtitle">90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -576,7 +576,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V50.0</strong><span>RECOVERY · CLEAN-ROOM ART · TAIPEI</span>
+    <span>CURRENT TEST BUILD</span><strong>V51.0</strong><span>SIDEWAYS DRIFT · CLEAN-ROOM · TAIPEI</span>
   </div>
 </div>
 
@@ -1184,13 +1184,48 @@ const STAGES = [
   ],
   // Stage 5 (五大終點：西北淡水漁人碼頭、正北富貴角燈塔、東北九份阿妹茶樓、東區台北101天際、正南貓空百萬夜景)
   [
-    { id:'5A', name:'GOAL A • 淡水漁人碼頭 & 淡江大橋', eng:'TAMSUI FISHERMAN WHARF & DANJIANG', theme:'danjiang', archetype:'coastal', difficulty:1.4, traffic:26, hills:220, curves:[0, 0.7, -0.9, 1.1, -0.5, 0], seed:51, goal:'A', ceremony:'淡水漁人碼頭夕陽授獎盛典', desc:'跨越淡江大橋抵達情人橋水岸！淡水河夕陽與遊艇鳴笛中，榮耀舉起極速大獎盃！', landmark:'lovers_bridge' },
+    { id:'5A', name:'GOAL A • 淡水漁人碼頭 & 淡江大橋', eng:'TAMSUI FISHERMAN WHARF & DANJIANG', theme:'danjiang', archetype:'coastal', difficulty:1.4, traffic:26, hills:220, curves:[0, 0.7, -0.9, 1.1, -0.5, 0], seed:51, goal:'A', ceremony:'淡水漁人碼頭夕陽授獎盛典', desc:'沿淡水端迎著淡江大橋遠景抵達情人橋水岸！淡水河夕陽與遊艇鳴笛中，榮耀舉起極速大獎盃！', landmark:'lovers_bridge' },
     { id:'5B', name:'GOAL B • 富貴角燈塔（台灣最北端）', eng:'FUGUI CAPE LIGHTHOUSE (NORTH)', theme:'jinguashi', archetype:'coastal', difficulty:1.52, traffic:28, hills:340, curves:[0, 1.4, -1.6, 1.8, -1.3, 0], seed:52, goal:'B', ceremony:'富貴角極北之巔授獎盛典', desc:'沿北海岸一路向北征服台灣最北岬角！黑白八角燈塔下迎風破浪，金黃海波中登頂！', landmark:'fugui_lighthouse' },
     { id:'5C', name:'GOAL C • 九份黃金山城 & 阿妹茶樓', eng:'JIUFEN GOLDEN MOUNTAIN GALA', theme:'jiufen', archetype:'mountain', difficulty:1.65, traffic:30, hills:540, curves:[0, -2.0, 2.2, -2.2, 1.8, 0], seed:53, goal:'C', ceremony:'九份紅燈籠茶坊奇幻之夜', desc:'穿過山海公路抵達山城之巔！阿妹茶樓千盞紅燈籠映照石階，遠眺太平洋漁火！', landmark:'jiufen_lanterns' },
     { id:'5D', name:'GOAL D • 台北101天際之巔（跨年煙火）', eng:'TAIPEI 101 SKYLINE SUMMIT', theme:'xinyi', archetype:'urban', difficulty:1.78, traffic:32, hills:300, curves:[0, 2.6, -2.7, 2.8, -2.3, 0], seed:54, goal:'D', ceremony:'台北101天際之巔煙火盛會', desc:'抵達台北101正下方！竹節造型地標全棟綻放跨年級璀璨大樓煙火，車神登頂！', landmark:'taipei101' },
     { id:'5E', name:'GOAL E • 貓空纜車茶園 & 台北百萬夜景', eng:'MAOKONG GONDOLA & TEA GARDEN', theme:'maokong', archetype:'mountain', difficulty:1.9, traffic:34, hills:490, curves:[0, -3.0, 2.8, -3.1, 2.7, 0], seed:55, goal:'E', ceremony:'貓空茶香百萬星空落幕', desc:'穿越信義快速道路直上木柵！貓空纜車劃過星空，在鐵觀音茶園木棧台俯瞰台北盆地萬家燈火！', landmark:'maokong_gondola' }
   ]
 ];
+const ROUTE_REALITY=Object.freeze({
+ '1A':{grade:'real-anchor',note:'凱達格蘭大道／總統府／景福門為同一核心街區；賽道距離為街機壓縮。'},
+ '2A':{grade:'real-corridor',note:'中山北路北向至圓山／劍潭周邊；圓山大飯店作山側視覺錨點。'},
+ '2B':{grade:'real-corridor',note:'市民大道高架與光華商圈屬同一東西向市中心走廊；道路幾何為遊戲化。'},
+ '3A':{grade:'compressed-link',note:'北投地熱谷與關渡水岸皆屬北投區，但不是同一條直連道路；遊戲以壓縮轉場串聯。'},
+ '3B':{grade:'compressed-link',note:'大直美麗華與故宮位於台北北側相鄰生活圈；實際道路距離被大幅壓縮。'},
+ '3C':{grade:'real-anchor',note:'臺北大巨蛋與松山文創園區實際相鄰；遊戲只壓縮周邊道路尺度。'},
+ '4A':{grade:'real-corridor',note:'淡水老街／金色水岸／紅毛城同屬淡水河岸觀光帶；路段為可辨識場景的街機重組。'},
+ '4B':{grade:'compressed-link',note:'小油坑與擎天崗皆在陽明山區，但不是單一路段直連；以山區轉場壓縮。'},
+ '4C':{grade:'compressed-link',note:'內湖科技園區與饒河街分居基隆河兩側；彩虹橋只作視覺地標，遊戲不把人行橋當汽車道路。'},
+ '4D':{grade:'real-anchor',note:'四四南村、台北101與信義商圈位於同一信義核心區；街道排列為遊戲化。'},
+ '5A':{grade:'real-corridor',note:'漁人碼頭／情人橋在淡水端；淡江大橋已通車但在本關主要作河口地標與遠景，不假裝直接穿越後抵達碼頭。'},
+ '5B':{grade:'real-anchor',note:'富貴角燈塔位於台灣極北點的富貴角；北海岸公路只作壓縮式抵達。'},
+ '5C':{grade:'real-anchor',note:'九份山城與阿妹茶樓位於瑞芳九份；山路與石階聚落以車行可讀方式重組。'},
+ '5D':{grade:'real-anchor',note:'台北101位於信義核心；終點街景使用周邊道路尺度重組，不代表實際封路賽道。'},
+ '5E':{grade:'compressed-link',note:'貓空纜車終點與茶園／茶館同屬貓空；纜車只作空中視覺地標，不是可駕駛路線。'}
+});
+function routeReality(id=currentNode.id){return ROUTE_REALITY[id]||{grade:'compressed-link',note:'台北實景錨點＋街機壓縮路線'};}
+const V51_LANDMARK_AUDIT=Object.freeze({
+ '1A':{height:7600,silhouette:'civic-tower-gate',status:'audited-v51'},
+ '2A':{height:9800,silhouette:'gold-roof-palace',status:'audited-v51'},
+ '2B':{height:7600,silhouette:'digital-blocks',status:'audited-v51'},
+ '3A':{height:7200,silhouette:'red-arch-waterfront',status:'audited-v51'},
+ '3B':{height:8600,silhouette:'wheel-and-palace',status:'audited-v51'},
+ '3C':{height:7200,silhouette:'low-oval-dome',status:'audited-v51'},
+ '4A':{height:6900,silhouette:'fort-waterfront',status:'audited-v51'},
+ '4B':{height:7200,silhouette:'volcanic-grassland',status:'audited-v51'},
+ '4C':{height:7400,silhouette:'river-tech-market',status:'audited-v51'},
+ '4D':{height:7600,silhouette:'xinyi-low-rise-plus-towers',status:'audited-v51'},
+ '5A':{height:7200,silhouette:'cable-stayed-marina',status:'audited-v51'},
+ '5B':{height:9000,silhouette:'black-white-lighthouse',status:'audited-v51'},
+ '5C':{height:8000,silhouette:'green-timber-lantern-house',status:'audited-v51'},
+ '5D':{height:19000,silhouette:'tiered-101-tower',status:'audited-v51'},
+ '5E':{height:7200,silhouette:'white-gondola-tea-hills',status:'audited-v51'}
+});
 
 const V46_CLEAN_ROOM_ART=Object.freeze({
   reference:'observable-composition-only',
@@ -1241,6 +1276,13 @@ const V50_CLEAN_ROOM_REFERENCE=Object.freeze({
   stageCompositionCopy:false,cameraCurveCopy:false,distinctiveFeatureClone:false,distinctiveModeClone:false,
   distinctiveRouteUICopy:false,licensedVehicleIdentity:false,patentedMechanicReplication:false,
   independentImplementation:true,preserve:'Taipei routes, landmarks, route graph, drift nitro, gears, collisions and Twin Link'
+});
+const V51_CLEAN_ROOM_REFERENCE=Object.freeze({
+  observationOnly:true,sourceCode:false,sourceAssets:false,sourceAudio:false,sourceVehicleModels:false,
+  decompilation:false,instructionMapping:false,directSyntaxTranslation:false,exactHandlingCurveCopy:false,
+  exactAnimationCopy:false,signatureCameraCopy:false,distinctiveFeatureClone:false,distinctiveModeClone:false,
+  licensedVehicleIdentity:false,patentedMechanicReplication:false,independentImplementation:true,
+  preserve:'Taipei routes, landmarks, V50 drift nitro recovery, comfort camera and Twin Link'
 });
 const V50_ART=Object.freeze({
   safeSetpieceStride:22,maxNearScale:1.10,roadClearance:.55,rushMin:190,
@@ -1448,14 +1490,14 @@ const nitroBar = document.getElementById('nitro-bar');
 const nitroNum = document.getElementById('nitro-num');
 function updateNitroHUD(){
   nitroBar.style.width=`${Math.round(nitro)}%`;
-  nitroNum.textContent=boostRemaining>0?`BOOST ${boostRemaining.toFixed(1)}s · ${nitroStock}/2`:`${Math.round(nitro)}% · ${nitroStock}/2`;
+  nitroNum.textContent=boostRemaining>0?`BOOST ${boostRemaining.toFixed(1)}s · CHARGE ${Math.round(nitro)}% · ${nitroStock}/2`:`${Math.round(nitro)}% · ${nitroStock}/2`;
   document.getElementById('btn-nitro').textContent=`氮氣 N · ${nitroStock}`;
   document.getElementById('btn-nitro').classList.toggle('ready',nitroStock>0);
 }
 function activateNitro(){
   if(!gameStarted||!raceActive||paused||gameOver||crashSequence||driveGear!=='D'||motionDirection!==1||speed<NITRO_RULES.minSpeed||nitroStock===0||boostRemaining>0)return false;
   nitroStock--;boostRemaining=NITRO_RULES.duration;nitroLatch=true;boostKick=1;
-  speed=Math.min(COMPETITION.boostSpeed,speed+18);
+  speed=Math.min(COMPETITION.boostSpeed,speed+V51_SPEED_FEEL.boostImpulse);
   flash=Math.max(flash,.05);screenShake=Math.max(screenShake,.85);
   styleMessage('NITRO!', 'BOOST 325 · 甩尾中仍可集氣 · 儲存 '+nitroStock+'/2');playBlowOffSound();return true;
 }
@@ -1741,8 +1783,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V50',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V50</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V51',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V51</span>',
   subtitle: '90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -2407,8 +2449,8 @@ function update(dt){
   shiftCutTimer=Math.max(0,shiftCutTimer-dt);shiftPunch=Math.max(0,shiftPunch-dt);boostKick=Math.max(0,boostKick-dt*1.65);
 
   const steerTarget=left||right?(right?1:0)-(left?1:0):gamepadInput.steer||(gyroEnabled?gyroSteer:0);
-  const steeringProfile=v50SteeringProfile(speed,isDrifting);
-  const steerRate=Math.abs(steerTarget)>.001?steeringProfile.response:V50_HANDLING.steerRelease;
+  const steeringProfile=v51SteeringProfile(speed,isDrifting);
+  const steerRate=Math.abs(steerTarget)>.001?steeringProfile.response:V51_HANDLING.steerRelease;
   steer=lerp(steer,steerTarget,1-Math.exp(-dt*steerRate));
   const segIndex=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,segments.length-1),seg=segments[segIndex];
   raceElapsed+=dt;stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,seg.curve);
@@ -2426,12 +2468,14 @@ function update(dt){
   const gp=gearDriveProfile(currentGear,speed,boosting),gearMax=desiredDirection<0?45:gp.max;
   if(motionDirection!==desiredDirection){speed=Math.max(0,speed-320*dt);if(speed===0)motionDirection=desiredDirection;}
   else if(brakeHeld){speed=Math.max(0,speed-COMPETITION.brake*dt);}
-  else if(accelHeld){
-    const torqueFade=Math.max(.10,1-speed/Math.max(1,gearMax));
+  else if(accelHeld||boosting){
+    const torqueFade=Math.max(.08,1-speed/Math.max(1,gearMax));
     const carFactor=clamp((currentCar.accel||68)/68,.84,1.16);
     const shiftFactor=shiftCutTimer>0?.12:1;
-    const pull=COMPETITION.accel*gp.torque*(.48+torqueFade*.82)*carFactor*shiftFactor;
-    const nitroPush=boosting?112:0,momentPush=exitBoost>0?62:0,shiftPush=shiftPunch>0?22:0;
+    const cruiseFactor=v51CruisePullFactor(speed,currentGear==='LOW'?GEAR_RULES.LOW.max:COMPETITION.topSpeed);
+    const throttleFactor=accelHeld?1:.28;
+    const pull=COMPETITION.accel*gp.torque*(.54+torqueFade*.72)*carFactor*shiftFactor*cruiseFactor*throttleFactor;
+    const nitroPush=boosting?v51NitroPush(speed):0,momentPush=exitBoost>0?62:0,shiftPush=shiftPunch>0?22:0;
     speed+=(pull+nitroPush+momentPush+shiftPush+(isDrafting?7:0))*dt;
   }else speed=Math.max(0,speed-19*dt);
   if(helperPulse>0&&!brakeHeld)speed=Math.max(0,speed-18*dt);
@@ -2723,8 +2767,7 @@ function drawRoad(){
   drawV49RoadLightRhythm(projected);
   if(currentNode.archetype==='expressway')drawElevatedRails(projected);
   drawV46RoadEdgeRhythm(projected);
-  drawV47ForegroundMass(projected);
-  drawV48ForegroundSetpieces(projected);
+  // V51: retire older overlapping foreground-building passes; one clipped surface-aware layer owns near-road architecture.
   drawV50SafeRoadsideDepth(projected);
   drawRoadside(Math.floor(playerZ / SEGMENT_LENGTH), t);
   drawStartingScene(Math.floor(playerZ / SEGMENT_LENGTH));
@@ -3452,12 +3495,13 @@ function drawRigidVehicle(yaw,braking){
 }
 function drawPlayer(){
  const braking=inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0;
- let cx=W/2,cy=H-65+brakeVisual*2-wanganTuning.suspension*2+chassisPitch*.75,scale=1,yaw=driftAngle,roll=chassisRoll;
+ const pose=v51DriftVisualPose();
+ let cx=W/2+pose.offsetX,cy=H-65+brakeVisual*2-wanganTuning.suspension*2+chassisPitch*.75,scale=1,yaw=pose.yaw,roll=chassisRoll;
  if(Math.abs(playerX)>drivableHalf()&&!crashSequence)cy+=Math.sin(simulationTime*24)*1.2;
  if(crashSequence){const p=crashPose(crashSequence.t,crashSequence.side);cx=p.x;cy=p.y;scale=p.scale;roll=p.roll;yaw=0;}
- ctx.save();ctx.translate(cx,cy);ctx.scale(scale,scale);if(roll)ctx.rotate(roll*Math.PI/180);
- if(!crashSequence){ctx.fillStyle='#08142088';ctx.beginPath();ctx.ellipse(-chassisRoll*1.2,21,currentCar.isBike?32:108,12,0,0,Math.PI*2);ctx.fill();
-  if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(0,25,currentCar.isBike?26:92,5,0,0,Math.PI*2);ctx.fill();}}
+ ctx.save();ctx.translate(cx,cy);ctx.scale(scale*pose.scaleX,scale);if(roll)ctx.rotate(roll*Math.PI/180);
+ if(!crashSequence){ctx.fillStyle='#08142088';ctx.beginPath();ctx.ellipse(pose.shadowX-chassisRoll*1.2,21,currentCar.isBike?32:108*(1+pose.intensity*.18),12,0,0,Math.PI*2);ctx.fill();
+  if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(pose.shadowX*.6,25,currentCar.isBike?26:92*(1+pose.intensity*.14),5,0,0,Math.PI*2);ctx.fill();}}
  if(boosting||exitBoost>0)drawNitroExhaust(yaw);
  drawRigidVehicle(yaw,braking);ctx.restore();
 }
@@ -3702,10 +3746,10 @@ function presentArcade(){
  displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);
  const active=clamp((boosting?.42:0)+(exitBoost>0?.24:0)+boostKick*.58,0,1);
  const speedRatio=clamp(speed/COMPETITION.topSpeed,0,1),seg=segments[clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,segments.length-1)],curve=seg?.curve||0;
- const speedCrop=Math.round(speedRatio*V50_HANDLING.speedZoom*W*.18),crop=Math.round(active*7)+speedCrop;
- const steerLean=(steer*.48+(driftAngle/48)*.62)*speedRatio*V50_HANDLING.cameraLeanMax;
- const curveLean=clamp(curve/3.3,-1,1)*speedRatio*V50_HANDLING.cameraCurveLean;
- const lean=clamp(steerLean+curveLean,-V50_HANDLING.cameraLeanMax,V50_HANDLING.cameraLeanMax);
+ const speedCrop=Math.round(speedRatio*V51_HANDLING.speedZoom*W*.18),crop=Math.round(active*7)+speedCrop;
+ const steerLean=(steer*.48+(driftAngle/48)*.62)*speedRatio*V51_HANDLING.cameraLeanMax;
+ const curveLean=clamp(curve/3.3,-1,1)*speedRatio*V51_HANDLING.cameraCurveLean;
+ const lean=clamp(steerLean+curveLean,-V51_HANDLING.cameraLeanMax,V51_HANDLING.cameraLeanMax);
  const zoom=1.008+speedRatio*.008+Math.abs(lean)*1.0+active*.006;
  const lateralLook=clamp((steer*.40+driftAngle/90)*speedRatio*4,-V50_COMFORT.lateralLookMax,V50_COMFORT.lateralLookMax);
  displayCtx.save();displayCtx.translate(W/2-lateralLook,H/2+Math.abs(chassisPitch)*.08);displayCtx.rotate(lean);displayCtx.scale(zoom,zoom);displayCtx.translate(-W/2,-H/2);
@@ -3747,16 +3791,15 @@ function legacyV40_drawGrandHotelPalace(x,y,s){
  for(let i=0;i<4;i++){ctx.fillStyle=i%2?'#ad9982':'#ddc6a0';ctx.fillRect(-35-i*5,i*2,70+i*10,2);}ctx.restore();
 }
 function drawTaipeiDome(x,y,s){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(120);
- ctx.fillStyle='#4d6676';ctx.fillRect(-104,-39,218,39);ctx.fillStyle='#213d4d';ctx.fillRect(77,-35,37,35);
- ctx.fillStyle='#c7d4d4';ctx.beginPath();ctx.ellipse(0,-35,120,62,0,Math.PI,Math.PI*2);ctx.lineTo(120,-26);ctx.lineTo(-120,-26);ctx.fill();
- ctx.save();ctx.beginPath();ctx.ellipse(0,-35,120,62,0,Math.PI,Math.PI*2);ctx.lineTo(120,-26);ctx.lineTo(-120,-26);ctx.clip();
- ctx.fillStyle='#91aeb9';ctx.beginPath();ctx.moveTo(28,-106);ctx.lineTo(141,-103);ctx.lineTo(141,4);ctx.lineTo(9,4);ctx.quadraticCurveTo(65,-55,28,-106);ctx.fill();
- ctx.fillStyle='#e6e8d7';ctx.beginPath();ctx.ellipse(-25,-59,75,32,-.1,Math.PI,Math.PI*2);ctx.fill();
- ctx.strokeStyle='#728d9d';ctx.lineWidth=1;for(let xx=-111;xx<117;xx+=13){ctx.beginPath();ctx.moveTo(xx,-27);ctx.quadraticCurveTo(xx*.55,-101,xx*.14,-98);ctx.stroke();}
- for(let yy=-88;yy<-29;yy+=9){ctx.beginPath();ctx.ellipse(0,yy,Math.sqrt(Math.max(0,1-Math.pow((yy+35)/62,2)))*120,5,0,0,Math.PI*2);ctx.stroke();}ctx.restore();
- ctx.fillStyle='#ebdeb9';ctx.fillRect(-121,-27,242,3);for(let xx=-100;xx<111;xx+=11)glassPanel(xx,-23,7,18);
- ctx.fillStyle='#142f3f';ctx.fillRect(-27,-17,54,17);ctx.fillStyle='#e5ce8d';ctx.fillRect(-29,-18,58,2);ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(128);
+  ctx.fillStyle='#344a55';ctx.beginPath();ctx.moveTo(82,-85);ctx.lineTo(118,-67);ctx.lineTo(118,-4);ctx.lineTo(82,-4);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#d0d3ca';ctx.beginPath();ctx.ellipse(-8,-52,118,58,0,Math.PI,Math.PI*2);ctx.lineTo(110,-28);ctx.quadraticCurveTo(75,-8,-8,-7);ctx.quadraticCurveTo(-82,-9,-124,-29);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#8c989b';ctx.lineWidth=2;for(let k=0;k<5;k++){const yy=-32-k*10;ctx.beginPath();ctx.ellipse(-8,yy,112-k*5,18,0,Math.PI,Math.PI*2);ctx.stroke();}
+  ctx.fillStyle='#51747b';ctx.beginPath();ctx.moveTo(-112,-36);ctx.quadraticCurveTo(-74,-20,102,-30);ctx.lineTo(101,-14);ctx.quadraticCurveTo(-60,-2,-116,-18);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1f3945';for(let xx=-91;xx<88;xx+=17)ctx.fillRect(xx,-28,10,15);
+  ctx.fillStyle='#e7ddbd';ctx.fillRect(-122,-11,232,4);
+  ctx.fillStyle='#718087';for(let xx=-105;xx<=100;xx+=22)ctx.fillRect(xx,-8,4,8);
+  ctx.restore();
 }
 function legacyV40_drawCloudTower(x,y,s){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(48);
@@ -3801,15 +3844,22 @@ function drawQingtiangangPavilion(x,y,s){
  ctx.strokeStyle='#c7c7a9';ctx.lineWidth=1;for(let xx=-69;xx<69;xx+=6){ctx.beginPath();ctx.moveTo(xx,5);ctx.lineTo(xx+3,-19-Math.abs(xx%13));ctx.moveTo(xx+1,-15);ctx.lineTo(xx-3,-20);ctx.stroke();}ctx.restore();
 }
 function drawJiufenAmeiTeaHouse(x,y,s){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(68);ctx.fillStyle='#422f32';ctx.beginPath();ctx.moveTo(48,-118);ctx.lineTo(72,-102);ctx.lineTo(72,-5);ctx.lineTo(48,-5);ctx.fill();ctx.fillStyle='#725345';ctx.fillRect(-55,-122,106,110);
- for(let fl=0;fl<3;fl++){
-  const yy=-14-fl*36;ctx.fillStyle='#342f31';ctx.fillRect(-55,yy-25,109,27);
-  for(let xx=-45;xx<48;xx+=18){ctx.fillStyle='#d6b674';ctx.fillRect(xx,yy-24,12,19);ctx.fillStyle='#ffe2a0';ctx.fillRect(xx+2,yy-22,4,12);ctx.fillStyle='#6c4738';ctx.fillRect(xx-2,yy-25,3,26);ctx.fillRect(xx+4,yy-24,1,18);ctx.fillRect(xx,yy-15,12,1);}
-  ctx.fillStyle='#244e4d';ctx.beginPath();ctx.moveTo(-66,yy-27);ctx.lineTo(-47,yy-42);ctx.lineTo(44,yy-42);ctx.lineTo(68,yy-27);ctx.lineTo(61,yy-24);ctx.lineTo(-64,yy-24);ctx.fill();ctx.strokeStyle='#7b9c86';ctx.lineWidth=1;for(let xx=-47;xx<=48;xx+=7){ctx.beginPath();ctx.moveTo(xx*.88,yy-40);ctx.lineTo(xx*1.21,yy-28);ctx.stroke();}
-  ctx.fillStyle='#b6916a';ctx.fillRect(-59,yy-5,118,2);ctx.fillStyle='#443534';for(let xx=-57;xx<=57;xx+=7)ctx.fillRect(xx,yy-4,2,9);ctx.fillRect(-61,yy+5,122,3);
-  for(let xx=-48;xx<=49;xx+=24){ctx.fillStyle='#b12e34';ctx.beginPath();ctx.ellipse(xx,yy-18,5,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ef7250';ctx.beginPath();ctx.ellipse(xx-1,yy-19,2,6,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e6c66f';ctx.fillRect(xx-2,yy-26,4,2);ctx.fillRect(xx-1,yy-10,2,5);}
- }
- for(let i=0;i<6;i++){ctx.fillStyle=i%2?'#86938a':'#beb7a0';ctx.fillRect(-25-i*5,-7+i*2,50+i*10,2);}ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(74);
+  ctx.fillStyle='#233f3a';ctx.beginPath();ctx.moveTo(54,-121);ctx.lineTo(76,-108);ctx.lineTo(76,-4);ctx.lineTo(54,-4);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#31584e';ctx.fillRect(-58,-124,114,118);
+  for(let fl=0;fl<3;fl++){
+    const base=-10-fl*37;
+    ctx.fillStyle='#17352f';ctx.fillRect(-59,base-27,116,27);
+    ctx.fillStyle='#6b452f';for(let xx=-49;xx<=43;xx+=23)ctx.fillRect(xx,base-26,4,24);
+    ctx.fillStyle='#d7b978';for(let xx=-44;xx<=42;xx+=23)ctx.fillRect(xx,base-23,14,17);
+    ctx.fillStyle='#285147';ctx.beginPath();ctx.moveTo(-69,base-29);ctx.lineTo(-49,base-43);ctx.lineTo(47,base-43);ctx.lineTo(70,base-29);ctx.lineTo(61,base-25);ctx.lineTo(-64,base-25);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#6f806e';ctx.lineWidth=1;for(let xx=-48;xx<=48;xx+=9){ctx.beginPath();ctx.moveTo(xx*.86,base-41);ctx.lineTo(xx*1.18,base-29);ctx.stroke();}
+    ctx.fillStyle='#8a684a';ctx.fillRect(-61,base-5,122,3);
+    for(let xx=-49;xx<=49;xx+=24){ctx.fillStyle='#b93436';ctx.beginPath();ctx.ellipse(xx,base-18,5,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ee7860';ctx.beginPath();ctx.ellipse(xx-1,base-19,2,5,0,0,Math.PI*2);ctx.fill();}
+  }
+  ctx.fillStyle='#2e5148';ctx.fillRect(-57,-125,112,3);
+  ctx.fillStyle='#395d4f';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(-68+i*34,-5-Math.abs((i-2)*3),7,0,Math.PI*2);ctx.fill();}
+  ctx.restore();
 }
 
 function tiledRoof(cx,top,width,color='#28746a'){
@@ -3848,13 +3898,21 @@ function drawPalaceMuseum(x,y,s){
  for(let step=0;step<5;step++){ctx.fillStyle=step%2?'#c0b8a0':'#e4dac0';ctx.fillRect(-26-step*6,-9+step*3,52+step*12,3);}arcadeFooting(112);ctx.fillStyle='#d4ba8b';ctx.fillRect(87,-69,13,61);ctx.fillStyle='#708774';for(let yy=-58;yy<-8;yy+=27)ctx.fillRect(91,yy,7,16);ctx.fillStyle='#dcd3b3';ctx.fillRect(-95,-4,71,3);ctx.fillRect(28,-4,71,3);ctx.restore();
 }
 function drawGuanduRedBridge(x,y,s){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#81bfc2';ctx.fillRect(-122,-4,244,13);ctx.fillStyle='#5a6c78';ctx.fillRect(-121,-14,242,7);
- for(const [cx,r]of [[-77,40],[0,60],[77,40]]){
-  ctx.strokeStyle='#a52d34';ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,-15,r,Math.PI,Math.PI*2);ctx.stroke();
-  ctx.strokeStyle='#e34c3f';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,-15,r-4,Math.PI,Math.PI*2);ctx.stroke();
-  ctx.strokeStyle='#dd9e87';ctx.lineWidth=1;for(let xx=-r+6;xx<r;xx+=10){const hh=Math.sqrt(r*r-xx*xx);ctx.beginPath();ctx.moveTo(cx+xx,-15);ctx.lineTo(cx+xx,-15-hh);ctx.stroke();}
- }
- ctx.fillStyle='#babaa3';for(let xx=-115;xx<116;xx+=77)ctx.fillRect(xx,-14,9,23);ctx.fillStyle='#a9b8b1';ctx.fillRect(-122,-6,244,2);ctx.fillStyle='#395d75';ctx.fillRect(-122,6,244,2);ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  ctx.fillStyle='#506b79';ctx.fillRect(-130,-11,260,9);
+  ctx.fillStyle='#a8b9b5';ctx.fillRect(-130,-3,260,6);
+  for(const off of [-5,5]){
+    ctx.strokeStyle=off<0?'#b33137':'#df4b45';ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(-126,-12);ctx.quadraticCurveTo(-70,-112+off,0,-24);ctx.quadraticCurveTo(70,-112-off,126,-12);ctx.stroke();
+  }
+  ctx.strokeStyle='#e6d6ca';ctx.lineWidth=1.2;
+  for(let xx=-108;xx<=108;xx+=18){
+    const a=Math.abs(xx)/126,top=-18-(1-a)*55;
+    ctx.beginPath();ctx.moveTo(xx,-10);ctx.lineTo(xx,top);ctx.stroke();
+  }
+  ctx.fillStyle='#8f9690';for(const xx of [-126,0,118])ctx.fillRect(xx,-11,9,18);
+  ctx.fillStyle='#2d6e82';ctx.fillRect(-132,5,264,3);
+  ctx.restore();
 }
 function drawFortSanDomingo(x,y,s){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#ac4634';ctx.fillRect(-60,-78,120,78);ctx.fillStyle='#ca6547';ctx.fillRect(-57,-75,105,72);
@@ -3887,18 +3945,35 @@ function drawLoversBridgeMarina(x,y,s){
  ctx.fillStyle='#fcf0d6';ctx.beginPath();ctx.moveTo(-104,3);ctx.lineTo(-47,3);ctx.lineTo(-37,-13);ctx.lineTo(-96,-13);ctx.fill();ctx.fillStyle='#286c8e';ctx.fillRect(-87,-12,36,7);ctx.strokeStyle='#809fa9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-111,-8);ctx.lineTo(115,-9);ctx.stroke();ctx.fillStyle='#253f54';for(let xx=-82;xx<-48;xx+=9)ctx.fillRect(xx,-11,6,5);ctx.fillStyle='#d7d6b8';ctx.fillRect(-100,3,67,2);ctx.restore();
 }
 function drawFuguiLighthouse(x,y,s){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#8c9787';ctx.beginPath();ctx.moveTo(-54,4);ctx.lineTo(-28,-11);ctx.lineTo(29,-13);ctx.lineTo(52,4);ctx.fill();
- ctx.fillStyle='#e9e5d2';ctx.beginPath();ctx.moveTo(-26,0);ctx.lineTo(-20,-125);ctx.lineTo(20,-125);ctx.lineTo(26,0);ctx.closePath();ctx.fill();
- for(let yy=-28;yy>-110;yy-=38){ctx.fillStyle='#31414b';ctx.fillRect(-23,yy,46,17);}
- ctx.fillStyle='#172f42';ctx.fillRect(-24,-130,48,7);ctx.fillStyle='#cfe6d6';ctx.fillRect(-17,-149,34,19);ctx.strokeStyle='#485b5c';ctx.lineWidth=2;for(let xx=-15;xx<18;xx+=8){ctx.beginPath();ctx.moveTo(xx,-148);ctx.lineTo(xx,-131);ctx.stroke();}
- ctx.fillStyle='#273e4b';ctx.beginPath();ctx.moveTo(-24,-150);ctx.lineTo(0,-167);ctx.lineTo(24,-150);ctx.fill();ctx.fillStyle='#3b4d58';ctx.fillRect(-5,-19,10,19);ctx.fillStyle='#607771';ctx.fillRect(12,-124,5,121);ctx.fillStyle='#b8c9b5';ctx.fillRect(-17,-122,2,117);ctx.fillStyle='#1d3b48';for(const yy of [-58,-100])ctx.fillRect(-3,yy,6,8);ctx.fillStyle='#e8dfb8';ctx.fillRect(-19,-130,38,2);ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(88);
+  ctx.fillStyle='#e8e5d9';ctx.fillRect(-77,-26,154,26);
+  ctx.fillStyle='#c8d1c8';ctx.beginPath();ctx.moveTo(-76,-26);ctx.lineTo(-61,-40);ctx.lineTo(66,-40);ctx.lineTo(78,-26);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#dfe1d7';ctx.beginPath();ctx.moveTo(-26,-20);ctx.lineTo(-18,-128);ctx.lineTo(18,-128);ctx.lineTo(27,-20);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#172a34';ctx.beginPath();ctx.moveTo(-22,-91);ctx.lineTo(22,-91);ctx.lineTo(20,-63);ctx.lineTo(-24,-63);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#758080';ctx.lineWidth=1.2;for(const xx of [-16,-8,0,8,16]){ctx.beginPath();ctx.moveTo(xx,-124);ctx.lineTo(xx*.75,-24);ctx.stroke();}
+  ctx.fillStyle='#182b36';ctx.fillRect(-24,-132,48,7);
+  ctx.fillStyle='#d7e4dc';ctx.fillRect(-17,-151,34,19);
+  ctx.strokeStyle='#59686a';ctx.lineWidth=2;for(let xx=-15;xx<=15;xx+=10){ctx.beginPath();ctx.moveTo(xx,-149);ctx.lineTo(xx,-132);ctx.stroke();}
+  ctx.fillStyle='#21343c';ctx.beginPath();ctx.moveTo(-24,-152);ctx.lineTo(0,-167);ctx.lineTo(24,-152);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#263842';ctx.fillRect(-6,-20,12,20);
+  ctx.fillStyle='#446052';for(const xx of [-70,64]){ctx.fillRect(xx-2,-14,4,14);ctx.beginPath();ctx.arc(xx,-18,8,0,Math.PI*2);ctx.fill();}
+  ctx.restore();
 }
 function drawMaokongGondola(x,y,s,idx){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.strokeStyle='#6b807c';ctx.lineWidth=5;
- for(const xx of [-100,100]){ctx.beginPath();ctx.moveTo(xx-13,0);ctx.lineTo(xx,-144);ctx.lineTo(xx+13,0);ctx.stroke();ctx.fillStyle='#496561';ctx.fillRect(xx-24,-147,48,8);}
- ctx.strokeStyle='#334956';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-142,-153);ctx.quadraticCurveTo(0,-132,142,-153);ctx.stroke();
- for(const [xx,color]of [[-67,'#f4cf42'],[12,'#62b576'],[87,'#74cee2']]){const yy=-138+Math.abs(xx)*-.04;ctx.strokeStyle='#5c6f77';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(xx,yy+15);ctx.stroke();ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(xx-16,yy+13,32,34,5);ctx.fill();ctx.fillStyle='#244b5c';ctx.fillRect(xx-12,yy+18,24,16);ctx.fillStyle='#d8f0dc';ctx.fillRect(xx-11,yy+19,3,13);}
- ctx.fillStyle='#384b57';for(const xx of [-100,100]){ctx.fillRect(xx-3,-114,6,22);ctx.fillStyle='#c8d4b7';ctx.fillRect(xx-13,-3,26,3);}ctx.fillStyle='#c8e2d7';for(const xx of [-67,12,87])ctx.fillRect(xx-11,-98,23,2);ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  ctx.strokeStyle='#7e8989';ctx.lineWidth=5;
+  for(const xx of [-104,104]){ctx.beginPath();ctx.moveTo(xx-14,0);ctx.lineTo(xx,-150);ctx.lineTo(xx+14,0);ctx.stroke();ctx.fillStyle='#bbc3bd';ctx.fillRect(xx-25,-154,50,8);}
+  ctx.strokeStyle='#263b45';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-150,-158);ctx.quadraticCurveTo(0,-134,150,-158);ctx.stroke();
+  const cabins=[[-70,'#d9bb3a'],[10,'#c65d82'],[91,'#6aa9c7']];
+  for(const [xx,accent] of cabins){
+    const yy=-140-Math.cos(xx*.03)*4;
+    ctx.strokeStyle='#5c676b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(xx,yy+16);ctx.stroke();
+    ctx.fillStyle='#eceee6';ctx.beginPath();ctx.roundRect(xx-17,yy+14,34,36,6);ctx.fill();
+    ctx.fillStyle='#1f3944';ctx.fillRect(xx-13,yy+19,26,17);
+    ctx.fillStyle=accent;ctx.fillRect(xx-16,yy+39,32,9);
+    ctx.fillStyle='#cfe0d8';ctx.fillRect(xx-11,yy+20,4,14);
+  }
+  ctx.restore();
 }
 
 // V39: classic sprite palette, bridge deck and original comic flourishes.
@@ -3938,9 +4013,9 @@ function drawBelowDeckDistrict(){
     if(i%16!==0||!canPlaceBelowDeckDistrict(i))continue;const seg=segments[i],p=seg.p1.screen;
     if(!p.scale||seg.p1.camera.z<=0)continue;
     const yy=p.y+deckElevation(i)*p.scale*H/2;
-    ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
+    ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();clipNearRoad(i);
     for(const side of [-1,1]){
-      const xx=p.x+side*p.w*2.5,scale=p.scale*5400;
+      const xx=p.x+side*p.w*(roadEnvelope(i)+1.15),scale=Math.min(.92,p.scale*4300);
       drawV42TaipeiBlock(xx,yy,scale,i+7,3);
     }ctx.restore();
   }
@@ -3983,14 +4058,28 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'50.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:72,turn:1.05,brake:125,nitroCharge:50,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'51.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:72,turn:1.05,brake:125,nitroCharge:50,hitHalfWidth:62});
 const GEAR_RULES=Object.freeze({
- LOW:{max:185,lowTorque:1.34,highTorque:.62},
- HIGH:{max:285,lowTorque:.34,highTorque:1.02}
+ LOW:{max:185,lowTorque:1.30,highTorque:.60},
+ HIGH:{max:285,lowTorque:.96,highTorque:.50}
 });
+const V51_SPEED_FEEL=Object.freeze({
+  softWallStart:100,cruiseFloor:.12,boostPush:188,boostImpulse:28,boostTaperStart:285,
+  independentCurve:true,exactSourceCurveCopy:false
+});
+function v51CruisePullFactor(speedNow,maxSpeed){
+  if(speedNow<=V51_SPEED_FEEL.softWallStart)return 1;
+  const span=Math.max(1,maxSpeed-V51_SPEED_FEEL.softWallStart);
+  const t=clamp((speedNow-V51_SPEED_FEEL.softWallStart)/span,0,1);
+  return lerp(.78,V51_SPEED_FEEL.cruiseFloor,Math.pow(t,.72));
+}
+function v51NitroPush(speedNow){
+  const t=clamp((speedNow-V51_SPEED_FEEL.boostTaperStart)/(COMPETITION.boostSpeed-V51_SPEED_FEEL.boostTaperStart),0,1);
+  return lerp(V51_SPEED_FEEL.boostPush,76,t*t);
+}
 function gearDriveProfile(gear,speedNow,isBoost=false){
  const rule=GEAR_RULES[gear]||GEAR_RULES.LOW;
- const blend=clamp((speedNow-95)/90,0,1);
+ const blend=clamp((speedNow-95)/110,0,1);
  const torque=lerp(rule.lowTorque,rule.highTorque,blend);
  return {max:isBoost?COMPETITION.boostSpeed:rule.max,torque};
 }
@@ -4008,7 +4097,7 @@ function resetDrivingState(){
  isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;boostKick=0;shiftCutTimer=0;shiftPunch=0;lateralVelocity=0;slideTrails=[];chassisRoll=0;chassisPitch=0;visualLoad=0;
 }
 // V48 clean-room handling calibration: stronger weight transfer, assertive steering, controllable slip and rapid recovery.
-const DRIFT50=Object.freeze({
+const DRIFT51=Object.freeze({
  entryMinSpeed:58, entryRamp:.050, counterRecover:.14, neutralRecover:.22,
  maxBodyYaw:46, baseYaw:15.2, steerYaw:26.8, speedYaw:8.8, curveYaw:4.0,
  baseSlip:8.8, steerSlip:12.8, counterYawTrim:.18, counterSlipTrim:.16,
@@ -4016,7 +4105,7 @@ const DRIFT50=Object.freeze({
  driftPathYaw:2.18, gripPathYaw:3.18, steerPath:.56, driftLateralResponse:17.0,
  exitBoost:.48, momentWindow:.60, rearmYaw:1.00, rearmSlip:.70
 });
-const V50_HANDLING=Object.freeze({
+const V51_HANDLING=Object.freeze({
   independentModel:true,directSyntaxTranslation:false,exactHandlingCurveCopy:false,
   gearDriftClone:false,distinctiveModeClone:false,licensedVehicleIdentity:false,
   patentedMechanicReplication:false,
@@ -4027,19 +4116,40 @@ const V50_HANDLING=Object.freeze({
   chassisRollMax:4.0,chassisPitchMax:2.0
 });
 const V50_COMFORT=Object.freeze({motionScale:.46,shakeMax:1.55,lateralLookMax:4.5});
-function v50SteeringProfile(speedNow,drifting=false){
+const V51_SIDEWAYS=Object.freeze({
+  independentVisualModel:true,directSyntaxTranslation:false,exactAnimationCopy:false,signatureCameraCopy:false,
+  visualYawGain:1.22,visualSlipGain:.92,maxVisualYaw:66,rearSwingPx:22,sideScaleGain:.075,
+  shadowSkewPx:16,trailYawGain:1.10,smokeRateGain:1.35
+});
+function v51DriftVisualYaw(){
+  if(!isDrifting&&driftState!=='recover')return driftAngle;
+  const signedSlip=Math.sign(driftAngle||driftDirection||1)*Math.abs(slipAngle);
+  return clamp(driftAngle*V51_SIDEWAYS.visualYawGain+signedSlip*V51_SIDEWAYS.visualSlipGain,-V51_SIDEWAYS.maxVisualYaw,V51_SIDEWAYS.maxVisualYaw);
+}
+function v51DriftVisualPose(){
+  const yaw=v51DriftVisualYaw(),rad=yaw*Math.PI/180,active=isDrifting||driftState==='recover';
+  const intensity=active?clamp((Math.abs(yaw)-8)/48,0,1):0;
+  return {
+    yaw,
+    offsetX:-Math.sin(rad)*V51_SIDEWAYS.rearSwingPx*intensity,
+    scaleX:1+Math.abs(Math.sin(rad))*V51_SIDEWAYS.sideScaleGain*intensity,
+    shadowX:-Math.sin(rad)*V51_SIDEWAYS.shadowSkewPx*intensity,
+    intensity
+  };
+}
+function v51SteeringProfile(speedNow,drifting=false){
   const t=clamp(speedNow/COMPETITION.topSpeed,0,1);
   const highSpeedEase=t*t*(3-2*t);
   return {
-    response:lerp(V50_HANDLING.steerResponseLow,V50_HANDLING.steerResponseHigh,highSpeedEase)*(drifting?1.15:1),
-    authority:lerp(V50_HANDLING.authorityLow,V50_HANDLING.authorityHigh,highSpeedEase),
-    liftGrip:1+V50_HANDLING.liftGripGain*t,
-    brakeRotation:V50_HANDLING.brakeRotationGain*(.30+.70*t)
+    response:lerp(V51_HANDLING.steerResponseLow,V51_HANDLING.steerResponseHigh,highSpeedEase)*(drifting?1.15:1),
+    authority:lerp(V51_HANDLING.authorityLow,V51_HANDLING.authorityHigh,highSpeedEase),
+    liftGrip:1+V51_HANDLING.liftGripGain*t,
+    brakeRotation:V51_HANDLING.brakeRotationGain*(.30+.70*t)
   };
 }
 function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  const helper=inputHeld('ShiftLeft')||inputHeld('ShiftRight')||gamepadInput.drift;
- if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT50.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.085;brakeEntry=.78;}
+ if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT51.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.085;brakeEntry=.78;}
  helperWasHeld=helper;helperPulse=Math.max(0,helperPulse-dt);
  const previousBrake=brakeWasHeld,sign=Math.abs(steerTarget)>.10?Math.sign(steerTarget):0;
  const gasPressed=accelHeld&&!previousGas,gasReleased=!accelHeld&&previousGas;
@@ -4051,21 +4161,21 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!driftRearmBlocked&&brakeHoldTime>=.008){brakeEntry=.72;if(!isDrifting)driftState='brake';}
  }else{
   brakeEntry=Math.max(0,brakeEntry-dt*1.25);
-  if(!isDrifting&&Math.abs(slipAngle)<DRIFT50.rearmSlip&&Math.abs(driftAngle)<DRIFT50.rearmYaw)driftRearmBlocked=false;
+  if(!isDrifting&&Math.abs(slipAngle)<DRIFT51.rearmSlip&&Math.abs(driftAngle)<DRIFT51.rearmYaw)driftRearmBlocked=false;
  }
  if(previousGas&&!accelHeld&&!brakeHeld)coastWindow=.26;else coastWindow=Math.max(0,coastWindow-dt);
  momentBoostWindow=Math.max(0,momentBoostWindow-dt);
  if(momentBoostWindow>0&&!isDrifting){
   if(gasReleased)momentBoostArmed=true;
   if(momentBoostArmed&&gasPressed&&!brakeHeld&&roadGrip>.8&&driveGear==='D'&&motionDirection===1){
-   exitBoost=Math.max(exitBoost,DRIFT50.exitBoost);momentBoostWindow=0;momentBoostArmed=false;boostKick=Math.max(boostKick,.62);
+   exitBoost=Math.max(exitBoost,DRIFT51.exitBoost);momentBoostWindow=0;momentBoostArmed=false;boostKick=Math.max(boostKick,.62);
    flash=Math.max(flash,.035);screenShake=Math.max(screenShake,1.8);
    styleMessage('MOMENT BOOST!','放油再補油成功 · 小噴接續氮氣');
   }
  }
  previousGas=accelHeld;brakeWasHeld=brakeHeld;exitBoost=Math.max(0,exitBoost-dt);
  const liftEntry=coastWindow>0&&Math.abs(curve)>.28&&Math.abs(curve)<2.55&&sign===Math.sign(curve)&&speed>100;
- if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.10&&speed>DRIFT50.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
+ if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.10&&speed>DRIFT51.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
   isDrifting=true;driftDirection=sign;driftState='entry';driftAge=0;cleanDriftTime=0;counterTime=0;neutralTime=0;brakeEntry=0;coastWindow=0;
   styleMessage('DRIFT','甩尾集氮中 · 反打可修線');
  }
@@ -4080,24 +4190,24 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(counter&&coastWindow>0&&accelHeld&&driftState!=='recover'&&counterTime>.10){
    driftDirection=sign;counterTime=0;driftAge=.08;coastWindow=0;cleanDriftTime=0;
   }
-  if(counterTime>DRIFT50.counterRecover||neutralTime>DRIFT50.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
+  if(counterTime>DRIFT51.counterRecover||neutralTime>DRIFT51.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
    driftState='recover';driftRearmBlocked=true;targetYaw=0;targetSlip=0;
-   if(Math.abs(driftAngle)<DRIFT50.rearmYaw&&Math.abs(slipAngle)<DRIFT50.rearmSlip){
+   if(Math.abs(driftAngle)<DRIFT51.rearmYaw&&Math.abs(slipAngle)<DRIFT51.rearmSlip){
     if(cleanDriftTime>.30&&roadGrip>.8&&!brakeHeld){
-      momentBoostWindow=Math.max(momentBoostWindow,DRIFT50.momentWindow);momentBoostArmed=!accelHeld;
+      momentBoostWindow=Math.max(momentBoostWindow,DRIFT51.momentWindow);momentBoostArmed=!accelHeld;
       styleMessage('MOMENT BOOST READY','反打收尾 · 放油再補油觸發小噴');
      }
     isDrifting=false;driftState='grip';driftDirection=0;cleanDriftTime=0;counterTime=0;neutralTime=0;
    }
   }else{
-   driftState=driftAge<DRIFT50.entryRamp?'entry':'drift';
+   driftState=driftAge<DRIFT51.entryRamp?'entry':'drift';
    const into=Math.max(0,steer*driftDirection);
-   const entryEase=clamp(driftAge/DRIFT50.entryRamp,0,1);
-   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT50.curveYaw:0;
-   const yawFull=DRIFT50.baseYaw+into*DRIFT50.steerYaw+ratio*DRIFT50.speedYaw+curveAssist;
-   const slipFull=DRIFT50.baseSlip+into*DRIFT50.steerSlip;
-   const yawTrim=counter?DRIFT50.counterYawTrim:neutral?.78:1;
-   const slipTrim=counter?DRIFT50.counterSlipTrim:neutral?.78:1;
+   const entryEase=clamp(driftAge/DRIFT51.entryRamp,0,1);
+   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT51.curveYaw:0;
+   const yawFull=DRIFT51.baseYaw+into*DRIFT51.steerYaw+ratio*DRIFT51.speedYaw+curveAssist;
+   const slipFull=DRIFT51.baseSlip+into*DRIFT51.steerSlip;
+   const yawTrim=counter?DRIFT51.counterYawTrim:neutral?.78:1;
+   const slipTrim=counter?DRIFT51.counterSlipTrim:neutral?.78:1;
    targetYaw=driftDirection*yawFull*entryEase*yawTrim;
    targetSlip=driftDirection*slipFull*entryEase*slipTrim;
   }
@@ -4106,54 +4216,54 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!brakeHeld)driftState=brakeEntry>0?'armed':'grip';
  }
  if(targetYaw===undefined)targetYaw=0;
- targetYaw=clamp(targetYaw,-DRIFT50.maxBodyYaw,DRIFT50.maxBodyYaw);
- const omega=driftState==='recover'?DRIFT50.recoverResponse:DRIFT50.yawResponse;
+ targetYaw=clamp(targetYaw,-DRIFT51.maxBodyYaw,DRIFT51.maxBodyYaw);
+ const omega=driftState==='recover'?DRIFT51.recoverResponse:DRIFT51.yawResponse;
  const error=driftAngle-targetYaw,c=yawRate+omega*error,decay=Math.exp(-omega*dt);
- driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT50.maxBodyYaw,DRIFT50.maxBodyYaw);
+ driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT51.maxBodyYaw,DRIFT51.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
- slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT50.recoverSlipResponse:DRIFT50.slipResponse)));
+ slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT51.recoverSlipResponse:DRIFT51.slipResponse)));
  const nitroRequested=boostRemaining>0;
- const driftEnergy=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&!brakeHeld&&Math.abs(slipAngle)>2.0&&speed>=DRIFT50.entryMinSpeed&&roadGrip>.8;
+ const driftEnergy=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&!brakeHeld&&Math.abs(slipAngle)>2.0&&speed>=DRIFT51.entryMinSpeed&&roadGrip>.8;
  driftChargeRate=0;
  if(driftEnergy){
   cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.55:1.35);
   const slipSkill=clamp((Math.abs(slipAngle)-1.5)/8,.72,1.22),speedSkill=.88+clamp(speed/COMPETITION.topSpeed,0,1)*.26;
-  const throttleFactor=accelHeld?1:.72,chargeFactor=nitroRequested?.70:1;
+  const throttleFactor=accelHeld?1:.78,chargeFactor=nitroRequested?1:1;
   driftChargeRate=COMPETITION.nitroCharge*chargeFactor*throttleFactor*slipSkill*speedSkill;
  }
  else{styleIdle+=dt;if(styleIdle>.60){if(styleBank>0)bankStyle();else driftTime=0;}}
  styleCombo=clamp(1+Math.floor(cleanDriftTime/.8)*.5,1,5);
- if(isDrifting&&Math.abs(slipAngle)>3&&Math.random()<dt*22){const p=vehicleProject([currentCar.isBike?1:driftDirection*(currentCar.isTruck?75:81),0,-66],driftAngle);addParticle(W/2+p.x,H-65+p.y,rand(-28,28)-lateralVelocity*24,rand(-24,-2),.42,rand(7,12),'smoke');}
+ if(isDrifting&&Math.abs(slipAngle)>3&&Math.random()<dt*30){const p=vehicleProject([currentCar.isBike?1:driftDirection*(currentCar.isTruck?75:81),0,-66],v51DriftVisualYaw());addParticle(W/2+p.x,H-65+p.y,rand(-28,28)-lateralVelocity*24,rand(-24,-2),.42,rand(7,12),'smoke');}
  for(const trail of slideTrails)trail.life-=dt;slideTrails=slideTrails.filter(p=>p.life>0);
- if(isDrifting&&Math.abs(slipAngle)>2.5&&speed>70){const points=(currentCar.isBike?[1]:currentCar.isTruck?[-75,75]:[-81,81]).map(x=>vehicleProject([x,0,-66],driftAngle));slideTrails.push({life:.48,y:H-65,points,dir:driftDirection});if(slideTrails.length>32)slideTrails.shift();}
+ if(isDrifting&&Math.abs(slipAngle)>2.5&&speed>70){const points=(currentCar.isBike?[1]:currentCar.isTruck?[-75,75]:[-81,81]).map(x=>vehicleProject([x,0,-66],v51DriftVisualYaw()));slideTrails.push({life:.62,y:H-65,points,dir:driftDirection});if(slideTrails.length>32)slideTrails.shift();}
 }
 function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
  const ratio=clamp(speed/COMPETITION.topSpeed,0,1.1),safe=clamp(278-Math.abs(curve)*24,120,278),excess=Math.max(0,speed-safe);
- const profile=v50SteeringProfile(speed,isDrifting);
+ const profile=v51SteeringProfile(speed,isDrifting);
  const liftGrip=!isDrifting&&!accelHeld&&!brakeHeld?profile.liftGrip:1;
  const frontGrip=clamp((1-excess/210)*liftGrip,.68,1.24);
  const travelYaw=(driftAngle-slipAngle)*Math.PI/180;
- const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT50.driftPathYaw:DRIFT50.gripPathYaw)*(.50+.72*ratio);
- const baseAuthority=isDrifting?DRIFT50.steerPath:.238*profile.authority;
+ const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT51.driftPathYaw:DRIFT51.gripPathYaw)*(.50+.72*ratio);
+ const baseAuthority=isDrifting?DRIFT51.steerPath:.238*profile.authority;
  const brakeRotation=!isDrifting&&brakeHeld?steer*profile.brakeRotation:0;
  const matchingCurve=Math.sign(steer)===Math.sign(curve)?Math.min(Math.abs(curve),2.4):0;
- const turnInBite=!isDrifting?steer*matchingCurve*V50_HANDLING.turnInBite*(.35+.65*ratio):0;
+ const turnInBite=!isDrifting?steer*matchingCurve*V51_HANDLING.turnInBite*(.35+.65*ratio):0;
  const turn=Math.min(1,speed/30)*(yawTurn+steer*baseAuthority+brakeRotation+turnInBite)*(isDrifting?1:frontGrip);
  const outward=curve*.032*ratio*ratio;
- lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT50.driftLateralResponse:17.6)));
+ lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT51.driftLateralResponse:17.6)));
  playerX+=lateralVelocity*dt*motionDirection;
  visualLoad=lerp(visualLoad,brakeHeld?1.08:accelHeld?-.42:0,1-Math.exp(-dt*10));
- const targetRoll=clamp(-(steer*.76+lateralVelocity*.48)*(2.5+ratio*2.5),-V50_HANDLING.chassisRollMax,V50_HANDLING.chassisRollMax);
- const targetPitch=clamp(visualLoad*V50_HANDLING.chassisPitchMax,-V50_HANDLING.chassisPitchMax,V50_HANDLING.chassisPitchMax);
+ const targetRoll=clamp(-(steer*.76+lateralVelocity*.48)*(2.5+ratio*2.5),-V51_HANDLING.chassisRollMax,V51_HANDLING.chassisRollMax);
+ const targetPitch=clamp(visualLoad*V51_HANDLING.chassisPitchMax,-V51_HANDLING.chassisPitchMax,V51_HANDLING.chassisPitchMax);
  chassisRoll=lerp(chassisRoll,targetRoll,1-Math.exp(-dt*12));
  chassisPitch=lerp(chassisPitch,targetPitch,1-Math.exp(-dt*13));
  if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.36+Math.abs(slipAngle)*.013)*dt);
  if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.013:.27)*dt);
 }
-function playerVisualTransform(){return {yaw:driftAngle,travelYaw:driftAngle-slipAngle,mode:'rigid-3d',scaleX:1,shearX:0};}
+function playerVisualTransform(){const p=v51DriftVisualPose();return {yaw:p.yaw,travelYaw:driftAngle-slipAngle,mode:'rigid-3d-sideways',scaleX:p.scaleX,shearX:0,offsetX:p.offsetX,intensity:p.intensity};}
 function drawSlideTrails(){
  ctx.save();ctx.lineCap='round';
- for(const p of slideTrails){const age=.48-p.life,y=p.y+age*speed*.72;if(y>H+5)continue;ctx.strokeStyle=`rgba(16,18,24,${p.life*.65})`;ctx.lineWidth=3;
+ for(const p of slideTrails){const age=.62-p.life,y=p.y+age*speed*.72;if(y>H+5)continue;ctx.strokeStyle=`rgba(16,18,24,${p.life*.72})`;ctx.lineWidth=3;
   for(const q of p.points){ctx.beginPath();ctx.moveTo(W/2+q.x,y+q.y);ctx.lineTo(W/2+q.x+p.dir*5,y+q.y+9);ctx.stroke();}}
  ctx.restore();
 }
@@ -4342,7 +4452,7 @@ function planLandmarks(){
  const end=v34Mode==='arcade'?(stageLevel===4?FINISH_LINE:STAGE_END):soloFinishIndex();
  const fractions=items.length===1?[.40]:items.length===2?[.22,.70]:[.16,.45,.75];let last=40;
  return items.map((h,i)=>{
-  const sprite=getLandmarkSprite(h),height=h.name.includes('101')?23000:h.name.includes('纜車')?9000:h.name.includes('橋')?6000:8500;
+  const sprite=getLandmarkSprite(h),height=V51_LANDMARK_AUDIT[currentNode.id]?.height||(h.name.includes('101')?19000:h.name.includes('纜車')?7200:h.name.includes('橋')?7000:7800);
   const artUnits=height*H/2/sprite.height,halfWorld=sprite.width*artUnits/W;
   const minOffset=ROAD_WIDTH*roadFactor()*1.12+halfWorld+1000,preferred=h.side??(i%2?-1:1),target=Math.round(end*fractions[i]);
   let best=null;
@@ -5078,7 +5188,7 @@ function updateGaragePreview(){
   const t=readGarageInputs(),p=tunedProfile(t);
   tuningHpDisp.textContent=`音色 ${t.powerBalance}/10 · 性能 +0`; 
   wanganCardInfo.textContent=`${p.name} · 獨立改裝存檔 · 已完成 ${driverStats.runs} 場`;
-  document.getElementById('garage-stats').textContent='全車統一：280 KM/H ｜ 氮氣 300 KM/H・4.00 s ｜ 改裝性能增益 +0';
+  document.getElementById('garage-stats').textContent='全車統一：285 KM/H ｜ 氮氣 325 KM/H・2.80 s ｜ 100+ 自然加速漸緩';
   const cv=document.getElementById('garage-preview'),c=cv.getContext('2d');c.clearRect(0,0,640,150);
   c.fillStyle='#071222';c.fillRect(0,0,640,150);
   c.strokeStyle='#1d4054';c.lineWidth=1;for(let y=85;y<150;y+=15){c.beginPath();c.moveTo(0,y);c.lineTo(640,y);c.stroke();}
@@ -5123,9 +5233,9 @@ function renderAtlas(){
   atlasSVG.innerHTML=`<defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="#193548" stroke-width=".6"/></pattern></defs><rect width="520" height="440" fill="url(#grid)"/><path d="M0 0H520V115Q430 92 340 93T75 80L0 120Z" fill="#113650"/><path d="M64 95 Q100 130 139 193 T184 255 Q177 298 143 348" stroke="#205675" fill="none" stroke-width="17"/><path d="M180 252 Q230 275 306 270T445 245" stroke="#205675" fill="none" stroke-width="10"/><path d="M177 116L244 95 300 128 317 175 266 185 202 170Z" fill="#143b37"/><path d="M307 390L337 350 429 390 478 440H325Z" fill="#143b37"/><text x="20" y="40" fill="#6ca3bd" font-size="14">北海岸</text><text x="16" y="215" fill="#5b94ad" font-size="12">淡水河</text><text x="187" y="375" fill="#598396" font-size="12">台北市區</text><text x="424" y="132" fill="#598396" font-size="12">新北山城</text><path d="M481 52V22M473 31L481 22 489 31" stroke="#ffe087" fill="none" stroke-width="2"/><text x="477" y="68" fill="#ffe087" font-size="12">N</text>`;
   for(const p of atlasPoints){const r=routeForId(p.id),selected=r.level===selectedRoute.level&&r.column===selectedRoute.column,current=currentNode.id===p.id&&gameStarted&&!gameOver;atlasSVG.innerHTML+=`<g data-route="${p.id}" tabindex="0" role="button" aria-label="${p.name}"><circle cx="${p.x}" cy="${p.y}" r="${selected?9:6}" fill="${selected?'#ffda66':current?'#00e5ff':'#87bbd0'}"/><text x="${p.x}" y="${p.y-13}" text-anchor="middle" fill="${selected?'#ffda66':'#cee2ec'}" font-size="11" font-family="sans-serif">${p.name}</text></g>`;}
   const list=document.getElementById('atlas-routes');list.innerHTML='';
-  for(let l=0;l<5;l++)for(let c=0;c<=l;c++){const n=STAGES[l][c],button=document.createElement('button');button.className='route-pick'+(l===selectedRoute.level&&c===selectedRoute.column?' selected':'');button.dataset.route=n.id;button.innerHTML=`<strong>${n.id} · ${n.name.replace(/GOAL [A-E] • /,'')}</strong><small>${{urban:'市區',mountain:'山道',coastal:'水岸',expressway:'高架'}[n.archetype]} · 難度 ${n.difficulty.toFixed(1)} · ${(soloLength(l,c)/1000).toFixed(1)} 遊戲 km · 紀錄 ${bestTimes[bestRecordKey(n.id)]?.toFixed(2)||'—'} s</small>`;button.addEventListener('click',()=>selectAtlasRoute(n.id));list.appendChild(button);}
+  for(let l=0;l<5;l++)for(let c=0;c<=l;c++){const n=STAGES[l][c],button=document.createElement('button');button.className='route-pick'+(l===selectedRoute.level&&c===selectedRoute.column?' selected':'');button.dataset.route=n.id;button.innerHTML=`<strong>${n.id} · ${n.name.replace(/GOAL [A-E] • /,'')}</strong><small>${{urban:'市區',mountain:'山道',coastal:'水岸',expressway:'高架'}[n.archetype]} · ${ROUTE_REALITY[n.id].grade==='real-anchor'?'實景核心':'實景錨點／街機壓縮'} · 難度 ${n.difficulty.toFixed(1)} · ${(soloLength(l,c)/1000).toFixed(1)} 遊戲 km</small><small>${ROUTE_REALITY[n.id].note}</small>`;button.addEventListener('click',()=>selectAtlasRoute(n.id));list.appendChild(button);}
   atlasSVG.querySelectorAll('[data-route]').forEach(g=>{g.addEventListener('click',()=>selectAtlasRoute(g.dataset.route));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectAtlasRoute(g.dataset.route);}});});
-  document.getElementById('atlas-note').textContent=v34Mode==='arcade'?'街機由總統府起跑；單段模式可選路段。商店與企業招牌採虛構名稱及圖樣，並非真實企業授權場景。':'十五段台北街機路線；企業招牌為虛構趣味名稱，未表示合作或授權。地圖比例與連接經過壓縮。';
+  document.getElementById('atlas-note').textContent='V51 地理稽核：15 段皆以真實台北／新北地標定位；跨區連接、道路長度與分岔為街機壓縮，不作導航。彩虹橋／貓空纜車等非汽車設施只作視覺地標。';
   document.getElementById('atlas-drive').disabled=gameStarted&&!gameOver&&v34Mode!=='cruise';
   document.getElementById('atlas-drive').textContent=gameStarted&&!gameOver&&v34Mode!=='cruise'?'比賽中，結束後可換路段':v34Mode==='sprint'?'選此路段 → 單段計時':'選此路段 → 自由巡航';
 }
@@ -5221,8 +5331,8 @@ function updateV39HUD(){
  gearBadge.classList.toggle('high',driveGear==='D'&&currentGear==='HIGH');
  const sc=scene(),state={grip:'GRIP 循跡',brake:'BRAKE 重心前移',armed:'READY 點煞・切彎',entry:'TURN IN 入彎',drift:'DRIFT 補油控線',recover:'EXIT 反打收尾'}[driftState];
  document.getElementById('street-name').textContent=`${currentNode.id} / ${sc.label}`;
- document.getElementById('street-detail').textContent=`${currentNode.id==='2B'?'高架橋面 · ':''}${sc.lanes} 線道 · 路寬 ${Math.round(sc.width*100)}% · ${autoGear?'AT 自排':'MT 手排'} · 競技同規格`;
- hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting&&isDrifting?`BOOST DRIFT · 集氣 ${Math.round(nitro)}%`:boosting?`NITRO 300 · ${boostRemaining.toFixed(1)} 秒 · 庫存 ${nitroStock}`:roadGrip<.8?'OFF ROAD 回到路面':state;
+ document.getElementById('street-detail').textContent=`${currentNode.id==='2B'?'高架橋面 · ':''}${sc.lanes} 線道 · ${routeReality().grade==='real-anchor'?'實景核心':'實景錨點＋街機壓縮'} · ${autoGear?'AT 自排':'MT 手排'}`;
+ hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting&&isDrifting?`BOOST DRIFT · 同步集氣 ${Math.round(nitro)}%`:boosting?`NITRO 325 · ${boostRemaining.toFixed(1)} 秒 · 庫存 ${nitroStock}`:roadGrip<.8?'OFF ROAD 回到路面':state;
  const brake=inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0;
  const gas=(inputHeld('ArrowUp')||inputHeld('KeyW')||gamepadInput.gas||nitroLatch)&&!brake;
  document.getElementById('gas-fill').style.width=gas?'100%':'0';document.getElementById('brake-fill').style.width=brake?'100%':'0';
@@ -5430,22 +5540,25 @@ function drawLandmarkInstance(h,x,y,s,layer){
 }
 
 function drawCloudTower(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(58);
-  ctx.fillStyle='#425b64';ctx.fillRect(-58,-40,116,40);
-  const pg=ctx.createLinearGradient(-55,-38,55,-2);pg.addColorStop(0,'#2b6273');pg.addColorStop(.5,'#79a9a4');pg.addColorStop(1,'#24495d');ctx.fillStyle=pg;ctx.fillRect(-53,-38,106,36);
-  for(let xx=-45;xx<46;xx+=12){ctx.fillStyle='#b9ded855';ctx.fillRect(xx,-34,7,27);}
-  ctx.fillStyle='#315468';ctx.fillRect(-28,-65,56,26);
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(62);
+  ctx.fillStyle='#40565f';ctx.fillRect(-62,-42,124,42);
+  ctx.fillStyle='#6f9ca1';ctx.fillRect(-55,-39,104,36);
+  ctx.fillStyle='#28485a';ctx.beginPath();ctx.moveTo(49,-39);ctx.lineTo(62,-32);ctx.lineTo(62,0);ctx.lineTo(49,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#315468';ctx.fillRect(-30,-67,60,27);
   for(let tier=0;tier<8;tier++){
-    const bottom=-65-tier*25,w=50-tier*.55,top=bottom-24;
-    const tg=ctx.createLinearGradient(-w/2,top,w/2,bottom);tg.addColorStop(0,'#b9ddd0');tg.addColorStop(.35,tier%2?'#4f948f':'#5ca19a');tg.addColorStop(1,'#24566c');
-    ctx.fillStyle=tg;ctx.beginPath();ctx.moveTo(-w/2+6,bottom);ctx.lineTo(-w/2,top+4);ctx.lineTo(-w*.38,top);ctx.lineTo(w*.38,top);ctx.lineTo(w/2,top+4);ctx.lineTo(w/2-6,bottom);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#d3e4d8';ctx.fillRect(-w/2-3,top+1,w+6,2);
+    const bottom=-67-tier*25,w=52-tier*.65,top=bottom-23,side=8;
+    ctx.fillStyle=tier%2?'#5a9f99':'#6aa8a0';
+    ctx.beginPath();ctx.moveTo(-w/2+6,bottom);ctx.lineTo(-w/2,top+4);ctx.lineTo(-w*.38,top);ctx.lineTo(w*.38,top);ctx.lineTo(w/2,top+4);ctx.lineTo(w/2-6,bottom);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#24556a';ctx.beginPath();ctx.moveTo(w/2-6,bottom);ctx.lineTo(w/2,top+4);ctx.lineTo(w/2+side,top+8);ctx.lineTo(w/2+side-5,bottom+4);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#d8e4d8';ctx.fillRect(-w/2-3,top+1,w+6,2);
     ctx.fillStyle='#1f4b61';ctx.fillRect(-w/2+5,bottom-4,w-10,3);
-    ctx.strokeStyle='#a7d2c699';ctx.lineWidth=.65;for(let gx=-w/2+8;gx<w/2-6;gx+=8){ctx.beginPath();ctx.moveTo(gx,top+4);ctx.lineTo(gx,bottom-5);ctx.stroke();}
+    ctx.strokeStyle='#b2d4cc88';ctx.lineWidth=.7;for(let gx=-w/2+8;gx<w/2-6;gx+=8){ctx.beginPath();ctx.moveTo(gx,top+4);ctx.lineTo(gx,bottom-5);ctx.stroke();}
   }
-  ctx.fillStyle='#447984';ctx.fillRect(-13,-277,26,12);ctx.fillStyle='#d5e0d7';ctx.fillRect(-16,-279,32,3);
-  ctx.fillStyle='#647c7f';ctx.fillRect(-6,-314,12,37);ctx.fillStyle='#d7ded8';ctx.fillRect(-2,-348,4,34);
-  ctx.strokeStyle='#e8f2e7';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,-348);ctx.lineTo(0,-372);ctx.stroke();
+  ctx.fillStyle='#447984';ctx.fillRect(-14,-279,28,12);
+  ctx.fillStyle='#d7e1da';ctx.fillRect(-17,-281,34,3);
+  ctx.fillStyle='#657c7f';ctx.fillRect(-6,-316,12,37);
+  ctx.fillStyle='#d7ded8';ctx.fillRect(-2,-350,4,34);
+  ctx.strokeStyle='#e8f2e7';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,-350);ctx.lineTo(0,-374);ctx.stroke();
   ctx.restore();
 }
 function drawTaipei101StreetLevel(x,y,s){
@@ -5459,19 +5572,21 @@ function drawTaipei101StreetLevel(x,y,s){
 }
 
 function drawGrandHotelPalace(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(118);
-  ctx.fillStyle='#31533c';ctx.beginPath();ctx.moveTo(-145,2);ctx.quadraticCurveTo(-95,-45,-45,-20);ctx.quadraticCurveTo(25,-65,145,2);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#9b3130';ctx.beginPath();ctx.moveTo(90,-106);ctx.lineTo(116,-91);ctx.lineTo(116,0);ctx.lineTo(90,0);ctx.closePath();ctx.fill();
-  const body=ctx.createLinearGradient(-98,-104,92,0);body.addColorStop(0,'#f1d8b4');body.addColorStop(.58,'#dcb98f');body.addColorStop(1,'#bd8f72');ctx.fillStyle=body;ctx.fillRect(-98,-104,190,104);
-  for(let fl=0;fl<9;fl++){
-    const yy=-10-fl*10.2;ctx.fillStyle='#b93532';ctx.fillRect(-101,yy,196,3);ctx.fillStyle='#f0c470';ctx.fillRect(-100,yy,194,1);
-    for(let xx=-91;xx<91;xx+=14){ctx.fillStyle='#3a4145';ctx.fillRect(xx,yy-7,8,6);ctx.fillStyle='#cf4036';ctx.fillRect(xx-3,yy-8,3,10);}
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(124);
+  ctx.fillStyle='#2f5b3f';ctx.beginPath();ctx.moveTo(-154,4);ctx.quadraticCurveTo(-105,-48,-48,-32);ctx.quadraticCurveTo(22,-72,154,4);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#9d392f';ctx.beginPath();ctx.moveTo(98,-108);ctx.lineTo(122,-94);ctx.lineTo(122,0);ctx.lineTo(98,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#e7c899';ctx.fillRect(-102,-108,200,108);
+  for(let fl=0;fl<8;fl++){
+    const yy=-13-fl*11.5;ctx.fillStyle='#ba3d31';ctx.fillRect(-104,yy,204,3);
+    for(let xx=-92;xx<=88;xx+=18){ctx.fillStyle='#4b3432';ctx.fillRect(xx,yy-8,9,7);ctx.fillStyle='#c84c36';ctx.fillRect(xx-4,yy-9,4,10);}
   }
-  ctx.fillStyle='#8e272b';ctx.beginPath();ctx.moveTo(-122,-106);ctx.quadraticCurveTo(-80,-100,-50,-139);ctx.quadraticCurveTo(0,-150,52,-139);ctx.quadraticCurveTo(82,-103,124,-108);ctx.lineTo(108,-99);ctx.lineTo(-108,-99);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#f0bd51';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-124,-107);ctx.quadraticCurveTo(-80,-100,-50,-139);ctx.quadraticCurveTo(0,-150,52,-139);ctx.quadraticCurveTo(82,-103,124,-108);ctx.stroke();
-  ctx.strokeStyle='#c04c3b';ctx.lineWidth=.8;for(let xx=-84;xx<=84;xx+=9){ctx.beginPath();ctx.moveTo(xx*.62,-140);ctx.lineTo(xx,-105);ctx.stroke();}
-  ctx.fillStyle='#7e2c2d';ctx.fillRect(-39,-34,78,34);ctx.fillStyle='#272f34';ctx.fillRect(-24,-26,48,26);
-  ctx.fillStyle='#efc56c';ctx.fillRect(-43,-38,86,4);
+  ctx.fillStyle='#b64232';for(let xx=-95;xx<=90;xx+=20)ctx.fillRect(xx,-106,4,103);
+  ctx.fillStyle='#d49a31';ctx.beginPath();ctx.moveTo(-130,-109);ctx.quadraticCurveTo(-82,-103,-52,-146);ctx.quadraticCurveTo(0,-158,54,-146);ctx.quadraticCurveTo(84,-105,130,-111);ctx.lineTo(112,-101);ctx.lineTo(-112,-101);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#f2c45e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-132,-110);ctx.quadraticCurveTo(-84,-102,-52,-146);ctx.quadraticCurveTo(0,-158,54,-146);ctx.quadraticCurveTo(85,-105,132,-112);ctx.stroke();
+  ctx.strokeStyle='#8d4c2c';ctx.lineWidth=1;for(let xx=-88;xx<=88;xx+=9){ctx.beginPath();ctx.moveTo(xx*.60,-149);ctx.lineTo(xx,-109);ctx.stroke();}
+  ctx.fillStyle='#a9352e';ctx.fillRect(-42,-39,84,39);ctx.fillStyle='#2c3135';ctx.fillRect(-26,-28,52,28);
+  ctx.fillStyle='#efc85d';ctx.fillRect(-46,-42,92,5);
+  for(let k=0;k<5;k++){ctx.fillStyle=k%2?'#b7aa91':'#ddd1b5';ctx.fillRect(-38-k*7,-3+k*2,76+k*14,3);}
   ctx.restore();
 }
 
