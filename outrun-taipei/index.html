@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V45</title>
+<title>台北極速傳說｜Taipei Sunset Drive V46</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -57,7 +57,7 @@
   #countdown{position:absolute;inset:0;display:grid;place-items:center;z-index:8;pointer-events:none;font-family:var(--hud-font);font-size:min(26vw,190px);font-weight:900;font-style:italic;color:#fff;text-shadow:0 8px 0 rgba(0,0,0,.6),0 0 50px rgba(255,210,0,.7);opacity:0;transform:scale(.75);transition:.16s}
   #countdown.show{opacity:1;transform:scale(1)}
 
-  /* ROUTE PYRAMID PANEL */
+  /* TAIPEI ROUTE NETWORK PANEL */
   #route-panel{position:absolute;right:10px;top:70px;width:155px;z-index:7;padding:5px 7px;border-radius:8px;background:rgba(5,11,20,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(3px);pointer-events:none}
   #route-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;font-size:8px;font-weight:900;letter-spacing:.14em;color:#9ec2db}
   #route-goals{color:var(--arcade-yellow)}
@@ -155,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V45 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V46 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -193,13 +193,13 @@
     <div id="countdown">3</div>
 
     <div id="route-panel">
-      <div id="route-panel-head"><span>ROUTE PYRAMID</span><span id="route-goals">GOALS 0/5</span></div>
+      <div id="route-panel-head"><span>TAIPEI ROUTE NETWORK</span><span id="route-goals">GOALS 0/5</span></div>
       <canvas id="route-map" width="436" height="216"></canvas>
     </div>
 
     <div id="fork-choice">
-      <div class="fork-card" id="fork-left"><span>↙ EASY ROUTE</span><strong id="fork-left-name">中山北路 & 圓山大飯店 ↙</strong></div>
-      <div class="fork-card" id="fork-right"><span>CHALLENGE ↘</span><strong id="fork-right-name">↘ 市民大道高架橋</strong></div>
+      <div class="fork-card" id="fork-left"><span>↙ DISTRICT A</span><strong id="fork-left-name">中山北路 & 圓山大飯店 ↙</strong></div>
+      <div class="fork-card" id="fork-right"><span>DISTRICT B ↘</span><strong id="fork-right-name">↘ 市民大道高架橋</strong></div>
     </div>
 
     <div id="stage-card">
@@ -505,9 +505,9 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V45 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V45</span></h1>
-      <div class="subtitle">OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。</div>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V46 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V46</span></h1>
+      <div class="subtitle">90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。</div>
       
       
 <div id="start-options"><label>座駕<select id="menu-car"></select></label><label>變速箱<select id="start-transmission"><option value="AT">AT 自排・A/Z</option><option value="MT">MT 手排 LOW / HIGH・A/Z</option></select></label></div>
@@ -1111,7 +1111,7 @@ function toggleRadio(){
 }
 
 // ============================================================
-// 1986 ARCADE ROUTE PYRAMID
+// TAIPEI DISTRICT ROUTE NETWORK
 // ============================================================
 const ROAD_WIDTH = 2200, SEGMENT_LENGTH = 200, DRAW_DISTANCE = 320, CAMERA_HEIGHT = 1000, CAMERA_DEPTH = 0.84;
 const WORLD_SPEED = 18;
@@ -1185,6 +1185,38 @@ const STAGES = [
     { id:'5E', name:'GOAL E • 貓空纜車茶園 & 台北百萬夜景', eng:'MAOKONG GONDOLA & TEA GARDEN', theme:'maokong', archetype:'mountain', difficulty:1.9, traffic:34, hills:490, curves:[0, -3.0, 2.8, -3.1, 2.7, 0], seed:55, goal:'E', ceremony:'貓空茶香百萬星空落幕', desc:'穿越信義快速道路直上木柵！貓空纜車劃過星空，在鐵觀音茶園木棧台俯瞰台北盆地萬家燈火！', landmark:'maokong_gondola' }
   ]
 ];
+
+const V46_CLEAN_ROOM_ART=Object.freeze({
+  reference:'observable-composition-only',
+  sourceCode:false,sourceAssets:false,sourceAudio:false,sourcePalettes:false,
+  decompilation:false,instructionMapping:false,sourceSymbols:false,directSyntaxTranslation:false,
+  distinctiveFeatureClone:false,independentImplementation:true,
+  preserve:'Taipei V45 routes, landmarks, physics, traffic rules and Twin Link',
+  visualModel:'layered Taipei vista + local roadside rhythm'
+});
+const V46_TAIPEI_ROUTE_GUARD=Object.freeze([
+  ['1A','總統府 & 凱達格蘭大道','civic','urban'],
+  ['2A','中山北路林蔭道 & 圓山大飯店','yuanshan','mountain'],
+  ['2B','市民大道高架橋 & 光華商場','civic','expressway'],
+  ['3A','北投溫泉地熱谷 & 關渡大橋','beitou','coastal'],
+  ['3B','大直美麗華摩天輪 & 國立故宮','dazhi','mountain'],
+  ['3C','松山文創園區 & 臺北大巨蛋','xinyi','urban'],
+  ['4A','淡水老街 & 紅毛城金色水岸','danjiang','coastal'],
+  ['4B','陽明山小油坑 & 擎天崗草原','yangming','mountain'],
+  ['4C','內湖科技園區 & 饒河夜市環東大道','nangang','expressway'],
+  ['4D','信義商圈 & 信義街區大道','xinyi','urban'],
+  ['5A','GOAL A • 淡水漁人碼頭 & 淡江大橋','danjiang','coastal'],
+  ['5B','GOAL B • 富貴角燈塔（台灣最北端）','jinguashi','coastal'],
+  ['5C','GOAL C • 九份黃金山城 & 阿妹茶樓','jiufen','mountain'],
+  ['5D','GOAL D • 台北101天際之巔（跨年煙火）','xinyi','urban'],
+  ['5E','GOAL E • 貓空纜車茶園 & 台北百萬夜景','maokong','mountain']
+]);
+function taipeiRouteIdentityIntact(){
+  const live=STAGES.flat();
+  return live.length===V46_TAIPEI_ROUTE_GUARD.length&&V46_TAIPEI_ROUTE_GUARD.every((g,i)=>{
+    const n=live[i];return n&&n.id===g[0]&&n.name===g[1]&&n.theme===g[2]&&n.archetype===g[3];
+  });
+}
 
 let segments = [];
 function createStageSegments(node, level){
@@ -1653,9 +1685,9 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V45',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V45</span>',
-  subtitle: 'OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V46',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V46</span>',
+  subtitle: '90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
 function restoreOverlayContent(){
@@ -2199,15 +2231,17 @@ function beginStageTransition(choice){
   stageTransition = { choice, nextLevel, nextColumn, next, progress:0, lastCenter:startCenter };
   choiceLocked = true; pendingChoice = choice;
   styleMessage('ROUTE LOCKED', `${choice === 'left' ? 'LEFT' : 'RIGHT'} → ${next.name}`);
-  say(`${choice === 'left' ? 'EASY ↙' : 'HARD ↘'} ${next.name}`);
+  say(`${choice === 'left' ? 'A線 ↙' : 'B線 ↘'} ${next.name}`);
   flash = 0.08; screenShake = 2.5;
   drawRouteMap();
 }
 
 
 function nodePos(level, column){
-  const spacing = 72;
-  return { x: routeMap.width / 2 + (column - level / 2) * spacing, y: 26 + level * 42 };
+  const x=36+level*88;
+  const spread=level===0?0:(column-level/2)*34;
+  const bend=Math.sin((level*1.7+column*.9))*8;
+  return {x,y:routeMap.height/2+spread+bend};
 }
 function hasVisited(level, column){ return routeHistory.some(r => r.level === level && r.column === column); }
 
@@ -2382,7 +2416,7 @@ function update(dt){
     roadGrip = 0.50; speed -= (26 + speed * 0.075) * dt;
     screenShake = Math.max(screenShake, 1.2);
     if(Math.random() < dt * 14) addParticle(W / 2 + rand(-95, 95), H - 65, rand(-50, 50), rand(-50, -15), rand(0.35, 0.7), rand(8, 15), 'dust');
-    // V45 acceptance rule: decorative roadside art never creates an invisible collider.
+    // V46 acceptance rule: decorative roadside art never creates an invisible collider.
     // Physical impacts are limited to rendered traffic and explicit hard road barriers.
   }
   resolveRoadBoundary((playerZ+PLAYER_DEPTH)/SEGMENT_LENGTH);
@@ -2574,7 +2608,16 @@ function drawRoad(){
     const slice = (center1, center2, half1, half2, road, rumble, lanes) => {
       polygon(center1 - half1 * 1.08, near.y, center1 + half1 * 1.08, near.y, center2 + half2 * 1.08, far.y, center2 - half2 * 1.08, far.y, rumble);
       polygon(center1 - half1, near.y, center1 + half1, near.y, center2 + half2, far.y, center2 - half2, far.y, road);
-      // V45 asphalt depth: restrained tar seams, patched bands and reflector studs keep the road from reading as a flat ribbon.
+      // V46 clean-room scaler composition: stronger road-surface bands create readable speed depth using our own Taipei palette.
+      if(phase%5===0){
+        const band1=center1-half1*.78,band2=center2-half2*.78;
+        ctx.strokeStyle='rgba(255,255,240,.10)';ctx.lineWidth=Math.max(.7,half1*.008);ctx.beginPath();ctx.moveTo(band1,near.y);ctx.lineTo(band2,far.y);ctx.stroke();
+      }
+      if(phase%11===3){
+        polygon(center1-half1*.92,near.y-.5,center1-half1*.83,near.y-.5,center2-half2*.83,far.y,center2-half2*.92,far.y,'rgba(232,210,151,.18)');
+        polygon(center1+half1*.83,near.y-.5,center1+half1*.92,near.y-.5,center2+half2*.92,far.y,center2+half2*.83,far.y,'rgba(232,210,151,.18)');
+      }
+      // V46 asphalt depth: restrained tar seams, patched bands and reflector studs keep the road from reading as a flat ribbon.
       if(phase%7===0){
         const seam1=center1-half1*.18,seam2=center2-half2*.18;
         ctx.strokeStyle='rgba(12,18,24,.20)';ctx.lineWidth=Math.max(.6,half1*.006);ctx.beginPath();ctx.moveTo(seam1,near.y);ctx.lineTo(seam2,far.y);ctx.stroke();
@@ -2618,6 +2661,7 @@ function drawRoad(){
   }
 
   if(currentNode.archetype==='expressway')drawElevatedRails(projected);
+  drawV46RoadEdgeRhythm(projected);
   drawRoadside(Math.floor(playerZ / SEGMENT_LENGTH), t);
   drawStartingScene(Math.floor(playerZ / SEGMENT_LENGTH));
   drawForkObjects(Math.floor(playerZ / SEGMENT_LENGTH));
@@ -2995,10 +3039,10 @@ function drawTownBuilding(x, y, s, idx){
   ctx.restore();
 }
 
-function drawSegaBillboard(x, y, s, text){
+function drawTaipeiArcadeBillboard(x, y, s, text){
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   ctx.fillStyle = '#222b3d'; ctx.fillRect(-3, -45, 6, 45);
-  ctx.fillStyle = '#0054a6'; ctx.fillRect(-42, -75, 84, 30);
+  ctx.fillStyle = '#176b57'; ctx.fillRect(-42, -75, 84, 30);
   ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.strokeRect(-42, -75, 84, 30);
   v40FitSignText(text,-38,-72,76,24,14,'#ffffff');
   ctx.restore();
@@ -3006,19 +3050,15 @@ function drawSegaBillboard(x, y, s, text){
 
 function drawCheckpointGate(p, label='CHECK POINT'){
   if(!p || !p.scale || p.w < 16) return;
-  const half = p.w * 1.12, left = p.x - half, right = p.x + half, poleH = p.w * 0.72, barH = p.w * 0.18, top = p.y - poleH;
-  if(top + barH < 0) return;
+  const half=p.w*1.12,left=p.x-half,right=p.x+half,poleH=p.w*.72,barH=p.w*.20,top=p.y-poleH,width=right-left;
+  if(top+barH<0)return;
   ctx.save();
-  ctx.fillStyle = '#e2e7ec'; ctx.fillRect(left - 6, top, 6, poleH); ctx.fillRect(right, top, 6, poleH);
-  const width = right - left, cols = 16, cw = width / cols, ch = barH / 3;
-  for(let r=0; r<3; r++){
-    for(let c=0; c<cols; c++){
-      ctx.fillStyle = (r + c) % 2 === 0 ? '#ffffff' : '#111111';
-      ctx.fillRect(left + c * cw, top + r * ch, cw + 0.5, ch + 0.5);
-    }
-  }
-  ctx.fillStyle = '#0a1d33'; ctx.fillRect(p.x - width * 0.32, top + barH * 0.15, width * 0.64, barH * 0.7);
-  v40FitSignText(label,p.x-width*.30,top+barH*.20,width*.60,barH*.60,barH*.42,'#ffd200');
+  ctx.fillStyle='#66757a';ctx.fillRect(left-6,top,6,poleH);ctx.fillRect(right,top,6,poleH);
+  ctx.fillStyle='#176b57';ctx.fillRect(left,top,width,barH);
+  ctx.strokeStyle='#e9f1e8';ctx.lineWidth=2;ctx.strokeRect(left,top,width,barH);
+  ctx.fillStyle='#f0b84b';
+  for(let i=0;i<5;i++){const cx=left+width*(.12+i*.19);ctx.beginPath();ctx.arc(cx,top+barH*.18,Math.max(1,barH*.045),0,Math.PI*2);ctx.fill();}
+  v40FitSignText(label,left+width*.12,top+barH*.28,width*.76,barH*.58,barH*.38,'#f7f4df');
   ctx.restore();
 }
 
@@ -3038,7 +3078,8 @@ function drawRouteGantry(p, n, index){
     ctx.fillStyle = g; ctx.fillRect(x, top, plateW, plateH);
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.strokeRect(x, top, plateW, plateH);
     if(plateW > 50){
-      v40FitSignText(`${side < 0 ? '◀ EASY' : 'HARD ▶'}`,x+6,top+plateH*.10,plateW-12,plateH*.32,plateH*.22,'#ffe570');
+      const family=node.archetype==='coastal'?'WATERFRONT':node.archetype==='mountain'?'HILLS':node.archetype==='expressway'?'EXPRESS':'CITY';
+      v40FitSignText(`${side < 0 ? '◀ ' : ''}${family}${side > 0 ? ' ▶' : ''}`,x+6,top+plateH*.10,plateW-12,plateH*.32,plateH*.22,'#ffe570');
       v40FitSignText(node.name,x+6,top+plateH*.44,plateW-12,plateH*.46,plateH*.34,'#ffffff');
     }
   }
@@ -3867,7 +3908,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'45.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:68,turn:1.05,brake:125,nitroCharge:32,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'46.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:68,turn:1.05,brake:125,nitroCharge:32,hitHalfWidth:62});
 const GEAR_RULES=Object.freeze({
  LOW:{max:185,lowTorque:1.34,highTorque:.62},
  HIGH:{max:285,lowTorque:.34,highTorque:1.02}
@@ -3890,7 +3931,7 @@ function resetDrivingState(){
  brakeEntry=0;brakeWasHeld=false;brakeVisual=0;driftAngle=0;yawRate=0;slipAngle=0;coastWindow=0;previousGas=false;
  isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;boostKick=0;shiftCutTimer=0;shiftPunch=0;lateralVelocity=0;slideTrails=[];
 }
-// V45 drift calibration: quicker initiation, stronger slip feedback, decisive counter-steer and a skill-timed re-throttle boost.
+// V46 drift calibration: quicker initiation, stronger slip feedback, decisive counter-steer and a skill-timed re-throttle boost.
 const DRIFT45=Object.freeze({
  entryMinSpeed:76, entryRamp:.11, counterRecover:.15, neutralRecover:.30,
  maxBodyYaw:45, baseYaw:12, steerYaw:22, speedYaw:7.2, curveYaw:3.0,
@@ -4087,7 +4128,7 @@ function resolveRoadBoundary(index){
 function trafficHalfWidth(car){return car.spec.w*.44*1400/(ROAD_WIDTH*W/2);}
 function trafficCollisionEligible(previous,car){
   if(!car||!car.spec||![car.x,car.z,car.previousX??car.x,car.previousZ??car.z].every(Number.isFinite))return false;
-  // V45: if the renderer cannot produce a visible body box this frame, the car cannot hit the player.
+  // V46: if the renderer cannot produce a visible body box this frame, the car cannot hit the player.
   if(!car.screenBox||car.screenBox.b<=car.screenBox.t)return false;
   if(currentNode.archetype==='expressway'&&car.spec.scooter)return false;
   // Traffic is intentionally rendered only before the fork warning. Once it leaves that authored road zone,
@@ -4375,6 +4416,95 @@ function drawV40FinishAtmosphere(){
  if(goal==='A'||goal==='E')for(let i=0;i<25;i++){const x=(i*91+t*(goal==='A'?8:14))%W,y=goal==='A'?H*.43+(i%4)*12:145+(i*57)%200;ctx.fillStyle=goal==='A'?'#ffdf80':'#d9ee96';ctx.globalAlpha=a*(.25+.65*Math.abs(Math.sin(t*2+i)));ctx.fillRect(x,y,3,3);}ctx.globalAlpha=1;
  ctx.restore();
 }
+function v46SceneFamily(sc=scene()){
+  if(currentNode.archetype==='expressway')return 'expressway';
+  if(currentNode.archetype==='coastal')return 'coastal';
+  if(currentNode.archetype==='mountain')return 'mountain';
+  return 'urban';
+}
+function v46VistaProfile(sc=scene()){
+  const family=v46SceneFamily(sc),art=v40Art();
+  return {
+    family,
+    far:family==='urban'?'#284452':family==='expressway'?'#173748':family==='coastal'?'#315e70':'#304f43',
+    mid:family==='urban'?'#496871':family==='expressway'?'#31515c':family==='coastal'?'#527b79':'#496b55',
+    near:art.ground?.[0]||'#52685a',
+    density:family==='urban'?1.25:family==='expressway'?1.05:family==='coastal'?.82:.92
+  };
+}
+function drawV46ScalerVista(base,sc=scene()){
+  const p=v46VistaProfile(sc),sunset=skyMood==='sunset';let drawn=0;
+  ctx.save();
+  // Far shapes: broad, readable silhouettes with slow parallax. They are original Taipei abstractions, not source-game art.
+  if(p.family==='urban'||p.family==='expressway'){
+    for(let layer=0;layer<2;layer++){
+      const step=layer?118:154,scroll=playerX*(3+layer*2)+playerZ*(layer?0.000010:0.000006);
+      ctx.globalAlpha=layer?.34:.22;ctx.fillStyle=layer?p.mid:p.far;
+      for(let i=-2;i<Math.ceil(W/step)+3;i++){
+        const seed=i*47+currentNode.seed*19+layer*503,x=((i*step-scroll+W*3)%(W+step*3))-step;
+        const w=step*(.46+v41Hash(seed)*.34),h=36+v41Hash(seed+1)*(layer?94:66);
+        ctx.fillRect(x,base-h-layer*8,w,h+layer*8);drawn++;
+        if(v41Hash(seed+3)>.62)ctx.fillRect(x+w*.18,base-h-12-layer*8,w*.55,12);
+      }
+    }
+  }else{
+    for(let layer=0;layer<2;layer++){
+      const scroll=playerX*(4+layer*3)+playerZ*(layer?0.000016:0.000009),amp=p.family==='mountain'?(layer?58:42):(layer?34:25);
+      ctx.globalAlpha=layer?.38:.24;ctx.fillStyle=layer?p.mid:p.far;ctx.beginPath();ctx.moveTo(-40,base+20);
+      for(let x=-40;x<=W+40;x+=44){
+        const ridge=Math.sin((x+scroll+layer*113)*.008)*amp+Math.sin((x+scroll)*.019+layer)*amp*.33;
+        ctx.lineTo(x,base-22-layer*12-ridge);
+      }
+      ctx.lineTo(W+40,base+72);ctx.lineTo(-40,base+72);ctx.fill();drawn++;
+    }
+  }
+  // Mid-ground light rhythm gives strong depth separation at speed without copying any source palette.
+  ctx.globalAlpha=sunset?.20:.28;
+  if(p.family==='urban'||p.family==='expressway'){
+    ctx.fillStyle=sunset?'#ffd98a':'#9ce9e0';
+    for(let x=-20;x<W+30;x+=54){const y=base-22-((x/54+currentNode.seed)%3)*8;ctx.fillRect(x,y,18,2);drawn++;}
+  }else if(p.family==='coastal'){
+    ctx.strokeStyle=sunset?'#ffe1a477':'#bcecf077';ctx.lineWidth=2;
+    for(let i=0;i<10;i++){const y=base+12+i*5,scroll=(playerZ*.0015+i*23)%86;ctx.beginPath();ctx.moveTo(-scroll,y);ctx.lineTo(W,y);ctx.stroke();drawn++;}
+  }
+  ctx.globalAlpha=1;ctx.restore();return drawn;
+}
+function drawV46RoadsideProp(x,y,s,side,family,idx){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  if(family==='expressway'){
+    ctx.fillStyle='#dce3df';ctx.fillRect(-2,-34,4,34);ctx.fillStyle=idx%2?'#ffd24f':'#7dd9ff';ctx.fillRect(-5,-34,10,5);
+    ctx.strokeStyle='#56636a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-8,-17);ctx.lineTo(8,-17);ctx.stroke();
+  }else if(family==='coastal'){
+    ctx.fillStyle='#e6e1cf';ctx.fillRect(-3,-24,6,24);ctx.fillStyle='#315c6b';ctx.fillRect(-4,-24,8,5);
+    ctx.strokeStyle='#a8b7b4';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(side*13,-31);ctx.stroke();
+  }else if(family==='mountain'){
+    ctx.fillStyle='#ecebdc';ctx.fillRect(-3,-27,6,27);ctx.fillStyle='#d34b42';ctx.fillRect(-3,-24,6,6);
+    ctx.fillStyle='#315c3e';ctx.beginPath();ctx.arc(side*9,-18,7,0,Math.PI*2);ctx.fill();
+  }else{
+    ctx.fillStyle='#4a555b';ctx.fillRect(-2,-42,4,42);ctx.strokeStyle='#4a555b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-39);ctx.lineTo(side*12,-47);ctx.stroke();
+    ctx.fillStyle=skyMood==='sunset'?'#ffe7a2':'#9defff';ctx.fillRect(side*9-4,-49,8,4);
+    ctx.fillStyle='#59734d';ctx.beginPath();ctx.arc(-side*8,-11,8,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+function drawV46RoadEdgeRhythm(road=projectedRoad){
+  const family=v46SceneFamily(),stride=family==='urban'?14:family==='expressway'?12:16;let drawn=0;
+  for(const seg of road){
+    if(seg.index%stride!==((currentNode.seed*3)%stride))continue;
+    const b=stripBounds(seg);if(!b||b.near.w<18)continue;
+    const lanes=roadCorridors(seg.index);if(!lanes.length)continue;
+    for(const q of lanes){
+      for(const side of [-1,1]){
+        const x=b.near.x+b.near.w*(q.center+side*(q.half+(family==='expressway'?.085:.14)))/roadFactor();
+        const y=b.near.y,scale=clamp(b.near.w/260,.13,1.28);
+        if(x<-90||x>W+90||y<0||y>H+30)continue;
+        drawV46RoadsideProp(x,y,scale,side,family,seg.index);drawn++;
+      }
+    }
+  }
+  return drawn;
+}
+
 function drawIdentitySky(t){
  const sc=scene(),art=v40Art(),sunset=skyMood==='sunset',sky=sunset?art.sky:t.sky;
  const g=ctx.createLinearGradient(0,0,0,H*.60);g.addColorStop(0,sky[0]);g.addColorStop(.60,sky[1]);g.addColorStop(1,sky[2]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
@@ -4383,6 +4513,7 @@ function drawIdentitySky(t){
  if(!sunset){ctx.fillStyle='#e1f4ff';for(let i=0;i<38;i++){const x=(i*127+31)%W,y=42+(i*47)%175;ctx.globalAlpha=.32+(i%5)*.11;ctx.fillRect(x,y,i%3===0?2:1,2);}ctx.globalAlpha=1;}
  else {ctx.fillStyle='#f4ffff42';for(let i=0;i<5;i++){const x=((i*237+simulationTime*6)%1180)-110,y=90+i%3*26;ctx.beginPath();ctx.ellipse(x,y,65,10,0,0,Math.PI*2);ctx.fill();}}
  const base=H*.51,mountain=['volcano','lantern','tea','spring','park','cape'].includes(sc.type);
+ drawV46ScalerVista(base,sc);
  if(mountain){for(let layer=0;layer<3;layer++){ctx.fillStyle=layer===0?art.mountain:art.ground[Math.min(1,layer-1)];ctx.globalAlpha=.30+layer*.17;ctx.beginPath();ctx.moveTo(-40,base+20);for(let x=-40;x<=W+40;x+=32){const scroll=playerX*(12+layer*7)+playerZ*.00007*(layer+1),rugged=['volcano','lantern','tea','cape'].includes(sc.type);const yy=base-12+layer*14-Math.sin((x+scroll+layer*290)*.005)*28-(rugged?Math.abs(Math.sin((x+scroll)*.012+layer))*44:0);ctx.lineTo(x,yy);}ctx.lineTo(W+40,base+55);ctx.lineTo(-40,base+55);ctx.fill();}ctx.globalAlpha=1;}
  else drawCitySilhouette(base,sc);
  // V34's second panorama layer restores the dense illustrated Taipei feeling.
@@ -4750,7 +4881,7 @@ function drawV42TaipeiBlock(x,y,s,idx,variant=0){
   const floorH=22+Math.floor(v41Hash(seed+2)*5),h=30+floors*floorH;
   const facades=['#d3b08c','#b9c7bf','#d4c1b0','#a9b9c4','#c7b69d','#c1c7b1'];
   const facade=v41Pick(facades,seed+3),vol=buildingVolumeProfile(worldX,idx,seed),depth=vol.depth,dx=vol.dx,dy=vol.dy,face=vol.face;
-  // V45: full extruded side + roof planes make roadside architecture read as volume while passing at speed.
+  // V46: full extruded side + roof planes make roadside architecture read as volume while passing at speed.
   ctx.fillStyle='#43545d';ctx.beginPath();ctx.moveTo(face*w/2,-h);ctx.lineTo(face*w/2+dx,-h+dy);ctx.lineTo(face*w/2+dx,dy);ctx.lineTo(face*w/2,0);ctx.closePath();ctx.fill();
   ctx.fillStyle='#8b9a98';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h);ctx.lineTo(w/2+dx,-h+dy);ctx.lineTo(-w/2+dx,-h+dy);ctx.closePath();ctx.fill();
   ctx.fillStyle='#253640';ctx.beginPath();ctx.moveTo(face*(w/2+1),-30);ctx.lineTo(face*(w/2+depth*.72),-30+dy*.72);ctx.lineTo(face*(w/2+depth*.72),dy*.72);ctx.lineTo(face*(w/2+1),0);ctx.closePath();ctx.fill();
