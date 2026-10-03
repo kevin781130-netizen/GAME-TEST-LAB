@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V42</title>
+<title>台北極速傳說｜Taipei Sunset Drive V43</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -155,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V42 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V43 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -505,8 +505,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V42 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V42</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V43 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V43</span></h1>
       <div class="subtitle">OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -1650,8 +1650,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V42',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V42</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V43',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V43</span>',
   subtitle: 'OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -2328,7 +2328,7 @@ function update(dt){
   else if(accelHeld){
     const torque=Math.max(0,1-speed/gearMax);
     const pull=currentGear==='LOW'?COMPETITION.accel*(.6+torque*.95):COMPETITION.accel*(speed<135?.28:.35+torque*.85);
-    speed+=(pull+(boosting?40:0)+(isDrafting?5:0)+(exitBoost>0?8:0))*dt;
+    speed+=(pull+(boosting?40:0)+(isDrafting?5:0)+(exitBoost>0?14:0))*dt;
   }else speed=Math.max(0,speed-18*dt);
   speed=clamp(speed,0,motionDirection===desiredDirection?gearMax:COMPETITION.boostSpeed);
 
@@ -2897,6 +2897,21 @@ function drawWaterfrontEmbankment(x, y, s){
   ctx.restore();
 }
 
+function drawCoastalWaterProp(x,y,s,idx){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const boat=(Math.floor(idx/8)&1)===0;
+  ctx.globalAlpha=.28;ctx.fillStyle='#d8f6f2';ctx.beginPath();ctx.ellipse(0,3,boat?45:22,5,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  if(boat){
+    ctx.fillStyle='#f4e6c7';ctx.beginPath();ctx.moveTo(-42,-8);ctx.lineTo(39,-8);ctx.lineTo(24,7);ctx.lineTo(-28,7);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#2f6479';ctx.fillRect(-20,-20,38,12);ctx.strokeStyle='#dce9df';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(1,-20);ctx.lineTo(1,-56);ctx.stroke();
+    ctx.fillStyle='#f7d26d';ctx.beginPath();ctx.moveTo(3,-54);ctx.lineTo(31,-28);ctx.lineTo(3,-28);ctx.closePath();ctx.fill();
+  }else{
+    ctx.strokeStyle='#d7e8df';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-4);ctx.lineTo(0,-34);ctx.stroke();
+    ctx.fillStyle='#ff7a4e';ctx.beginPath();ctx.arc(0,-36,9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff1c8';ctx.fillRect(-7,-39,14,5);
+  }
+  ctx.restore();
+}
+
 // 山路岩壁與黃黑轉彎導標 (Mountain Touge Rock Wall & Chevron Marker)
 function drawMountainRockWall(x, y, s, side){
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
@@ -3279,7 +3294,7 @@ function drawPlayer(){
  ctx.save();ctx.translate(cx,cy);ctx.scale(scale,scale);if(roll)ctx.rotate(roll*Math.PI/180);
  if(!crashSequence){ctx.fillStyle='#08142088';ctx.beginPath();ctx.ellipse(0,21,currentCar.isBike?32:108,12,0,0,Math.PI*2);ctx.fill();
   if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(0,25,currentCar.isBike?26:92,5,0,0,Math.PI*2);ctx.fill();}}
- if(boosting)drawNitroExhaust(yaw);
+ if(boosting||exitBoost>0)drawNitroExhaust(yaw);
  drawRigidVehicle(yaw,braking);ctx.restore();
 }
 
@@ -3739,7 +3754,7 @@ function drawDeckStructure(road){
 function drawBelowDeckDistrict(){
   const start=Math.floor(playerZ/SEGMENT_LENGTH);
   for(let i=Math.min(segments.length-1,start+230);i>start+8;i--){
-    if(i%16!==0)continue;const seg=segments[i],p=seg.p1.screen;
+    if(i%16!==0||!canPlaceBelowDeckDistrict(i))continue;const seg=segments[i],p=seg.p1.screen;
     if(!p.scale||seg.p1.camera.z<=0)continue;
     const yy=p.y+deckElevation(i)*p.scale*H/2;
     ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
@@ -3787,7 +3802,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'42.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:24,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'43.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:24,hitHalfWidth:62});
 let helperWasHeld=false,helperPulse=0,counterTime=0,neutralTime=0;
 let driftRearmBlocked=false;
 let driftState='grip',brakeHoldTime=0,brakeLoss=0,driftAge=0,driftCooldown=0,brakeVisual=0;
@@ -3807,7 +3822,7 @@ const DRIFT40=Object.freeze({
  baseSlip:6.5, steerSlip:8.5, counterYawTrim:.50, counterSlipTrim:.58,
  yawResponse:14, recoverResponse:18, slipResponse:11, recoverSlipResponse:15,
  driftPathYaw:1.58, gripPathYaw:2.70, steerPath:.34, driftLateralResponse:9.5,
- exitBoost:.42, rearmYaw:1.8, rearmSlip:1.2
+ exitBoost:.56, rearmYaw:1.8, rearmSlip:1.2
 });
 function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  const helper=inputHeld('ShiftLeft')||inputHeld('ShiftRight')||gamepadInput.drift;
@@ -3844,7 +3859,10 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(counterTime>DRIFT40.counterRecover||neutralTime>DRIFT40.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
    driftState='recover';driftRearmBlocked=true;targetYaw=0;targetSlip=0;
    if(Math.abs(driftAngle)<DRIFT40.rearmYaw&&Math.abs(slipAngle)<DRIFT40.rearmSlip){
-    if(cleanDriftTime>.35&&roadGrip>.8&&accelHeld&&!brakeHeld)exitBoost=DRIFT40.exitBoost;
+    if(cleanDriftTime>.35&&roadGrip>.8&&accelHeld&&!brakeHeld){
+      exitBoost=Math.max(exitBoost,DRIFT40.exitBoost);
+      if(cleanDriftTime>.70)styleMessage('CLEAN EXIT!', '出彎短推進 · 繼續甩尾集氮');
+     }
     isDrifting=false;driftState='grip';driftDirection=0;cleanDriftTime=0;counterTime=0;neutralTime=0;
    }
   }else{
@@ -3952,13 +3970,20 @@ function landmarkSides(h,preferred){
   if(currentNode.archetype==='coastal')return h.name.includes('橋')?[-1]:[1];
   return preferred===0?[0]:[preferred,-preferred];
 }
+function districtSurface(index,side){
+  if(currentNode.archetype==='coastal'&&side<0)return 'water';
+  if(currentNode.archetype==='expressway'&&deckElevation(index)>0)return 'elevated';
+  return 'land';
+}
+function canPlaceBelowDeckDistrict(index){
+  return currentNode.archetype==='expressway'&&deckElevation(index)>=520;
+}
 function districtPlacement(index,side){
-  const envelope=roadEnvelope(index),coastal=currentNode.archetype==='coastal';
-  const waterside=coastal&&side<0,highway=currentNode.archetype==='expressway';
-  const artUnits=waterside?3000:highway?3000:6000;
+  const envelope=roadEnvelope(index),surface=districtSurface(index,side),waterside=surface==='water',highway=currentNode.archetype==='expressway';
+  const artUnits=waterside?2600:highway?3000:6000;
   // The full facade, projecting signs and awnings stay beyond the curb.
-  const halfWorld=70*artUnits/(W/2),margin=waterside?.28:halfWorld/ROAD_WIDTH+.18;
-  return {artUnits,offset:side*ROAD_WIDTH*roadFactor()*(envelope+margin)};
+  const halfWorld=70*artUnits/(W/2),margin=waterside?.34:halfWorld/ROAD_WIDTH+.18;
+  return {artUnits,offset:side*ROAD_WIDTH*roadFactor()*(envelope+margin),surface};
 }
 function resolveRoadBoundary(index){
   let lanes=roadCorridors(index);
@@ -4270,14 +4295,16 @@ function drawCitySilhouette(base,sc){
  if(civic){ctx.fillStyle='#c5b99a';ctx.fillRect(0,base-12,W,12);ctx.fillStyle='#a47660';for(let x=0;x<W;x+=46)ctx.fillRect(x,base-12,28,8);}
 }
 function drawDistrictProp(x,y,s,idx,side){
+ const surface=districtSurface(idx,side);
+ if(surface==='water'){drawCoastalWaterProp(x,y,s,idx);return;}
  const kind=scene().props,useV34=((Math.floor(idx/8)&1)===0);
  if(kind==='highway'){drawExpresswaySoundBarrier(x,y,s,side);if(idx%48===0)drawTaiwanExpresswaySign(x,y,s*.90,idx);if(idx%32===16)drawV40StreetLamp(x+side*18*s,y,s*.8,idx);return;}
  if(kind==='cape'){if(idx%32===0)drawMountainRockWall(x,y,s,side);else drawTaiwanMountainPine(x,y,s*.92);return;}
  if(kind==='volcano'){if(idx%32===0)drawMountainRockWall(x,y,s,side);else drawTaiwanMountainPine(x,y,s);return;}
  if(kind==='tea'){drawTaiwanMountainPine(x,y,s*.85);if(idx%48===0)drawV40StreetLamp(x,y,s*.75,idx);return;}
  if(kind==='park'){drawTaiwanMountainPine(x,y,s);if(idx%48===16)drawV40StreetLamp(x,y,s*.7,idx);return;}
- if(kind==='marina'||kind==='water'){if(side<0)drawWaterfrontEmbankment(x,y,s);else (useV34?drawV40V34TaipeiShophouse(x,y,s,idx+10):drawTaipeiShophouse(x,y,s,idx+10));return;}
- if(kind==='spring'){if(side<0){drawWaterfrontEmbankment(x,y,s);return;}if(idx%32===0)drawTaiwanMountainPine(x,y,s*.9);else drawV40V34TaipeiShophouse(x,y,s*.85,idx);return;}
+ if(kind==='marina'||kind==='water'){(useV34?drawV40V34TaipeiShophouse(x,y,s,idx+10):drawTaipeiShophouse(x,y,s,idx+10));return;}
+ if(kind==='spring'){if(idx%32===0)drawTaiwanMountainPine(x,y,s*.9);else drawV40V34TaipeiShophouse(x,y,s*.85,idx);return;}
  if(kind==='dome'){if(side<0)drawTaiwanMountainPine(x,y,s*.85);else (useV34?drawV40V34TaipeiShophouse(x,y,s*.86,idx):drawTaipeiSkyscrapers(x,y,s*.8,idx));return;}
  if(kind==='xinyi'){if(useV34)drawV40V34TaipeiShophouse(x,y,s*.86,idx);else drawTaipeiSkyscrapers(x,y,s*1.1,idx);return;}
  if(kind==='market'||kind==='lantern'){
