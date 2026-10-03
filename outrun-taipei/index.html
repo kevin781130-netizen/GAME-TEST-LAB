@@ -1282,6 +1282,7 @@ const V51_CLEAN_ROOM_REFERENCE=Object.freeze({
   decompilation:false,instructionMapping:false,directSyntaxTranslation:false,exactHandlingCurveCopy:false,
   exactAnimationCopy:false,signatureCameraCopy:false,distinctiveFeatureClone:false,distinctiveModeClone:false,
   licensedVehicleIdentity:false,patentedMechanicReplication:false,independentImplementation:true,
+  curveBoundVisualYaw:true,physicsVisualDecoupled:true,noAutoRailDrift:true,
   preserve:'Taipei routes, landmarks, V50 drift nitro recovery, comfort camera and Twin Link'
 });
 const V50_ART=Object.freeze({
@@ -4098,11 +4099,11 @@ function resetDrivingState(){
 }
 // V48 clean-room handling calibration: stronger weight transfer, assertive steering, controllable slip and rapid recovery.
 const DRIFT51=Object.freeze({
- entryMinSpeed:58, entryRamp:.050, counterRecover:.14, neutralRecover:.22,
- maxBodyYaw:46, baseYaw:15.2, steerYaw:26.8, speedYaw:8.8, curveYaw:4.0,
- baseSlip:8.8, steerSlip:12.8, counterYawTrim:.18, counterSlipTrim:.16,
- yawResponse:32, recoverResponse:42, slipResponse:27, recoverSlipResponse:36,
- driftPathYaw:2.18, gripPathYaw:3.18, steerPath:.56, driftLateralResponse:17.0,
+ entryMinSpeed:58, entryRamp:.055, counterRecover:.16, neutralRecover:.24,
+ maxBodyYaw:40, baseYaw:13.8, steerYaw:22.0, speedYaw:7.2, curveYaw:3.6,
+ baseSlip:8.4, steerSlip:11.8, counterYawTrim:.22, counterSlipTrim:.20,
+ yawResponse:29, recoverResponse:43, slipResponse:25, recoverSlipResponse:38,
+ driftPathYaw:1.76, gripPathYaw:3.18, steerPath:.45, driftLateralResponse:14.2,
  exitBoost:.48, momentWindow:.60, rearmYaw:1.00, rearmSlip:.70
 });
 const V51_HANDLING=Object.freeze({
@@ -4118,23 +4119,36 @@ const V51_HANDLING=Object.freeze({
 const V50_COMFORT=Object.freeze({motionScale:.46,shakeMax:1.55,lateralLookMax:4.5});
 const V51_SIDEWAYS=Object.freeze({
   independentVisualModel:true,directSyntaxTranslation:false,exactAnimationCopy:false,signatureCameraCopy:false,
-  visualYawGain:1.22,visualSlipGain:.92,maxVisualYaw:66,rearSwingPx:22,sideScaleGain:.075,
-  shadowSkewPx:16,trailYawGain:1.10,smokeRateGain:1.35
+  physicsVisualDecoupled:true,curveBoundVisualYaw:true,
+  visualYawGain:1.18,visualSlipGain:.72,maxVisualYaw:58,
+  shallowCurveYaw:30,tightCurveYaw:58,curveForFullYaw:2.0,
+  rearSwingPx:8,sideScaleGain:.018,shadowSkewPx:6,trailYawGain:1.06,smokeRateGain:1.22
 });
-function v51DriftVisualYaw(){
+function v51CurrentCurve(){
+  const seg=segments[clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,Math.max(0,segments.length-1))];
+  return seg?.curve||0;
+}
+function v51CurveDemand(curve){return clamp(Math.abs(curve)/V51_SIDEWAYS.curveForFullYaw,0,1);}
+function v51VisualCurveCap(curve){return lerp(V51_SIDEWAYS.shallowCurveYaw,V51_SIDEWAYS.tightCurveYaw,v51CurveDemand(curve));}
+function v51DriftPathScale(curve){return lerp(.45,1,clamp(Math.abs(curve)/1.8,0,1));}
+function v51DriftVisualYaw(curve=v51CurrentCurve()){
   if(!isDrifting&&driftState!=='recover')return driftAngle;
   const signedSlip=Math.sign(driftAngle||driftDirection||1)*Math.abs(slipAngle);
-  return clamp(driftAngle*V51_SIDEWAYS.visualYawGain+signedSlip*V51_SIDEWAYS.visualSlipGain,-V51_SIDEWAYS.maxVisualYaw,V51_SIDEWAYS.maxVisualYaw);
+  const raw=driftAngle*V51_SIDEWAYS.visualYawGain+signedSlip*V51_SIDEWAYS.visualSlipGain;
+  const curveCap=v51VisualCurveCap(curve);
+  const cap=Math.min(V51_SIDEWAYS.maxVisualYaw,curveCap);
+  return clamp(raw,-cap,cap);
 }
-function v51DriftVisualPose(){
-  const yaw=v51DriftVisualYaw(),rad=yaw*Math.PI/180,active=isDrifting||driftState==='recover';
-  const intensity=active?clamp((Math.abs(yaw)-8)/48,0,1):0;
+function v51DriftVisualPose(curve=v51CurrentCurve()){
+  const yaw=v51DriftVisualYaw(curve),rad=yaw*Math.PI/180,active=isDrifting||driftState==='recover';
+  const intensity=active?clamp((Math.abs(yaw)-7)/44,0,1):0;
   return {
     yaw,
     offsetX:-Math.sin(rad)*V51_SIDEWAYS.rearSwingPx*intensity,
     scaleX:1+Math.abs(Math.sin(rad))*V51_SIDEWAYS.sideScaleGain*intensity,
     shadowX:-Math.sin(rad)*V51_SIDEWAYS.shadowSkewPx*intensity,
-    intensity
+    intensity,
+    curveCap:v51VisualCurveCap(curve)
   };
 }
 function v51SteeringProfile(speedNow,drifting=false){
@@ -4203,9 +4217,11 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
    driftState=driftAge<DRIFT51.entryRamp?'entry':'drift';
    const into=Math.max(0,steer*driftDirection);
    const entryEase=clamp(driftAge/DRIFT51.entryRamp,0,1);
+   const curveDemand=clamp(Math.abs(curve)/1.8,0,1);
    const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT51.curveYaw:0;
-   const yawFull=DRIFT51.baseYaw+into*DRIFT51.steerYaw+ratio*DRIFT51.speedYaw+curveAssist;
-   const slipFull=DRIFT51.baseSlip+into*DRIFT51.steerSlip;
+   const steerYawGain=lerp(.52,1,curveDemand),slipGain=lerp(.62,1,curveDemand);
+   const yawFull=DRIFT51.baseYaw+into*DRIFT51.steerYaw*steerYawGain+ratio*DRIFT51.speedYaw*(.78+.22*curveDemand)+curveAssist;
+   const slipFull=DRIFT51.baseSlip+into*DRIFT51.steerSlip*slipGain;
    const yawTrim=counter?DRIFT51.counterYawTrim:neutral?.78:1;
    const slipTrim=counter?DRIFT51.counterSlipTrim:neutral?.78:1;
    targetYaw=driftDirection*yawFull*entryEase*yawTrim;
@@ -4242,23 +4258,33 @@ function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
  const profile=v51SteeringProfile(speed,isDrifting);
  const liftGrip=!isDrifting&&!accelHeld&&!brakeHeld?profile.liftGrip:1;
  const frontGrip=clamp((1-excess/210)*liftGrip,.68,1.24);
+ const curveDemand=clamp(Math.abs(curve)/1.8,0,1);
  const travelYaw=(driftAngle-slipAngle)*Math.PI/180;
- const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT51.driftPathYaw:DRIFT51.gripPathYaw)*(.50+.72*ratio);
- const baseAuthority=isDrifting?DRIFT51.steerPath:.238*profile.authority;
+ const driftPathScale=isDrifting?v51DriftPathScale(curve):1;
+ const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT51.driftPathYaw*driftPathScale:DRIFT51.gripPathYaw)*(.50+.72*ratio);
+ const baseAuthority=isDrifting?lerp(.25,DRIFT51.steerPath,curveDemand):.238*profile.authority;
  const brakeRotation=!isDrifting&&brakeHeld?steer*profile.brakeRotation:0;
  const matchingCurve=Math.sign(steer)===Math.sign(curve)?Math.min(Math.abs(curve),2.4):0;
  const turnInBite=!isDrifting?steer*matchingCurve*V51_HANDLING.turnInBite*(.35+.65*ratio):0;
  const turn=Math.min(1,speed/30)*(yawTurn+steer*baseAuthority+brakeRotation+turnInBite)*(isDrifting?1:frontGrip);
  const outward=curve*.032*ratio*ratio;
  lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT51.driftLateralResponse:17.6)));
+ const idx=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,Math.max(0,segments.length-1)),corridors=roadCorridors(idx);
+ const lane=corridors.reduce((best,q)=>Math.abs(playerX-q.center)<Math.abs(playerX-best.center)?q:best,corridors[0]||{center:0,half:roadFactor()});
+ const usable=Math.max(.12,lane.half-PLAYER_HALF_WIDTH),edgeUse=Math.abs(playerX-lane.center)/usable;
+ const outwardMotion=Math.sign(lateralVelocity)===Math.sign(playerX-lane.center)&&Math.abs(playerX-lane.center)>.01;
+ if(isDrifting&&outwardMotion&&edgeUse>.70){
+   const shoulderDamp=clamp((edgeUse-.70)/.30,0,1);
+   lateralVelocity*=Math.max(.72,1-dt*(2.2+shoulderDamp*5.2));
+ }
  playerX+=lateralVelocity*dt*motionDirection;
  visualLoad=lerp(visualLoad,brakeHeld?1.08:accelHeld?-.42:0,1-Math.exp(-dt*10));
- const targetRoll=clamp(-(steer*.76+lateralVelocity*.48)*(2.5+ratio*2.5),-V51_HANDLING.chassisRollMax,V51_HANDLING.chassisRollMax);
+ const targetRoll=clamp(-(steer*.72+lateralVelocity*.40)*(2.3+ratio*2.2),-V51_HANDLING.chassisRollMax,V51_HANDLING.chassisRollMax);
  const targetPitch=clamp(visualLoad*V51_HANDLING.chassisPitchMax,-V51_HANDLING.chassisPitchMax,V51_HANDLING.chassisPitchMax);
- chassisRoll=lerp(chassisRoll,targetRoll,1-Math.exp(-dt*12));
+ chassisRoll=lerp(chassisRoll,targetRoll,1-Math.exp(-dt*11));
  chassisPitch=lerp(chassisPitch,targetPitch,1-Math.exp(-dt*13));
- if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.36+Math.abs(slipAngle)*.013)*dt);
- if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.013:.27)*dt);
+ if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.32+Math.abs(slipAngle)*.011)*dt);
+ if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.012:.27)*dt);
 }
 function playerVisualTransform(){const p=v51DriftVisualPose();return {yaw:p.yaw,travelYaw:driftAngle-slipAngle,mode:'rigid-3d-sideways',scaleX:p.scaleX,shearX:0,offsetX:p.offsetX,intensity:p.intensity};}
 function drawSlideTrails(){
@@ -4959,8 +4985,10 @@ function drawV49AccelerationRush(){
   ctx.restore();return drawn;
 }
 
+let v51RoadsideRenderLog=[];
 function drawV50SafeRoadsideDepth(road=projectedRoad){
   const family=v46SceneFamily(),start=Math.floor(playerZ/SEGMENT_LENGTH),stride=V50_ART.safeSetpieceStride;let drawn=0;
+  v51RoadsideRenderLog=[];
   for(const seg of road){
     if(seg.index<start+9||((seg.index+currentNode.seed*5)%stride)!==7)continue;
     const b=stripBounds(seg);if(!b||b.near.w<78||b.near.y<H*.48)continue;
@@ -4969,7 +4997,9 @@ function drawV50SafeRoadsideDepth(road=projectedRoad){
       const surface=districtSurface(seg.index,side);
       const x=b.near.x+side*b.near.w*(env+V50_ART.roadClearance),y=b.near.y;
       const scale=clamp(b.near.w/230,.28,V50_ART.maxNearScale);
+      const roadEdge=b.near.x+side*b.near.w*env,clearance=Math.abs(x-roadEdge);
       if(x<-150||x>W+150)continue;
+      v51RoadsideRenderLog.push({index:seg.index,side,surface,family,x,y,scale,roadEdge,clearance,requiredClearance:b.near.w*V50_ART.roadClearance,building:family==='urban'&&surface==='land'});
       ctx.save();clipNearRoad(seg.index);ctx.translate(x,y);ctx.scale(scale,scale);
       if(surface==='water'){
         ctx.fillStyle='#486864';ctx.fillRect(-4,-54,8,54);
