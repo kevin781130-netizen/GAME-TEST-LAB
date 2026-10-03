@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V43</title>
+<title>台北極速傳說｜Taipei Sunset Drive V44</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -155,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V43 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V44 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -505,8 +505,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V43 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V43</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V44 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V44</span></h1>
       <div class="subtitle">OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -1300,6 +1300,7 @@ let roadGrip = 1, isDrafting = false;
 let score = 0, timeLeft = 85;
 let styleCombo = 1, styleBank = 0, totalStyle = 0, styleIdle = 0, driftTime = 0;
 let nitro=0,nitroStock=0,boostRemaining=0,nitroWasHeld=false,driftChargeRate=0,boosting=false;
+let momentBoostWindow=0,momentBoostArmed=false;
 const NITRO_RULES=Object.freeze({capacity:2,duration:2.8,minSpeed:60});
 
 // ============================================================
@@ -1517,7 +1518,7 @@ function resetGame(){
   clearInputs(); distanceOffset = 0; simulationTime = 0; hudClock = 0; isDrifting = false; isDrafting = false;
   bubbleTimer = 0; styleTimer = 0; stageCardTimer = 0; celebrationTimer = 0;
   score=0; timeLeft=v34Mode==='arcade'?dipSettings.time:stageTimeBudget(selectedRoute.level,selectedRoute.column)+20;
-  resetDrivingState(); nitro=0;nitroStock=0;boostRemaining=0;nitroWasHeld=false;driftChargeRate=0; boosting=false; lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; cleanDriftTime=0; raceElapsed=0;
+  resetDrivingState(); nitro=0;nitroStock=0;boostRemaining=0;nitroWasHeld=false;driftChargeRate=0; boosting=false; lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; momentBoostWindow=0;momentBoostArmed=false;cleanDriftTime=0; raceElapsed=0;
   styleCombo = 1; styleBank = 0; totalStyle = 0; styleIdle = 0; driftTime = 0;
   screenShake = 0; flash = 0; collisionCooldown = 0;
   speed=0;currentGear='LOW';driveGear='D';motionDirection=1;reverseWindow=0;nitroLatch=false;gearDWasHeld=false;gearRWasHeld=false;rpm=800;
@@ -1650,8 +1651,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V43',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V43</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V44',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V44</span>',
   subtitle: 'OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -2139,7 +2140,7 @@ function triggerCrash(car, hit, isObstacle=false){
   resetDrivingState();
   exitBoost=0;cleanDriftTime=0;lateralVelocity=0;boosting=false;boostRemaining=0;nitroLatch=false;reverseWindow=0;
   crashCount++; isDrifting = false; isDrafting = false; driftAngle = 0; steer = 0;
-  say('WATCH OUT! OUCH!! 💥');
+  say(isObstacle?'ROAD EDGE! HIT THE BARRIER! 💥':'WATCH OUT! TRAFFIC HIT! 💥');
 }
 
 function updateCrash(dt){
@@ -2328,7 +2329,7 @@ function update(dt){
   else if(accelHeld){
     const torque=Math.max(0,1-speed/gearMax);
     const pull=currentGear==='LOW'?COMPETITION.accel*(.6+torque*.95):COMPETITION.accel*(speed<135?.28:.35+torque*.85);
-    speed+=(pull+(boosting?40:0)+(isDrafting?5:0)+(exitBoost>0?14:0))*dt;
+    speed+=(pull+(boosting?40:0)+(isDrafting?5:0)+(exitBoost>0?34:0))*dt;
   }else speed=Math.max(0,speed-18*dt);
   speed=clamp(speed,0,motionDirection===desiredDirection?gearMax:COMPETITION.boostSpeed);
 
@@ -2433,7 +2434,7 @@ function update(dt){
     const contact=trafficContact(previousPlayer,car);
     if(contact&&car.hitTimer<=0&&collisionCooldown<=0){
       playerZ=lerp(previousPlayer.z,playerZ,contact.t);playerX=lerp(previousPlayer.x,playerX,contact.t);
-      car.near=true;triggerCrash(car,{x:W/2,y:H-85});
+      car.near=true;triggerCrash(car,{x:W/2,y:H-85},false);
       if(crashSequence){updateHUD();return;}
     }else if(!car.near&&car.hitTimer<=0){
       const dz=car.z-playerZ-PLAYER_DEPTH,half=trafficHalfWidth(car)+PLAYER_HALF_WIDTH;
@@ -3085,7 +3086,7 @@ function drawTraffic(){
 }
 
 
-function drawRivalCar(car, x, y, s){
+function drawRivalCarFlatLegacy(car, x, y, s){
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   const spec = car.spec, w = spec.w, h = spec.h;
 
@@ -3158,6 +3159,49 @@ function drawRivalCar(car, x, y, s){
     ctx.shadowBlur = 0;
   }
 
+  ctx.restore();
+}
+
+
+function rivalVolumeProfile(car,x){
+  const w=car.spec.w,h=car.spec.h,side=x<W/2?1:-1;
+  return {side,depth:Math.max(9,w*(car.spec.bus ? .24 : car.spec.scooter ? .16 : .19)),roofLift:h*(car.spec.bus ? .08 : .13)};
+}
+function drawRivalCar(car,x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const spec=car.spec,w=spec.w,h=spec.h,p=rivalVolumeProfile(car,x),side=p.side,d=p.depth,dx=side*d,dy=-d*.22;
+  const body=car.color||'#d8dde3',dark=paintShade(body,.62),light=paintShade(body,1.18),glass='#173849';
+  ctx.fillStyle='rgba(0,0,0,.42)';ctx.beginPath();ctx.ellipse(dx*.12,4,w*.58,8,0,0,Math.PI*2);ctx.fill();
+  if(spec.scooter){
+    ctx.fillStyle='#101820';for(const wx of [-5,5]){ctx.beginPath();ctx.ellipse(wx,0,5,10,.12,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle=dark;ctx.beginPath();ctx.moveTo(-10,-8);ctx.lineTo(8+dx*.25,-10+dy);ctx.lineTo(11,-36);ctx.lineTo(-7,-38);ctx.closePath();ctx.fill();
+    ctx.fillStyle=body;ctx.beginPath();ctx.moveTo(-9,-10);ctx.lineTo(9,-10);ctx.lineTo(7,-39);ctx.lineTo(-7,-39);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#f3f4f6';ctx.beginPath();ctx.arc(0,-h*.82,8,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ff4058';ctx.fillRect(-6,-31,12,5);
+    ctx.restore();return;
+  }
+  const rearTop=spec.bus?-h*.86:spec.blueTruck?-h*.52:-h*.66,roofTop=spec.bus?-h*.92:-h*.84;
+  // Visible side extrusion: a separate shaded plane, not a paper-thin rear sprite.
+  ctx.fillStyle=dark;ctx.beginPath();ctx.moveTo(side*w*.46,0);ctx.lineTo(side*w*.46+dx,dy);ctx.lineTo(side*w*.40+dx,rearTop+dy);ctx.lineTo(side*w*.40,rearTop);ctx.closePath();ctx.fill();
+  // Trunk/roof depth plane.
+  ctx.fillStyle=light;ctx.beginPath();ctx.moveTo(-w*.40,rearTop);ctx.lineTo(w*.40,rearTop);ctx.lineTo(w*.40+dx,rearTop+dy);ctx.lineTo(-w*.40+dx,rearTop+dy);ctx.closePath();ctx.fill();
+  // Rear body.
+  ctx.fillStyle=body;ctx.beginPath();ctx.moveTo(-w*.48,0);ctx.lineTo(-w*.44,rearTop);ctx.lineTo(-w*.27,roofTop);ctx.lineTo(w*.27,roofTop);ctx.lineTo(w*.44,rearTop);ctx.lineTo(w*.48,0);ctx.closePath();ctx.fill();
+  // Cabin extrusion and glass.
+  ctx.fillStyle=dark;ctx.beginPath();ctx.moveTo(side*w*.27,roofTop);ctx.lineTo(side*w*.27+dx*.72,roofTop+dy*.72);ctx.lineTo(side*w*.36+dx*.72,rearTop+dy*.72);ctx.lineTo(side*w*.36,rearTop);ctx.closePath();ctx.fill();
+  ctx.fillStyle=glass;ctx.beginPath();ctx.moveTo(-w*.24,roofTop+5);ctx.lineTo(w*.24,roofTop+5);ctx.lineTo(w*.32,rearTop-4);ctx.lineTo(-w*.32,rearTop-4);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#78b6c055';ctx.beginPath();ctx.moveTo(-w*.18,roofTop+8);ctx.lineTo(-w*.04,roofTop+8);ctx.lineTo(w*.04,rearTop-7);ctx.lineTo(-w*.11,rearTop-7);ctx.closePath();ctx.fill();
+  // Four-wheel volume cues; the visible-side wheels sit on the extruded plane.
+  ctx.fillStyle='#0d141c';
+  for(const wx of [-w*.38,w*.38]){ctx.beginPath();ctx.ellipse(wx,0,w*.12,10,0,0,Math.PI*2);ctx.fill();}
+  ctx.beginPath();ctx.ellipse(side*w*.40+dx*.72,dy*.55,w*.11,9,0,0,Math.PI*2);ctx.fill();
+  // Vehicle-specific volume/details.
+  if(spec.bus){ctx.fillStyle='#f1f4ee';ctx.fillRect(-w*.45,-h*.45,w*.9,h*.17);ctx.fillStyle='#0b1520';ctx.fillRect(-w*.28,-h*.89,w*.56,8);ctx.fillStyle='#ff9b22';ctx.font='900 6px monospace';ctx.textAlign='center';ctx.fillText('307 台北車站',0,-h*.89+6);}
+  if(spec.blueTruck){ctx.fillStyle='#2c5282';ctx.fillRect(-w*.44,-h*.42,w*.88,h*.34);ctx.strokeStyle='#8eb4d0';ctx.strokeRect(-w*.44,-h*.42,w*.88,h*.34);ctx.fillStyle='#b7791f';ctx.fillRect(-w*.27,-h*.48,22,14);}
+  if(spec.taxi){ctx.fillStyle='#ff3150';ctx.beginPath();ctx.roundRect(-12,roofTop-10,24,7,2);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 5px sans-serif';ctx.textAlign='center';ctx.fillText('TAXI',0,roofTop-4);}
+  ctx.fillStyle='#ff344f';ctx.fillRect(-w*.40,-h*.25,w*.20,8);ctx.fillRect(w*.20,-h*.25,w*.20,8);
+  ctx.fillStyle='#f6f3df';ctx.fillRect(-9,-h*.20,18,7);
+  const changing=Math.abs((car.laneTarget??car.x)-car.x)>.08,blinkOn=changing&&(Math.floor(simulationTime*7)%2===0);
+  if(blinkOn){ctx.fillStyle='#ffaa00';ctx.shadowColor='#ffaa00';ctx.shadowBlur=10;const bx=(car.laneTarget<car.x?-1:1)*w*.38;ctx.fillRect(bx-4,-h*.34,8,7);ctx.shadowBlur=0;}
   ctx.restore();
 }
 
@@ -3802,7 +3846,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'43.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:24,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'44.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:28,hitHalfWidth:62});
 let helperWasHeld=false,helperPulse=0,counterTime=0,neutralTime=0;
 let driftRearmBlocked=false;
 let driftState='grip',brakeHoldTime=0,brakeLoss=0,driftAge=0,driftCooldown=0,brakeVisual=0;
@@ -3813,22 +3857,23 @@ function resetDrivingState(){
  helperWasHeld=false;helperPulse=0;counterTime=0;neutralTime=0;
  driftRearmBlocked=false;driftState='grip';brakeHoldTime=0;brakeLoss=0;driftAge=0;driftCooldown=0;
  brakeEntry=0;brakeWasHeld=false;brakeVisual=0;driftAngle=0;yawRate=0;slipAngle=0;coastWindow=0;previousGas=false;
- isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;lateralVelocity=0;slideTrails=[];
+ isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;lateralVelocity=0;slideTrails=[];
 }
-// V40 OutRunners-style drift calibration: dramatic body angle, predictable road line.
-const DRIFT40=Object.freeze({
- entryMinSpeed:88, entryRamp:.20, counterRecover:.48, neutralRecover:.42,
- maxBodyYaw:38, baseYaw:10, steerYaw:18, speedYaw:6, curveYaw:2.6,
- baseSlip:6.5, steerSlip:8.5, counterYawTrim:.50, counterSlipTrim:.58,
- yawResponse:14, recoverResponse:18, slipResponse:11, recoverSlipResponse:15,
- driftPathYaw:1.58, gripPathYaw:2.70, steerPath:.34, driftLateralResponse:9.5,
- exitBoost:.56, rearmYaw:1.8, rearmSlip:1.2
+// V44 drift calibration: fast counter-steer recovery plus a KartRider-inspired throttle re-tap moment boost.
+const DRIFT44=Object.freeze({
+ entryMinSpeed:82, entryRamp:.14, counterRecover:.18, neutralRecover:.34,
+ maxBodyYaw:42, baseYaw:11, steerYaw:20, speedYaw:6.5, curveYaw:2.8,
+ baseSlip:7.2, steerSlip:9.6, counterYawTrim:.32, counterSlipTrim:.30,
+ yawResponse:18, recoverResponse:25, slipResponse:15, recoverSlipResponse:22,
+ driftPathYaw:1.72, gripPathYaw:2.70, steerPath:.39, driftLateralResponse:11.5,
+ exitBoost:.36, momentWindow:.46, rearmYaw:1.5, rearmSlip:1.0
 });
 function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  const helper=inputHeld('ShiftLeft')||inputHeld('ShiftRight')||gamepadInput.drift;
- if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT40.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
+ if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT44.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
  helperWasHeld=helper;helperPulse=Math.max(0,helperPulse-dt);
  const previousBrake=brakeWasHeld,sign=Math.abs(steerTarget)>.10?Math.sign(steerTarget):0;
+ const gasPressed=accelHeld&&!previousGas,gasReleased=!accelHeld&&previousGas;
  const ratio=clamp(speed/COMPETITION.topSpeed,0,1.1);
  brakeVisual=lerp(brakeVisual,(brakeHeld||helperPulse>0)&&speed>25?1:0,1-Math.exp(-dt*18));
  if(brakeHeld){
@@ -3837,12 +3882,20 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!driftRearmBlocked&&brakeHoldTime>=.012){brakeEntry=.46;if(!isDrifting)driftState='brake';}
  }else{
   brakeEntry=Math.max(0,brakeEntry-dt*1.25);
-  if(!isDrifting&&Math.abs(slipAngle)<DRIFT40.rearmSlip&&Math.abs(driftAngle)<DRIFT40.rearmYaw)driftRearmBlocked=false;
+  if(!isDrifting&&Math.abs(slipAngle)<DRIFT44.rearmSlip&&Math.abs(driftAngle)<DRIFT44.rearmYaw)driftRearmBlocked=false;
  }
  if(previousGas&&!accelHeld&&!brakeHeld)coastWindow=.26;else coastWindow=Math.max(0,coastWindow-dt);
+ momentBoostWindow=Math.max(0,momentBoostWindow-dt);
+ if(momentBoostWindow>0&&!isDrifting){
+  if(gasReleased)momentBoostArmed=true;
+  if(momentBoostArmed&&gasPressed&&!brakeHeld&&roadGrip>.8&&driveGear==='D'&&motionDirection===1){
+   exitBoost=Math.max(exitBoost,DRIFT44.exitBoost);momentBoostWindow=0;momentBoostArmed=false;
+   styleMessage('MOMENT BOOST!','放油再補油成功 · 保持甩尾節奏');
+  }
+ }
  previousGas=accelHeld;brakeWasHeld=brakeHeld;exitBoost=Math.max(0,exitBoost-dt);
  const liftEntry=coastWindow>0&&Math.abs(curve)>.55&&Math.abs(curve)<2.05&&sign===Math.sign(curve)&&speed>138;
- if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT40.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
+ if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT44.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
   isDrifting=true;driftDirection=sign;driftState='entry';driftAge=0;cleanDriftTime=0;counterTime=0;neutralTime=0;brakeEntry=0;coastWindow=0;
  }
  let targetYaw,targetSlip=0;
@@ -3856,24 +3909,24 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(counter&&coastWindow>0&&accelHeld&&driftState!=='recover'&&counterTime>.10){
    driftDirection=sign;counterTime=0;driftAge=.08;coastWindow=0;cleanDriftTime=0;
   }
-  if(counterTime>DRIFT40.counterRecover||neutralTime>DRIFT40.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
+  if(counterTime>DRIFT44.counterRecover||neutralTime>DRIFT44.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
    driftState='recover';driftRearmBlocked=true;targetYaw=0;targetSlip=0;
-   if(Math.abs(driftAngle)<DRIFT40.rearmYaw&&Math.abs(slipAngle)<DRIFT40.rearmSlip){
-    if(cleanDriftTime>.35&&roadGrip>.8&&accelHeld&&!brakeHeld){
-      exitBoost=Math.max(exitBoost,DRIFT40.exitBoost);
-      if(cleanDriftTime>.70)styleMessage('CLEAN EXIT!', '出彎短推進 · 繼續甩尾集氮');
+   if(Math.abs(driftAngle)<DRIFT44.rearmYaw&&Math.abs(slipAngle)<DRIFT44.rearmSlip){
+    if(cleanDriftTime>.30&&roadGrip>.8&&!brakeHeld){
+      momentBoostWindow=Math.max(momentBoostWindow,DRIFT44.momentWindow);momentBoostArmed=!accelHeld;
+      styleMessage('MOMENT BOOST READY','反打收尾 · 放油再補油觸發小噴');
      }
     isDrifting=false;driftState='grip';driftDirection=0;cleanDriftTime=0;counterTime=0;neutralTime=0;
    }
   }else{
-   driftState=driftAge<DRIFT40.entryRamp?'entry':'drift';
+   driftState=driftAge<DRIFT44.entryRamp?'entry':'drift';
    const into=Math.max(0,steer*driftDirection);
-   const entryEase=clamp(driftAge/DRIFT40.entryRamp,0,1);
-   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT40.curveYaw:0;
-   const yawFull=DRIFT40.baseYaw+into*DRIFT40.steerYaw+ratio*DRIFT40.speedYaw+curveAssist;
-   const slipFull=DRIFT40.baseSlip+into*DRIFT40.steerSlip;
-   const yawTrim=counter?DRIFT40.counterYawTrim:neutral?.78:1;
-   const slipTrim=counter?DRIFT40.counterSlipTrim:neutral?.78:1;
+   const entryEase=clamp(driftAge/DRIFT44.entryRamp,0,1);
+   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT44.curveYaw:0;
+   const yawFull=DRIFT44.baseYaw+into*DRIFT44.steerYaw+ratio*DRIFT44.speedYaw+curveAssist;
+   const slipFull=DRIFT44.baseSlip+into*DRIFT44.steerSlip;
+   const yawTrim=counter?DRIFT44.counterYawTrim:neutral?.78:1;
+   const slipTrim=counter?DRIFT44.counterSlipTrim:neutral?.78:1;
    targetYaw=driftDirection*yawFull*entryEase*yawTrim;
    targetSlip=driftDirection*slipFull*entryEase*slipTrim;
   }
@@ -3882,14 +3935,14 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!brakeHeld)driftState=brakeEntry>0?'armed':'grip';
  }
  if(targetYaw===undefined)targetYaw=0;
- targetYaw=clamp(targetYaw,-DRIFT40.maxBodyYaw,DRIFT40.maxBodyYaw);
- const omega=driftState==='recover'?DRIFT40.recoverResponse:DRIFT40.yawResponse;
+ targetYaw=clamp(targetYaw,-DRIFT44.maxBodyYaw,DRIFT44.maxBodyYaw);
+ const omega=driftState==='recover'?DRIFT44.recoverResponse:DRIFT44.yawResponse;
  const error=driftAngle-targetYaw,c=yawRate+omega*error,decay=Math.exp(-omega*dt);
- driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT40.maxBodyYaw,DRIFT40.maxBodyYaw);
+ driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT44.maxBodyYaw,DRIFT44.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
- slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT40.recoverSlipResponse:DRIFT40.slipResponse)));
+ slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT44.recoverSlipResponse:DRIFT44.slipResponse)));
  const nitroRequested=boostRemaining>0;
- const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT40.entryMinSpeed&&roadGrip>.8;
+ const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT44.entryMinSpeed&&roadGrip>.8;
  driftChargeRate=0;
  if(genuineCorner){
   cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.65:1.4);
@@ -3908,11 +3961,11 @@ function stepArcadeMotion(dt,curve){
  const frontGrip=clamp(1-excess/180,.65,1);
  // V40: body can look sideways without throwing the car across multiple lanes.
  const travelYaw=(driftAngle-slipAngle)*Math.PI/180;
- const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT40.driftPathYaw:DRIFT40.gripPathYaw)*(.45+.65*ratio);
- const steerAuthority=isDrifting?DRIFT40.steerPath:.18;
+ const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT44.driftPathYaw:DRIFT44.gripPathYaw)*(.45+.65*ratio);
+ const steerAuthority=isDrifting?DRIFT44.steerPath:.18;
  const turn=Math.min(1,speed/35)*(yawTurn+steer*steerAuthority)*(isDrifting?1:frontGrip);
  const outward=curve*.036*ratio*ratio;
- lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT40.driftLateralResponse:14)));
+ lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT44.driftLateralResponse:14)));
  playerX+=lateralVelocity*dt*motionDirection;
  if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.55+Math.abs(slipAngle)*.020)*dt);
  if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.018:.38)*dt);
@@ -3999,7 +4052,23 @@ function resolveRoadBoundary(index){
   if(speed>85&&collisionCooldown<=0)triggerCrash(null,{x:W/2+side*80,y:H-85},true);
 }
 function trafficHalfWidth(car){return car.spec.w*.44*1400/(ROAD_WIDTH*W/2);}
+function trafficCollisionEligible(previous,car){
+  if(!car||!car.spec||![car.x,car.z,car.previousX??car.x,car.previousZ??car.z].every(Number.isFinite))return false;
+  if(currentNode.archetype==='expressway'&&car.spec.scooter)return false;
+  // Traffic is intentionally rendered only before the fork warning. Once it leaves that authored road zone,
+  // it must stop being a collider too; this removes invisible "ghost car" impacts.
+  const renderLimit=FORK_WARN*SEGMENT_LENGTH;
+  if(Math.min(car.z,car.previousZ??car.z)>=renderLimit)return false;
+  const midZ=((car.z+(car.previousZ??car.z))*.5),idx=Math.floor(clamp(midZ/SEGMENT_LENGTH,0,segments.length-1));
+  let corridors=roadCorridors(idx);
+  if(choiceLocked&&corridors.length===2)corridors=[corridors[pendingChoice==='left'?0:1]];
+  const carHalf=trafficHalfWidth(car)*.82;
+  if(!corridors.some(q=>Math.abs(car.x-q.center)<=Math.max(.04,q.half-carHalf)))return false;
+  const fromZ=(car.previousZ??car.z)-previous.z-PLAYER_DEPTH,toZ=car.z-playerZ-PLAYER_DEPTH;
+  return Math.min(Math.abs(fromZ),Math.abs(toZ))<1500||fromZ*toZ<=0;
+}
 function trafficContact(previous,car){
+  if(!trafficCollisionEligible(previous,car))return null;
   // Relative swept AABB catches overtakes and reversing at any render rate.
   const from=[previous.x-(car.previousX??car.x),previous.z+PLAYER_DEPTH-(car.previousZ??car.z)];
   const to=[playerX-car.x,playerZ+PLAYER_DEPTH-car.z];
@@ -4523,7 +4592,7 @@ function updateDrivingHUD(){
   const magnitude=Math.abs(strongest),entry=Math.round(clamp(270-magnitude*26,115,270));
   document.getElementById('corner-name').textContent=magnitude<.55?'↑ 前方直線':`${strongest>0?'↗ 右':'↖ 左'}${magnitude>3?'急彎':magnitude>1.5?'中彎':'緩彎'}`;
   document.getElementById('corner-speed').textContent=magnitude<.55?'保持油門 · 注意車流':`建議入彎 ${entry} KM/H · ${speed>entry+15?'先減速':'保持路線'}`;
-  document.getElementById('drive-state').textContent=isDrifting?`DRIFT · ${driftTime.toFixed(1)} s · x${styleCombo.toFixed(1)}`:boosting?'NITRO · 氮氣推進':exitBoost>0?'CLEAN EXIT · 出彎加速':roadGrip<.8?'OFF ROAD · 回到路面':'GRIP · 循跡中';
+  document.getElementById('drive-state').textContent=isDrifting?`DRIFT · ${driftTime.toFixed(1)} s · x${styleCombo.toFixed(1)}`:boosting?'NITRO · 氮氣推進':exitBoost>0?'MOMENT BOOST · 小噴':momentBoostWindow>0?'MOMENT READY · 放油再補油':roadGrip<.8?'OFF ROAD · 回到路面':'GRIP · 循跡中';
 }
 const radioActions=document.getElementById('radio-actions');
 function cancelRadio(){if(!inRadioScreen)return;inRadioScreen=false;radioActions.hidden=true;restoreOverlayContent();overlay.classList.remove('hidden');updateModeUI();}
@@ -4629,16 +4698,19 @@ function finishStageTransition(){
   styleMessage('DISTRICT FLOW',tr.next.name+' · KEEP IT MOVING');
 }
 
+function buildingVolumeProfile(x,idx,seed){const face=x<W/2?1:-1,depth=14+Math.floor(v41Hash(seed+4)*10);return {face,depth,dx:face*depth,dy:-depth*.28};}
 function drawV42TaipeiBlock(x,y,s,idx,variant=0){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const worldX=x;ctx.save();ctx.translate(x,y);ctx.scale(s,s);
   const seed=idx*97+variant*331+currentNode.seed*17;
   const floors=3+Math.floor(v41Hash(seed)*4);
   const w=68+Math.floor(v41Hash(seed+1)*28);
   const floorH=22+Math.floor(v41Hash(seed+2)*5),h=30+floors*floorH;
   const facades=['#d3b08c','#b9c7bf','#d4c1b0','#a9b9c4','#c7b69d','#c1c7b1'];
-  const facade=v41Pick(facades,seed+3);
-  const depth=10+Math.floor(v41Hash(seed+4)*8);
-  ctx.fillStyle='#52616a';ctx.beginPath();ctx.moveTo(w/2,-h);ctx.lineTo(w/2+depth,-h-6);ctx.lineTo(w/2+depth,0);ctx.lineTo(w/2,0);ctx.closePath();ctx.fill();
+  const facade=v41Pick(facades,seed+3),vol=buildingVolumeProfile(worldX,idx,seed),depth=vol.depth,dx=vol.dx,dy=vol.dy,face=vol.face;
+  // V44: full extruded side + roof planes make roadside architecture read as volume while passing at speed.
+  ctx.fillStyle='#43545d';ctx.beginPath();ctx.moveTo(face*w/2,-h);ctx.lineTo(face*w/2+dx,-h+dy);ctx.lineTo(face*w/2+dx,dy);ctx.lineTo(face*w/2,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8b9a98';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h);ctx.lineTo(w/2+dx,-h+dy);ctx.lineTo(-w/2+dx,-h+dy);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#253640';ctx.beginPath();ctx.moveTo(face*(w/2+1),-30);ctx.lineTo(face*(w/2+depth*.72),-30+dy*.72);ctx.lineTo(face*(w/2+depth*.72),dy*.72);ctx.lineTo(face*(w/2+1),0);ctx.closePath();ctx.fill();
   const fg=ctx.createLinearGradient(-w/2,0,w/2,0);
   fg.addColorStop(0,'#ffffff18');fg.addColorStop(.2,facade);fg.addColorStop(1,facade);
   ctx.fillStyle=fg;ctx.fillRect(-w/2,-h,w,h);
@@ -4658,15 +4730,16 @@ function drawV42TaipeiBlock(x,y,s,idx,variant=0){
     for(let c=0;c<cols;c++){
       const px=-w/2+12+c*((w-24)/(Math.max(1,cols-1)));
       const lit=skyMood!=='sunset'&&v41Hash(seed+fl*11+c*7)>.45;
-      ctx.fillStyle=lit?'#f5cf86':'#345764';ctx.fillRect(px-7,fy-floorH+7,14,13);
+      ctx.fillStyle='#1b2c34';ctx.fillRect(px-8,fy-floorH+6,16,15);
+      ctx.fillStyle=lit?'#f5cf86':'#345764';ctx.fillRect(px-6.5,fy-floorH+7.5,13,12);
       const wg=ctx.createLinearGradient(px-7,fy-floorH+7,px+7,fy-floorH+20);
       wg.addColorStop(0,'#b8e0df55');wg.addColorStop(1,'#132c3c44');ctx.fillStyle=wg;ctx.fillRect(px-6,fy-floorH+8,12,11);
-      ctx.strokeStyle='#e2ddd0aa';ctx.lineWidth=.8;ctx.strokeRect(px-7,fy-floorH+7,14,13);
+      ctx.strokeStyle='#e2ddd0aa';ctx.lineWidth=.8;ctx.strokeRect(px-7,fy-floorH+7,14,13);ctx.fillStyle='#5b6d72';ctx.fillRect(px-8,fy-floorH+21,16,2);
       ctx.strokeStyle='#63757d';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(px,fy-floorH+7);ctx.lineTo(px,fy-floorH+20);ctx.stroke();
       if((fl+c+idx)%3===0){ctx.fillStyle='#d8dddc';ctx.fillRect(px+8,fy-floorH+14,8,6);ctx.fillStyle='#6f7d80';ctx.fillRect(px+10,fy-floorH+16,4,2);}
     }
     if((fl+idx)%2===0){
-      ctx.fillStyle='#566a70';ctx.fillRect(-w/2+5,fy-3,w-10,3);
+      ctx.fillStyle='#384d55';ctx.fillRect(-w/2+3,fy-3,w-6,5);ctx.fillStyle='#7f9093';ctx.fillRect(-w/2+5,fy-4,w-10,2);
       ctx.strokeStyle='#8a999a';ctx.lineWidth=.7;
       for(let bx=-w/2+8;bx<w/2-5;bx+=8){ctx.beginPath();ctx.moveTo(bx,fy-3);ctx.lineTo(bx,fy+4);ctx.stroke();}
     }
