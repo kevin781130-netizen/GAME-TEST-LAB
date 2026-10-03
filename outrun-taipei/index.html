@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V41</title>
+<title>台北極速傳說｜Taipei Sunset Drive V42</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -126,6 +126,7 @@
   .car-selector{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:#a2b5c7}
   select{background:#111929;color:#fff;border:1px solid #31425e;border-radius:8px;padding:8px 24px 8px 10px;font-weight:800;font-size:11px;outline:none}
   .touch-keys{display:flex;gap:5px;flex-wrap:nowrap}
+  .btn.ready{border-color:#7df5ea;box-shadow:0 0 12px #00e5ff88;color:#a9fff6;}
   .btn{appearance:none;min-width:56px;border:1px solid #33435e;background:#182236;color:#e6effa;padding:9px 12px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;touch-action:none;transition:.08s}
   .btn.active,.btn:active{transform:translateY(1px) scale(.96);background:#ff244f;border-color:#ff6988}
   .btn.accel{background:#0d6948;border-color:#16a370}.btn.brake{background:#7d1d2f;border-color:#ba2946}.btn.gear{background:#0e4e7e;border-color:#177bbd}
@@ -141,7 +142,7 @@
     .spec-grid{grid-template-columns:1fr;gap:4px}
     #overlay .controls{display:none}#overlay h1{font-size:42px}#start-btn{padding:10px 22px;font-size:15px}
     #bottom-bar{padding:5px;border-radius:0}.car-selector{display:none}
-    .touch-keys{display:grid;grid-template-columns:repeat(6,1fr);width:100%;gap:3px}
+    .touch-keys{display:grid;grid-template-columns:repeat(8,1fr);width:100%;gap:3px}
     .btn{min-width:0;padding:11px 2px;font-size:9px}
   }
 </style>
@@ -154,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V41 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V42 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -167,7 +168,7 @@
 
     <div id="nitro-box" style="display:flex;flex-direction:column;gap:3px;background:rgba(5,15,30,.85);padding:5px 10px;border-radius:8px;border:1px solid #00e5ff">
       <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:900;color:#00e5ff;letter-spacing:.1em">
-        <span>BOOST DRIFT · 邊噴邊集</span><span id="nitro-num">0%</span>
+        <span>甩尾集氮 · N 加速</span><span id="nitro-num">0%</span>
       </div>
       <div style="width:105px;height:9px;background:rgba(0,10,25,.8);border:1px solid #00e5ff;border-radius:4px;overflow:hidden">
         <div id="nitro-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#00b0ff,#00e5ff,#ff2d75);transition:width .08s"></div>
@@ -415,7 +416,7 @@
     #overlay{padding:12px 12px;}#overlay .coin-bar{margin-bottom:4px!important;}#overlay h1{font-size:28px;}
     #game-container{min-height:350px;aspect-ratio:16/10.2;max-height:75vh;}
     #bottom-bar{flex-wrap:wrap;}.car-selector{display:flex;width:100%;font-size:10px;flex-wrap:wrap;}.car-selector select{flex:1;min-width:150px;max-width:75%;padding:6px;}
-    .touch-keys{grid-template-columns:repeat(7,1fr);}.touch-keys .btn{min-height:44px;font-size:9px;padding:6px 2px;}
+    .touch-keys{grid-template-columns:repeat(8,1fr);}.touch-keys .btn{min-height:44px;font-size:9px;padding:6px 2px;}
     #route-status{display:none;}#utility-bar{justify-content:center;}#corner-hud{right:7px;bottom:45px;font-size:8px;padding:5px 7px;max-width:150px;}#corner-hud b{font-size:11px;}
     #wangan-modal>div{padding:12px!important;}#wangan-modal h3{font-size:14px!important;}
     .atlas-layout{grid-template-columns:1fr;overflow:visible;}#atlas-routes{max-height:190px;min-height:150px;}#atlas-modal{padding:10px;}.atlas-head h2{font-size:17px;}#atlas-map{max-height:270px;}
@@ -504,9 +505,9 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V41 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V41</span></h1>
-      <div class="subtitle">V34 台北街景美術 × V39 立體道路/車體 × V40 重新校正甩尾。15 個街區一路從府城、水岸、高架跑到九份、101 與貓空。</div>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V42 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V42</span></h1>
+      <div class="subtitle">OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。</div>
       
       
 <div id="start-options"><label>座駕<select id="menu-car"></select></label><label>變速箱<select id="start-transmission"><option value="AT">AT 自排・A/Z</option><option value="MT">MT 手排 LOW / HIGH・A/Z</option></select></label></div>
@@ -525,8 +526,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
         <span class="key">W / ↑ 加速</span>
         <span class="key">S / ↓ 煞車</span>
         <span class="key">← → / J L 轉向</span>
-        <span class="key">A 前進 / Z 倒退 · Z → A 氮氣</span>
-        <span class="key">SHIFT 甩尾 · 氮氣中仍可集氣 · T 路線圖</span>
+        <span class="key">A 前進 / Z 倒退 · N 氮氣 / Z → A</span>
+        <span class="key">SHIFT 甩尾 · N 氮氣 · 加速中可集氣 · T 路線圖</span>
         <span class="key">M 切換電台</span>
         <span class="key">P 暫停</span>
       </div>
@@ -565,7 +566,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
       <button class="btn" id="btn-right">右 ▶</button>
       <button class="btn gear" id="btn-gear">R 倒退 Z</button>
       <button class="btn" id="btn-drift">甩尾 SHIFT</button>
-      <button class="btn" id="btn-nitro">D 前進 A</button>
+      <button class="btn" id="btn-drive">D 前進 A</button>
+      <button class="btn" id="btn-nitro">氮氣 N</button>
       <button class="btn accel" id="btn-accel">油門 W</button>
       <button class="btn brake" id="btn-brake">煞車 S</button>
     </div>
@@ -956,20 +958,19 @@ function voiceFormant(word='checkpoint'){
 
     g.gain.setValueAtTime(0.05, now);
     g.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-    osc.stop(now + 0.48);
   } else if(word === 'go'){
     osc.frequency.setValueAtTime(175, now);
     osc.frequency.exponentialRampToValueAtTime(120, now + 0.3);
     f1.frequency.value = 450; f2.frequency.value = 1100; f3.frequency.value = 2500;
     g.gain.setValueAtTime(0.06, now);
     g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-    osc.stop(now + 0.38);
   }
 
   osc.connect(f1); osc.connect(f2); osc.connect(f3);
   f1.connect(g); f2.connect(g); f3.connect(g);
   g.connect(masterGain);
   osc.start(now);
+  osc.stop(now + (word === 'go' ? 0.38 : 0.48));
 }
 
 function playGearShiftSound(){
@@ -1216,7 +1217,7 @@ function createStageSegments(node, level){
     }
     if(i > STAGE_SWITCH){
       const tail = clamp((i - STAGE_SWITCH) / RENDER_BUFFER_SEGMENTS, 0, 1);
-      y = level < 4 ? 0 : lerp(endY, endY * 0.82, ease(tail));
+      y = level < 4 ? 0 : result[STAGE_SWITCH].y;
       curve *= 1 - ease(clamp((i - STAGE_END) / 56, 0, 1));
     }
     result.push({
@@ -1232,13 +1233,16 @@ function createStageSegments(node, level){
   return result;
 }
 
+function deckElevation(index){
+  if(currentNode.archetype!=='expressway')return 0;
+  const rampIn=ease(clamp(index/140,0,1));
+  const rampOut=1-ease(clamp((index-(STAGE_END-100))/170,0,1));
+  return 1500*Math.min(rampIn,rampOut);
+}
 function buildStage(node){
- segments=createStageSegments(node,stageLevel);
- if(node.id==='2B')for(const seg of segments){
-  const ramp=seg.index<140?ease(seg.index/140):seg.index>STAGE_END-100?1-ease(clamp((seg.index-(STAGE_END-100))/170,0,1)):1;
-  seg.p1.world.y+=ramp*1500;
- }
- if(node.id==='2B')for(let i=0;i<segments.length;i++)segments[i].p2.world.y=segments[Math.min(i+1,segments.length-1)].p1.world.y;
+  segments=createStageSegments(node,stageLevel);
+  for(const seg of segments)seg.p1.world.y+=deckElevation(seg.index);
+  for(let i=0;i<segments.length;i++)segments[i].p2.world.y=segments[Math.min(i+1,segments.length-1)].p1.world.y;
 }
 
 function project(p, cameraX, cameraY, cameraZ){
@@ -1295,7 +1299,8 @@ let playerX = 0, playerZ = 0, speed = 0, steer = 0, driftAngle = 0, isDrifting =
 let roadGrip = 1, isDrafting = false;
 let score = 0, timeLeft = 85;
 let styleCombo = 1, styleBank = 0, totalStyle = 0, styleIdle = 0, driftTime = 0;
-let nitro = 0, boosting = false, touchDriftHeld = false;
+let nitro=0,nitroStock=0,boostRemaining=0,nitroWasHeld=false,driftChargeRate=0,boosting=false;
+const NITRO_RULES=Object.freeze({capacity:2,duration:2.8,minSpeed:60});
 
 // ============================================================
 // 台北自創外觀改裝系統 (TAIPEI CUSTOM GARAGE)
@@ -1353,8 +1358,21 @@ function playBlowOffSound(){
 const nitroBar = document.getElementById('nitro-bar');
 const nitroNum = document.getElementById('nitro-num');
 function updateNitroHUD(){
-  if(nitroBar) nitroBar.style.width = `${Math.round(nitro)}%`;
-  if(nitroNum) nitroNum.textContent = `${Math.round(nitro)}%`;
+  nitroBar.style.width=`${Math.round(nitro)}%`;
+  nitroNum.textContent=boostRemaining>0?`BOOST ${boostRemaining.toFixed(1)}s · ${nitroStock}/2`:`${Math.round(nitro)}% · ${nitroStock}/2`;
+  document.getElementById('btn-nitro').textContent=`氮氣 N · ${nitroStock}`;
+  document.getElementById('btn-nitro').classList.toggle('ready',nitroStock>0);
+}
+function activateNitro(){
+  if(!gameStarted||!raceActive||paused||gameOver||crashSequence||driveGear!=='D'||motionDirection!==1||speed<NITRO_RULES.minSpeed||nitroStock===0||boostRemaining>0)return false;
+  nitroStock--;boostRemaining=NITRO_RULES.duration;nitroLatch=true;
+  styleMessage('NITRO!', '甩尾中繼續集氣 · 儲存 '+nitroStock+'/2');playBlowOffSound();return true;
+}
+function chargeDriftNitro(dt){
+  if(driftChargeRate<=0||roadGrip<.8||crashSequence||nitroStock>=NITRO_RULES.capacity)return;
+  nitro+=driftChargeRate*dt;
+  if(nitro>=100){nitroStock++;nitro=nitroStock>=NITRO_RULES.capacity?0:nitro-100;styleMessage('NITRO READY', 'N 加速 · 儲存 '+nitroStock+'/2');}
+  nitro=clamp(nitro,0,100);
 }
 
 let screenShake = 0, flash = 0, bestScore = 0;
@@ -1366,7 +1384,7 @@ let traffic = [], particles = [];
 let crashSequence = null, crashCount = 0;
 let lastTime = performance.now(), countdownTimer = 0, countdownValue = 3;
 let bubbleTimer = 0, styleTimer = 0, stageCardTimer = 0, collisionCooldown = 0;
-let celebrationTimer = 0;
+let celebrationTimer = 0,resultTimer=null;
 let unlockedGoals = new Set();
 const keys = {};
 const pointerKeys = new Map();
@@ -1393,7 +1411,7 @@ try{
 
 const inputHeld = code => !!keys[code] || [...pointerKeys.values()].some(v => v.code === code);
 const clearInputs = () => {
-  nitroLatch=false;reverseWindow=0;gearDWasHeld=false;gearRWasHeld=false;gearInputEvents=[];
+  nitroLatch=false;boosting=false;nitroWasHeld=false;gamepadInput={steer:0,gas:false,brake:false,drift:false,nitro:false};gyroSteer=0;reverseWindow=0;gearDWasHeld=false;gearRWasHeld=false;gearInputEvents=[];
   for(const k in keys) keys[k] = false;
   pointerKeys.clear();
   document.querySelectorAll('.btn.active').forEach(el => el.classList.remove('active'));
@@ -1493,18 +1511,18 @@ function setStage(level, column, announce=true, detail='STAGE REACHED', entryCho
 }
 
 function resetGame(){
-  gameStarted=false;
+  gameStarted=false;clearTimeout(resultTimer);resultTimer=null;
   raceBoardKey=arcadeBoardKey();
   crashSequence = null; crashCount = 0; document.getElementById('pause-btn').textContent = '暫停 P';
   clearInputs(); distanceOffset = 0; simulationTime = 0; hudClock = 0; isDrifting = false; isDrafting = false;
   bubbleTimer = 0; styleTimer = 0; stageCardTimer = 0; celebrationTimer = 0;
   score=0; timeLeft=v34Mode==='arcade'?dipSettings.time:stageTimeBudget(selectedRoute.level,selectedRoute.column)+20;
-  resetDrivingState(); nitro=0; boosting=false; lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; cleanDriftTime=0; raceElapsed=0;
+  resetDrivingState(); nitro=0;nitroStock=0;boostRemaining=0;nitroWasHeld=false;driftChargeRate=0; boosting=false; lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; cleanDriftTime=0; raceElapsed=0;
   styleCombo = 1; styleBank = 0; totalStyle = 0; styleIdle = 0; driftTime = 0;
   screenShake = 0; flash = 0; collisionCooldown = 0;
   speed=0;currentGear='LOW';driveGear='D';motionDirection=1;reverseWindow=0;nitroLatch=false;gearDWasHeld=false;gearRWasHeld=false;rpm=800;
   gameOver = false; paused = false; raceActive = false; countdownTimer = 0; countdownValue = 3;
-  particles = []; stageTransition = null; inRadioScreen = false;
+  particles = []; stageTransition = null; stageVisualBlend=0;stageBlendPalette=null;inRadioScreen = false;
   routeHistory = [{ level:0, column:0, id:'1A', name:STAGES[0][0].name }];
   stageChoices = [];
   stylePop.classList.remove('show'); stageCard.classList.remove('show'); celebrationCard.classList.remove('show');
@@ -1560,7 +1578,8 @@ function finishGame(cleared){
   // Play Last Wave ballad
   setTrack(4);
 
-  setTimeout(() => {
+  resultTimer=setTimeout(() => {
+    if(!gameOver)return;
     celebrationCard.classList.remove('show');
     showLeaderboardAndEntry(cleared);
   }, cleared ? 4000 : 800);
@@ -1568,7 +1587,8 @@ function finishGame(cleared){
 
 function showLeaderboardAndEntry(cleared){
   nameEntryModal.classList.add('show');
-  leaderboard = (competitiveBoards[raceBoardKey] || []).filter(item=>Number.isFinite(item.score)).slice(0,7).map(item=>({...item}));
+  const saved=competitiveBoards[raceBoardKey];
+  leaderboard=(Array.isArray(saved)?saved:[]).filter(item=>item&&Number.isFinite(item.score)&&item.score>=0).sort((a,b)=>b.score-a.score).slice(0,7).map((item,i)=>({rank:i+1,score:item.score,name:String(item.name||'AAA').replace(/[^A-Z0-9_]/g,'').slice(0,3)||'AAA',route:String(item.route||'').split('-').filter(id=>STAGES.flat().some(n=>n.id===id)).join('-'),goal:['A','B','C','D','E'].includes(item.goal)?item.goal:'—'}));
   document.getElementById('leaderboard-rules').textContent=`本機街機榜 · ${raceBoardKey.split(':').slice(0,3).join(' / ')} 秒 · 統一性能`;
   const isHighScore = leaderboard.length<7 || score > leaderboard[leaderboard.length - 1].score;
 
@@ -1630,9 +1650,9 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V41',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V41</span>',
-  subtitle: 'V34 台北街景美術 × V39 立體道路/車體 × V40 重新校正甩尾。15 個街區一路從府城、水岸、高架跑到九份、101 與貓空。',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V42',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V42</span>',
+  subtitle: 'OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
 function restoreOverlayContent(){
@@ -1669,11 +1689,11 @@ function selectDriveGear(next,inputTime=performance.now()){
  if(!gameStarted||!raceActive||paused||gameOver||crashSequence||inRadioScreen)return;
  if(next===driveGear)return;
  if(next==='R'){
-  driveGear='R';reverseInputTime=inputTime;reverseWindow=COMPETITION.dashWindow;nitroLatch=false;boosting=false;
+  driveGear='R';boostRemaining=0;reverseInputTime=inputTime;reverseWindow=COMPETITION.dashWindow;nitroLatch=false;boosting=false;
   brakeEntry=0;coastWindow=0;say('R 倒退！A 回前進，甩尾能量變氮氣');
  }else{
   const combo=driveGear==='R'&&reverseWindow>0&&inputTime-reverseInputTime<=COMPETITION.dashWindow*1000;driveGear='D';reverseWindow=0;
-  if(combo&&nitro>0){nitroLatch=true;say('Z → A！氮氣衝刺！');}
+  if(combo&&activateNitro())say('Z → A！氮氣衝刺！');
   else if(combo)say('氮氣空槽！先用 Shift 甩尾集氣');
  }
  playGearShiftSound();updateV39HUD();
@@ -1918,7 +1938,7 @@ function pollGamepads(){
   keys['gp_select_last'] = gp.buttons[8]?.pressed;
 
   if(gp.buttons[9]?.pressed && !keys['gp_start_last']){
-    if(!gameStarted || gameOver) openRadioSelector();
+    if(!gameStarted || gameOver)openRadioSelector();else if(!inRadioScreen&&wanganModal.style.display!=='flex'&&atlasModal.style.display!=='flex'&&serviceModal.style.display!=='flex')togglePause();
   }
   keys['gp_start_last'] = gp.buttons[9]?.pressed;
 
@@ -1958,6 +1978,7 @@ window.addEventListener('deviceorientation', e => {
 
 window.addEventListener('keydown', e => {
   if(e.target.matches('select,input,textarea')) return;
+  if(serviceModal.style.display==='flex'){if(e.code==='Escape'||e.code==='F2'||e.code==='Tab'){e.preventDefault();toggleServiceMenu();}return;}
   if(wanganModal.style.display==='flex'||atlasModal.style.display==='flex'){ if(e.code==='Escape'){ if(wanganModal.style.display==='flex') toggleWanganGarage(); else closeAtlas(); } return; }
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','KeyW','KeyS','KeyA','KeyZ','KeyJ','KeyL','ShiftLeft','ShiftRight','KeyN','Digit5','Digit1'].includes(e.code)) e.preventDefault();
 
@@ -2026,11 +2047,11 @@ window.addEventListener('keyup', e => { keys[e.code] = false; });
 function bindButton(id, code, isGear=false){
   const el = document.getElementById(id);
   if(isGear){
-    el.addEventListener('pointerdown', e => { e.preventDefault(); if(paused||gameOver) return; toggleGear(); });
+    el.addEventListener('pointerdown', e => { e.preventDefault(); if(paused||gameOver||inRadioScreen||!raceActive) return; toggleGear(); });
     return;
   }
   el.addEventListener('pointerdown', e => {
-    e.preventDefault(); if(paused||gameOver) return;
+    e.preventDefault(); if(paused||gameOver||inRadioScreen||!raceActive) return;
     if(code==='KeyA'||code==='KeyZ')enqueueDriveGear(code==='KeyA'?'D':'R');
     el.setPointerCapture(e.pointerId); pointerKeys.set(e.pointerId, { code, el });
     el.classList.add('active');
@@ -2045,7 +2066,8 @@ function bindButton(id, code, isGear=false){
 bindButton('btn-left','ArrowLeft');
 bindButton('btn-right','ArrowRight');
 bindButton('btn-drift','ShiftLeft');
-bindButton('btn-nitro','KeyA');
+bindButton('btn-drive','KeyA');
+bindButton('btn-nitro','KeyN');
 bindButton('btn-gear','KeyZ');
 bindButton('btn-accel','ArrowUp');
 bindButton('btn-brake','ArrowDown');
@@ -2107,7 +2129,7 @@ function triggerCrash(car, hit, isObstacle=false){
   const otherCenter = car && car.screenBox ? (car.screenBox.l + car.screenBox.r) / 2 : W / 2;
   const pushDir = isObstacle ? (playerX > 0 ? -1 : 1) : (otherCenter < W / 2 ? 1 : -1);
   playerX += pushDir * 0.08;
-  screenShake = 14; flash = 0.14; styleBank = 0; styleCombo = 1;
+  screenShake = 14; flash = 0.14; styleBank = 0; styleCombo = 1;nitro=0;
   
   const hx = hit ? hit.x : W / 2, hy = hit ? hit.y : H - 85;
   for(let i=0; i<25; i++){
@@ -2115,7 +2137,7 @@ function triggerCrash(car, hit, isObstacle=false){
   }
   crashSequence={t:0,duration:4.1,impactSpeed:speed,side:pushDir};
   resetDrivingState();
-  exitBoost=0;cleanDriftTime=0;lateralVelocity=0;boosting=false;nitroLatch=false;reverseWindow=0;
+  exitBoost=0;cleanDriftTime=0;lateralVelocity=0;boosting=false;boostRemaining=0;nitroLatch=false;reverseWindow=0;
   crashCount++; isDrifting = false; isDrafting = false; driftAngle = 0; steer = 0;
   say('WATCH OUT! OUCH!! 💥');
 }
@@ -2174,19 +2196,7 @@ function beginStageTransition(choice){
   drawRouteMap();
 }
 
-function finishStageTransition(){
-  if(!stageTransition) return;
-  const tr = stageTransition;
-  const remainder = playerZ - STAGE_SWITCH * SEGMENT_LENGTH;
-  const remainingCenter = transitionGeometry(STAGE_SWITCH, tr.choice).center - tr.lastCenter;
-  playerX += remainingCenter*roadFactor(); distanceOffset += STAGE_SWITCH * SEGMENT_LENGTH;
-  setStage(tr.nextLevel, tr.nextColumn, true, tr.choice === 'left' ? 'LEFT FORK' : 'RIGHT FORK', tr.choice, true);
-  playerZ=Math.max(0,remainder);playerX=clamp(playerX,-drivableHalf()*.85,drivableHalf()*.85);resetDrivingState();
-}
 
-// ============================================================
-// ROUTE PYRAMID MAP DRAWING
-// ============================================================
 function nodePos(level, column){
   const spacing = 72;
   return { x: routeMap.width / 2 + (column - level / 2) * spacing, y: 26 + level * 42 };
@@ -2248,7 +2258,7 @@ function updateForkUI(){
 // ============================================================
 
 // All screen controls share pointer capture, including touch and pen.
-window.addEventListener('blur',clearInputs);
+window.addEventListener('blur',()=>{clearInputs();if(gameStarted&&!paused&&!gameOver&&!inRadioScreen)togglePause();});
 document.addEventListener('visibilitychange',()=>{ if(document.hidden){ clearInputs(); if(gameStarted&&!paused&&!gameOver&&!inRadioScreen) togglePause(); } });
 
 function update(dt){
@@ -2285,6 +2295,7 @@ function update(dt){
   if(crashSequence){ updateCrash(dt); return; }
 
   // Player input
+  const previousPlayer={x:playerX,z:playerZ};
   processGearInputs(dt);
   const accelHeld=inputHeld('ArrowUp')||inputHeld('KeyW')||gamepadInput.gas||nitroLatch;
   const brakeHeld=inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake;
@@ -2301,9 +2312,13 @@ function update(dt){
   const segIndex=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,segments.length-1),seg=segments[segIndex];
   raceElapsed+=dt;stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,seg.curve);
   const nitroHeld=inputHeld('KeyN')||gamepadInput.nitro;
-  boosting=!!((nitroHeld||nitroLatch)&&driveGear==='D'&&motionDirection===1&&accelHeld&&!brakeHeld&&nitro>0);
-  if(nitroLatch&&(brakeHeld||driveGear!=='D'||nitro<=0))nitroLatch=false;
-  if(boosting){nitro=Math.max(0,nitro-COMPETITION.nitroDrain*dt);if(nitro<1e-6)nitro=0;screenShake=Math.max(screenShake,1.0);}
+  if(nitroHeld&&!nitroWasHeld&&accelHeld&&!brakeHeld)activateNitro();
+  nitroWasHeld=nitroHeld;
+  if(brakeHeld||driveGear!=='D'){boostRemaining=0;nitroLatch=false;}
+  boosting=boostRemaining>0&&driveGear==='D'&&motionDirection===1&&accelHeld&&!brakeHeld;
+  boostRemaining=Math.max(0,boostRemaining-dt);
+  if(boostRemaining===0)nitroLatch=false;
+  if(boosting)screenShake=Math.max(screenShake,1.0);
   isDrafting=driveGear==='D'&&motionDirection===1&&traffic.some(car=>car.z-playerZ>1200&&car.z-playerZ<5500&&Math.abs(playerX-car.x)<.22&&speed>200);
   draftHud.classList[isDrafting?'add':'remove']('show');
   const desiredDirection=driveGear==='R'?-1:1;
@@ -2362,7 +2377,8 @@ function update(dt){
       triggerCrash(null, { x: W / 2 + (playerX > 0 ? 80 : -80), y: H - 85 }, true);
     }
   }
-  playerX=clamp(playerX,-1.45*roadFactor(),1.45*roadFactor());
+  resolveRoadBoundary((playerZ+PLAYER_DEPTH)/SEGMENT_LENGTH);
+  if(crashSequence){updateHUD();return;}
 
   speed=clamp(speed,0,COMPETITION.boostSpeed);
   playerZ=Math.max(0,playerZ+speed*WORLD_SPEED*dt*motionDirection);
@@ -2375,7 +2391,7 @@ function update(dt){
     if(v34Mode==='sprint'){ finishGame(true); return; }
     const savedSpeed=speed; bankStyle(); setStage(stageLevel,stageColumn,false); speed=savedSpeed;
     routeHistory=[{level:stageLevel,column:stageColumn,id:currentNode.id,name:currentNode.name}];
-    say('巡航路段完成 · 再跑一圈，或按 T 換路段');
+    say('巡航路段完成 · 再跑一圈，或按 T 換路段');updateHUD();return;
   }
   const stageEndZ = STAGE_END * SEGMENT_LENGTH;
   const stageSwitchZ = STAGE_SWITCH * SEGMENT_LENGTH;
@@ -2397,6 +2413,7 @@ function update(dt){
     if(car.targetSpeed && car.speed < car.targetSpeed){
       car.speed += 45 * dt;
     }
+    car.previousX=car.x;car.previousZ=car.z;
     car.z += car.speed * WORLD_SPEED * dt;
     car.x += Math.sin((simulationTime * 1000) / 1500 + car.phase) * 0.025 * dt;
     car.laneTarget=Math.sin(simulationTime*.13+car.phase)*.58*roadFactor();
@@ -2406,25 +2423,26 @@ function update(dt){
     if(dz < -1800 && playerZ + 24000 < trafficLimit){
       car.z=Math.min(playerZ+seededRange(22000,56000),trafficLimit);
       car.x=seededRange(-.65,.65)*roadFactor();car.laneTarget=seededRange(-.60,.60)*roadFactor();
-      car.near = false; car.screenBox = null;
+      car.previousX=car.x;car.previousZ=car.z;car.near = false; car.screenBox = null;
     }
     if(dz > 2600) car.near = false;
   }
 
   projectRoad(); prepareTrafficSprites();
-  const pb = playerHitBox();
   for(const car of traffic){
-    const cb = car.screenBox; if(!cb) continue;
-    const hit = boxContact(pb, cb);
-    if(hit && hit.ox >= 8 && hit.oy >= 5){
-      car.near = true; triggerCrash(car, hit);
-      if(crashSequence){ updateHUD(); return; }
-    } else if(!car.near && car.hitTimer <= 0){
-      const gap = boxGapX(pb, cb);
-      if(cb.b >= pb.t - 10 && cb.t <= pb.b + 10 && gap > 2 && gap < 26) nearMiss(car);
+    const contact=trafficContact(previousPlayer,car);
+    if(contact&&car.hitTimer<=0&&collisionCooldown<=0){
+      playerZ=lerp(previousPlayer.z,playerZ,contact.t);playerX=lerp(previousPlayer.x,playerX,contact.t);
+      car.near=true;triggerCrash(car,{x:W/2,y:H-85});
+      if(crashSequence){updateHUD();return;}
+    }else if(!car.near&&car.hitTimer<=0){
+      const dz=car.z-playerZ-PLAYER_DEPTH,half=trafficHalfWidth(car)+PLAYER_HALF_WIDTH;
+      const gap=Math.abs(playerX-car.x)-half;
+      if(Math.abs(dz)<480&&gap>.01&&gap<.09)nearMiss(car);
     }
   }
 
+  chargeDriftNitro(dt);
   score += speed * dt * 0.75;
   updateForkUI(); hudClock += dt;
   if(hudClock >= 0.05){ hudClock = 0; updateHUD(); }
@@ -2499,7 +2517,7 @@ function drawSky(t){drawIdentitySky(t);}
 function roadColors(t, index){
   const alt = Math.floor(index / 3) % 2;
   if(currentNode.id==='2B')return {road:alt?'#424d54':'#45515a',grass:'#667d86',rumble:'#cbd4c6'};
-  return { road: alt ? t.road[1] : t.road[0], grass: alt ? t.grass[1] : t.grass[0], rumble: t.rumble[alt] };
+  return { road: alt ? '#343b46' : '#363d48', grass: alt ? t.grass[1] : t.grass[0], rumble: t.rumble[alt] };
 }
 
 function projectRoad(){
@@ -2528,9 +2546,12 @@ function drawRoad(){
   const t = theme();
   projectRoad();
   prepareLandmarkFrame();
+  prepareTrafficSprites();
   drawSky(t);
   drawStageBlendOverlay();
   const projected = projectedRoad;
+  drawTerrain(projected,t);
+  if(currentNode.archetype==='expressway'){drawBelowDeckDistrict();drawDeckStructure(projected);}
 
   for(const seg of projected){
     const idx = seg.index, p1 = seg.p1.screen, p2 = seg.p2.screen;
@@ -2540,41 +2561,6 @@ function drawRoad(){
     const c = roadColors(t, phase);
 
     ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
-
-    const arch = currentNode.archetype || 'urban';
-
-    if(arch === 'coastal'){
-      // 水岸公路：大稻埕往淡水、漁人碼頭、富貴角！左側是淡水河/海波，右側是堤防陸地！
-      const roadLeftEdge = p1.x - p1.w * 1.15;
-      if(roadLeftEdge > 0){
-        // 淡水河 / 太平洋波光水面
-        const isWaterDark = (phase % 4 < 2);
-        ctx.fillStyle = isWaterDark ? '#0277bd' : '#01579b';
-        ctx.fillRect(0, top, roadLeftEdge, bottom - top);
-        // 動態水面波浪反光 (Animated Wave Ripples)
-        if((phase + Math.floor(simulationTime * 12)) % 5 === 0){
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-          ctx.fillRect(0, top, roadLeftEdge, 2);
-        }
-      }
-      // 右側陸地 (河濱草坪與步道)
-      ctx.fillStyle = c.grass;
-      ctx.fillRect(Math.max(0, roadLeftEdge), top, W, bottom - top);
-    } else if(arch === 'urban' || arch === 'expressway'){
-      // 台北市區/高架：路面外側不是荒野大草皮，而是台北人行道紅磚與灰色柏油鋪面！
-      const isSidewalkDark=phase%2===0;
-      ctx.fillStyle=currentNode.id==='2B'?'#637681':scene().ground[isSidewalkDark?0:1];
-      ctx.fillRect(0, top, W, bottom - top);
-      // 人行道紅磚緣石 (Curbs)
-      ctx.fillStyle = '#b71c1c';
-      const curbWidth=Math.max(2,p1.w*.045);
-      ctx.fillRect(p1.x-p1.w*1.08-curbWidth,top,curbWidth,2);
-      ctx.fillRect(p1.x+p1.w*1.08,top,curbWidth,2);
-    } else {
-      // 陽明山/貓空/九份：深山蓊鬱草木
-      ctx.fillStyle = c.grass;
-      ctx.fillRect(0, top, W, bottom - top);
-    }
 
     const near = { ...p1, y: p1.y + 0.65 }, far = p2;
     const slice = (center1, center2, half1, half2, road, rumble, lanes) => {
@@ -2613,12 +2599,12 @@ function drawRoad(){
     ctx.restore();
   }
 
-  if(currentNode.id==='2B'){drawBelowDeckDistrict();drawElevatedRails(projected);}
+  if(currentNode.archetype==='expressway')drawElevatedRails(projected);
   drawRoadside(Math.floor(playerZ / SEGMENT_LENGTH), t);
   drawStartingScene(Math.floor(playerZ / SEGMENT_LENGTH));
   drawForkObjects(Math.floor(playerZ / SEGMENT_LENGTH));
-  if(currentNode.id==='2B')drawCivicRoadGantry();
-  drawTraffic();
+  if(currentNode.archetype==='expressway')drawCivicRoadGantry();
+
 }
 
 function drawStartingScene(start){
@@ -3293,6 +3279,7 @@ function drawPlayer(){
  ctx.save();ctx.translate(cx,cy);ctx.scale(scale,scale);if(roll)ctx.rotate(roll*Math.PI/180);
  if(!crashSequence){ctx.fillStyle='#08142088';ctx.beginPath();ctx.ellipse(0,21,currentCar.isBike?32:108,12,0,0,Math.PI*2);ctx.fill();
   if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(0,25,currentCar.isBike?26:92,5,0,0,Math.PI*2);ctx.fill();}}
+ if(boosting)drawNitroExhaust(yaw);
  drawRigidVehicle(yaw,braking);ctx.restore();
 }
 
@@ -3506,6 +3493,7 @@ function render(dt){
   ctx.save();
   if(screenShake > 0.2) ctx.translate(Math.round(rand(-screenShake, screenShake)), Math.round(rand(-screenShake * 0.55, screenShake * 0.55)));
   
+  if(paused)dt=0;
   drawRoad();
   drawAtmosphere();
   drawV40FinishAtmosphere();
@@ -3719,39 +3707,49 @@ function drawMaokongGondola(x,y,s,idx){
 
 // V39: classic sprite palette, bridge deck and original comic flourishes.
 function drawElevatedRails(road){
- for(const side of [-1,1]){
-  const edge=[];for(const seg of [...road].reverse()){
-   for(const p of [seg.p2.screen,seg.p1.screen]){
-    if(p.y>H+120||p.y<0)continue;
-    edge.push({x:p.x+side*p.w*1.025,y:p.y,top:p.y-p.scale*210*H/2,scale:p.scale,index:seg.index});
-   }
+  for(const seg of [...road].reverse()){
+    const p1=seg.p1.screen,p2=seg.p2.screen;
+    ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,seg.clipY));ctx.clip();
+    let near=roadCorridors(seg.index),far=roadCorridors(seg.index+1);
+    if(near.length!==far.length){near=[{center:0,half:roadEnvelope(seg.index)*roadFactor()}];far=[{center:0,half:roadEnvelope(seg.index+1)*roadFactor()}];}
+    near.forEach((lane,i)=>{const next=far[Math.min(i,far.length-1)];
+      for(const side of [-1,1]){
+        const x1=p1.x+p1.w*(lane.center+side*lane.half*1.045)/roadFactor();
+        const x2=p2.x+p2.w*(next.center+side*next.half*1.045)/roadFactor();
+        const h1=p1.scale*180*H/2,h2=p2.scale*180*H/2;
+        polygon(x1,p1.y,x2,p2.y,x2,p2.y-h2,x1,p1.y-h1,side<0?'#b3c4c5':'#8fa5ae');
+        ctx.strokeStyle='#f9eac2';ctx.lineWidth=Math.max(1,p1.scale*2400);ctx.beginPath();ctx.moveTo(x1,p1.y-h1);ctx.lineTo(x2,p2.y-h2);ctx.stroke();
+        if(seg.index%12===0){ctx.fillStyle='#ffbd47';ctx.fillRect(x1-2,p1.y-h1+2,4,Math.max(2,h1*.2));}
+      }
+    });ctx.restore();
   }
-  if(edge.length<2)continue;
-  ctx.save();ctx.fillStyle=side<0?'#b5c5c3':'#9cacb0';ctx.beginPath();
-  for(let i=0;i<edge.length;i++){const q=edge[i];if(i===0)ctx.moveTo(q.x,q.top);else ctx.lineTo(q.x,q.top);}
-  for(const q of [...edge].reverse())ctx.lineTo(q.x,q.y);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#f4f0d5';ctx.lineWidth=3;ctx.beginPath();edge.forEach((q,i)=>i?ctx.lineTo(q.x,q.top):ctx.moveTo(q.x,q.top));ctx.stroke();
-  ctx.strokeStyle='#6f858e';ctx.lineWidth=1;
-  const seen=new Set();for(const q of edge){
-   if(seen.has(q.index)||q.index%24||q.y-q.top<5)continue;seen.add(q.index);
-   ctx.beginPath();ctx.moveTo(q.x,q.top+2);ctx.lineTo(q.x,q.y);ctx.stroke();
-   ctx.fillStyle='#ffcb51';ctx.fillRect(q.x-2,q.top+3,4,Math.max(3,(q.y-q.top)*.16));
+}
+function drawDeckStructure(road){
+  for(const seg of [...road].reverse()){
+    const a=seg.p1.screen,b=seg.p2.screen;if(deckElevation(seg.index)<150)continue;
+    ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
+    for(const side of [-1,1]){
+      const x1=a.x+side*a.w*roadEnvelope(seg.index)*1.08,x2=b.x+side*b.w*roadEnvelope(seg.index+1)*1.08;
+      const depth1=Math.min(36,a.scale*210*H/2),depth2=Math.min(36,b.scale*210*H/2);
+      polygon(x1,a.y,x2,b.y,x2+side*b.w*.025,b.y+depth2,x1+side*a.w*.025,a.y+depth1,side<0?'#405460':'#324650');
+      if(seg.index%48===0){const height=deckElevation(seg.index)*a.scale*H/2,width=Math.max(2,a.w*.025);ctx.fillStyle='#72848a';ctx.fillRect(x1-width/2,a.y,width,height);ctx.fillStyle='#405c66';ctx.fillRect(x1,a.y,width/2,height);}
+    }ctx.restore();
   }
-  ctx.restore();
- }
 }
 function drawBelowDeckDistrict(){
- const start=Math.floor(playerZ/SEGMENT_LENGTH);
- for(let i=Math.min(segments.length-1,start+230);i>start+14;i--){
-  if(i%20!==0)continue;const p=segments[i].p1.screen;
-  if(!p.scale)continue;const yy=p.y+1500*p.scale*H/2;
-  for(const side of [-1,1]){
-   const xx=p.x+side*p.w*(2.3+(i%3)*.4),scale=p.scale*2700;
-   drawTaipeiShophouse(xx,yy,scale,i+7);
-   
+  const start=Math.floor(playerZ/SEGMENT_LENGTH);
+  for(let i=Math.min(segments.length-1,start+230);i>start+8;i--){
+    if(i%16!==0)continue;const seg=segments[i],p=seg.p1.screen;
+    if(!p.scale||seg.p1.camera.z<=0)continue;
+    const yy=p.y+deckElevation(i)*p.scale*H/2;
+    ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
+    for(const side of [-1,1]){
+      const xx=p.x+side*p.w*2.5,scale=p.scale*5400;
+      drawV42TaipeiBlock(xx,yy,scale,i+7,3);
+    }ctx.restore();
   }
- }
 }
+
 function drawCivicRoadGantry(){
  const start=Math.floor(playerZ/SEGMENT_LENGTH),index=Math.ceil((start+8)/160)*160,seg=segments[index];
  if(!seg||index-start>=DRAW_DISTANCE)return;const p=seg.p1.screen;
@@ -3789,7 +3787,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'41.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroDrain:25,nitroCharge:24,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'42.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:24,hitHalfWidth:62});
 let helperWasHeld=false,helperPulse=0,counterTime=0,neutralTime=0;
 let driftRearmBlocked=false;
 let driftState='grip',brakeHoldTime=0,brakeLoss=0,driftAge=0,driftCooldown=0,brakeVisual=0;
@@ -3872,13 +3870,14 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT40.maxBodyYaw,DRIFT40.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
  slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT40.recoverSlipResponse:DRIFT40.slipResponse)));
- const nitroRequested=nitroLatch||inputHeld('KeyN')||gamepadInput.nitro;
- const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&Math.abs(curve)>.55&&Math.sign(curve)===driftDirection&&roadGrip>.8;
+ const nitroRequested=boostRemaining>0;
+ const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT40.entryMinSpeed&&roadGrip>.8;
+ driftChargeRate=0;
  if(genuineCorner){
   cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.65:1.4);
   const slipSkill=clamp((Math.abs(slipAngle)-2.5)/9,.55,1.15),speedSkill=.82+clamp(speed/COMPETITION.topSpeed,0,1)*.28;
   const chargeFactor=nitroRequested?.64:1;
-  nitro=clamp(nitro+COMPETITION.nitroCharge*chargeFactor*slipSkill*speedSkill*dt,0,100);
+  driftChargeRate=COMPETITION.nitroCharge*chargeFactor*slipSkill*speedSkill;
  }
  else{styleIdle+=dt;if(styleIdle>.60){if(styleBank>0)bankStyle();else driftTime=0;}}
  styleCombo=clamp(1+Math.floor(cleanDriftTime/.8)*.5,1,5);
@@ -3933,6 +3932,120 @@ function scene(){return SCENES[currentNode.id];}
 function roadFactor(){return scene().width;}
 function drivableHalf(){return roadFactor()*.98;}
 
+// Shared world geometry: rendering, placement and collision use these corridors.
+const PLAYER_DEPTH=1100,PLAYER_HALF_WIDTH=.13;
+function roadCorridors(index){
+  const factor=roadFactor();
+  if(v34Mode==='arcade'&&stageLevel<4&&index>=FORK_START&&index<STAGE_END){
+    const f=forkGeometry((index-FORK_START)/(STAGE_END-FORK_START));
+    if(f.spread<=f.half)return [{center:0,half:(f.spread+f.half)*factor}];
+    return [-1,1].map(side=>({center:side*f.spread*factor,half:f.half*factor}));
+  }
+  if(v34Mode==='arcade'&&stageLevel<4&&index>=STAGE_END&&index<STAGE_SWITCH){
+    const g=transitionGeometry(index,stageTransition?.choice||pendingChoice);
+    return [{center:g.center*factor,half:g.half*factor}];
+  }
+  return [{center:0,half:factor}];
+}
+function roadEnvelope(index){return Math.max(...roadCorridors(index).map(lane=>Math.abs(lane.center)+lane.half))/roadFactor();}
+function landmarkSides(h,preferred){
+  if(currentNode.archetype==='coastal')return h.name.includes('橋')?[-1]:[1];
+  return preferred===0?[0]:[preferred,-preferred];
+}
+function districtPlacement(index,side){
+  const envelope=roadEnvelope(index),coastal=currentNode.archetype==='coastal';
+  const waterside=coastal&&side<0,highway=currentNode.archetype==='expressway';
+  const artUnits=waterside?3000:highway?3000:6000;
+  // The full facade, projecting signs and awnings stay beyond the curb.
+  const halfWorld=70*artUnits/(W/2),margin=waterside?.28:halfWorld/ROAD_WIDTH+.18;
+  return {artUnits,offset:side*ROAD_WIDTH*roadFactor()*(envelope+margin)};
+}
+function resolveRoadBoundary(index){
+  let lanes=roadCorridors(index);
+  if(choiceLocked&&lanes.length===2)lanes=[lanes[pendingChoice==='left'?0:1]];
+  const lane=lanes.reduce((best,q)=>Math.abs(playerX-q.center)-q.half<Math.abs(playerX-best.center)-best.half?q:best);
+  const hard=currentNode.archetype==='expressway',shoulder=hard?-.045:.12;
+  const limit=Math.max(.10,lane.half+shoulder*roadFactor()-PLAYER_HALF_WIDTH);
+  const delta=playerX-lane.center;
+  if(Math.abs(delta)<=limit)return;
+  const side=Math.sign(delta);playerX=lane.center+side*limit;
+  lateralVelocity=side*Math.min(0,lateralVelocity*side);
+  roadGrip=.65;driftChargeRate=0;speed=Math.max(0,speed-1.2);
+  if(speed>85&&collisionCooldown<=0)triggerCrash(null,{x:W/2+side*80,y:H-85},true);
+}
+function trafficHalfWidth(car){return car.spec.w*.44*1400/(ROAD_WIDTH*W/2);}
+function trafficContact(previous,car){
+  // Relative swept AABB catches overtakes and reversing at any render rate.
+  const from=[previous.x-(car.previousX??car.x),previous.z+PLAYER_DEPTH-(car.previousZ??car.z)];
+  const to=[playerX-car.x,playerZ+PLAYER_DEPTH-car.z];
+  const limits=[PLAYER_HALF_WIDTH+trafficHalfWidth(car),210+car.spec.h*2];
+  let enter=0,exit=1;
+  for(let axis=0;axis<2;axis++){
+    const delta=to[axis]-from[axis],half=limits[axis];
+    if(Math.abs(delta)<1e-9){if(Math.abs(from[axis])>half)return null;continue;}
+    const a=(-half-from[axis])/delta,b=(half-from[axis])/delta;
+    enter=Math.max(enter,Math.min(a,b));exit=Math.min(exit,Math.max(a,b));
+    if(enter>exit)return null;
+  }
+  return {t:clamp(enter,0,1)};
+}
+function stripBounds(seg){
+  const a=seg.p1.screen,b=seg.p2.screen,top=Math.max(0,b.y),bottom=Math.min(H,seg.clipY,a.y);
+  if(bottom<=top||a.y<=b.y)return null;
+  const at=y=>{const t=(y-b.y)/(a.y-b.y);return {x:lerp(b.x,a.x,t),w:lerp(b.w,a.w,t),y};};
+  return {near:at(bottom),far:at(top)};
+}
+function clipNearRoad(anchor){
+  ctx.beginPath();ctx.rect(0,0,W,H);
+  for(const seg of projectedRoad){
+    if(seg.index>(currentNode.archetype==='expressway'?anchor:anchor-1))continue;
+    const bounds=stripBounds(seg);if(!bounds)continue;
+    const {near:a,far:b}=bounds;
+    const lanes=roadCorridors(seg.index),next=roadCorridors(seg.index+1);
+    lanes.forEach((q,i)=>{const r=next[Math.min(i,next.length-1)];
+      const edge=(p,l,side)=>p.x+p.w*(l.center+side*l.half*1.085)/roadFactor();
+      ctx.moveTo(edge(a,q,-1),a.y);ctx.lineTo(edge(a,q,1),a.y);ctx.lineTo(edge(b,r,1),b.y);ctx.lineTo(edge(b,r,-1),b.y);ctx.closePath();
+    });
+  }
+  ctx.clip('evenodd');
+}
+function drawTerrain(road,t){
+  for(const seg of road){
+    const bounds=stripBounds(seg);if(!bounds)continue;
+    const {near:a,far:b}=bounds,phase=seg.index+Math.round(distanceOffset/SEGMENT_LENGTH);
+    const arch=currentNode.archetype,coastal=arch==='coastal',urban=arch==='urban',elevated=arch==='expressway';
+    ctx.save();ctx.beginPath();ctx.rect(0,b.y,W,a.y-b.y+.7);ctx.clip();
+    ctx.fillStyle=elevated?'#516a75':coastal?v40Art().ground[0]:scene().ground[0];
+    ctx.fillRect(0,b.y,W,a.y-b.y+1);
+    const envelope1=roadEnvelope(seg.index),envelope2=roadEnvelope(seg.index+1);
+    if(coastal){
+      const x1=a.x-a.w*(envelope1+.28),x2=b.x-b.w*(envelope2+.28);
+      polygon(-W,a.y,x1,a.y,x2,b.y,-W,b.y,skyMood==='sunset'?'#317f96':'#1b496a');
+      ctx.save();ctx.beginPath();ctx.moveTo(-W,a.y);ctx.lineTo(x1,a.y);ctx.lineTo(x2,b.y);ctx.lineTo(-W,b.y);ctx.clip();
+      if(phase%4===0){ctx.strokeStyle=skyMood==='sunset'?'#ffd89388':'#99d3e755';ctx.lineWidth=Math.max(.6,a.w*.002);ctx.beginPath();const ripple=(phase*53+simulationTime*11)%120;ctx.moveTo(x1-a.w*.55-ripple,a.y);ctx.lineTo(x1-a.w*.14-ripple,a.y);ctx.stroke();}ctx.restore();
+      polygon(x1,a.y,a.x-a.w*envelope1,a.y,b.x-b.w*envelope2,b.y,x2,b.y,'#a89479');
+      polygon(x1,a.y,x1+a.w*.025,a.y,x2+b.w*.025,b.y,x2,b.y,'#d0c6a9');
+    }
+    if(urban){
+      for(const side of [-1,1]){
+        polygon(a.x+side*a.w*envelope1,a.y,a.x+side*a.w*(envelope1+.35),a.y,b.x+side*b.w*(envelope2+.35),b.y,b.x+side*b.w*envelope2,b.y,'#a79b8a');
+        polygon(a.x+side*a.w*(envelope1+.07),a.y,a.x+side*a.w*(envelope1+.09),a.y,b.x+side*b.w*(envelope2+.09),b.y,b.x+side*b.w*(envelope2+.07),b.y,'#c65346');
+        if(phase%4===0){ctx.strokeStyle='#766e6644';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x+side*a.w*envelope1,a.y);ctx.lineTo(a.x+side*a.w*(envelope1+.35),a.y);ctx.stroke();}
+      }
+    }
+    ctx.restore();
+  }
+}
+function drawNitroExhaust(yaw){
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  for(const x of currentCar.isBike?[0]:[-58,58]){
+    const p=vehicleProject([x,8,-88],yaw),length=34+Math.sin(simulationTime*55+x)*9;
+    ctx.fillStyle='#168bff99';ctx.beginPath();ctx.moveTo(p.x-9,p.y-6);ctx.lineTo(p.x+8,p.y-6);ctx.lineTo(p.x+4,p.y+length);ctx.lineTo(p.x-4,p.y+length*.7);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#b9ffff';ctx.beginPath();ctx.moveTo(p.x-4,p.y-6);ctx.lineTo(p.x+4,p.y-6);ctx.lineTo(p.x,p.y+length*.55);ctx.closePath();ctx.fill();
+  }ctx.restore();
+}
+
+
 function draw101Full(x,y,s){drawCloudTower(x,y,s);}
 let landmarkFrame={horizon:[],world:[]},landmarkDrawLog=[];
 const landmarkSpriteCache=new Map();let stageLandmarkPlan=[];
@@ -3957,7 +4070,7 @@ function planLandmarks(){
   const minOffset=ROAD_WIDTH*roadFactor()*1.12+halfWorld+1000,preferred=h.side??(i%2?-1:1),target=Math.round(end*fractions[i]);
   let best=null;
   for(let anchor=Math.max(last+100,target-90);anchor<=Math.min(end-70,target+90);anchor+=10){
-   for(const side of preferred===0?[0]:[preferred,-preferred]){
+   for(const side of landmarkSides(h,preferred)){
     const offset=side*minOffset;let penalty=Math.abs(anchor-target)*.025+(side!==preferred?1:0);
     for(const distance of [180,140,100,70]){
      let x=0,dx=0;const start=Math.max(0,anchor-distance);
@@ -3969,7 +4082,7 @@ function planLandmarks(){
    }
   }
   if(!best)best={seg:target,side:preferred,worldOffset:preferred*minOffset};last=best.seg;
-  return {...h,...best,id:currentNode.id+':'+i,artUnits,sprite,heightWorld:height};
+  return {...h,...best,id:currentNode.id+':'+i,artUnits,sprite,heightWorld:height,groundDrop:currentNode.archetype==='expressway'?deckElevation(best.seg):0};
  });
 }
 function prepareLandmarkFrame(){
@@ -3988,7 +4101,7 @@ function drawLandmarkInstance(h,x,y,s,layer){
 }
 function landmarkProjection(h){
  const seg=segments[h.seg],p=seg?.p1.screen;if(!p||seg.p1.camera.z<=600)return null;
- return {x:p.x+h.worldOffset*p.scale*W/2,y:p.y,scale:p.scale*h.artUnits};
+ return {x:p.x+h.worldOffset*p.scale*W/2,y:p.y+(h.groundDrop||0)*p.scale*H/2,scale:p.scale*h.artUnits};
 }
 function drawDistantLandmark(){
  for(const h of landmarkFrame.horizon){const p=landmarkProjection(h);if(!p)continue;
@@ -4003,7 +4116,7 @@ function drawXinyiLightCourt(x,y,s){
  ctx.fillStyle='#fff0b9';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('信義街區',0,-25);ctx.restore();
 }
 function drawWorldLandmarks(start){
- const objects=[],timeline=landmarkTimeline();
+ const objects=trafficSprites.map(sprite=>({seg:sprite.car.z/SEGMENT_LENGTH,traffic:sprite})),timeline=landmarkTimeline();
  for(const h of landmarkFrame.world)if(segments[h.seg])objects.push({seg:h.seg,hero:h});
  for(let i=start+4;i<Math.min(segments.length,start+DRAW_DISTANCE);i++){
   if(i%16!==0&&i%16!==8)continue;const side=i%16===0?-1:1;
@@ -4011,14 +4124,17 @@ function drawWorldLandmarks(start){
  }
  objects.sort((a,b)=>b.seg-a.seg);
  for(const object of objects){
+  if(object.traffic){const o=object.traffic;ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,o.clipY));ctx.clip();drawRivalCar(o.car,o.x,o.y,o.scale);ctx.restore();continue;}
   const seg=segments[object.seg],p=seg.p1.screen;if(seg.p1.camera.z<=0||!p.scale||p.y<0||p.y>H+50)continue;
   const side=object.hero?object.hero.side:object.side;let envelope=1;
   if(v34Mode==='arcade'&&stageLevel<4&&object.seg>=FORK_START&&object.seg<STAGE_END){const f=forkGeometry((object.seg-FORK_START)/(STAGE_END-FORK_START));envelope=f.spread+f.half;}
   const anchor=object.hero?landmarkProjection(object.hero):null;
-  const x=anchor?anchor.x:p.x+side*p.w*(envelope+1.10),scale=anchor?anchor.scale:clamp(p.scale*2700,.025,1.9);
+  const placement=districtPlacement(object.seg,side);
+  const x=anchor?anchor.x:p.x+placement.offset*p.scale*W/2,scale=anchor?anchor.scale:Math.max(.025,p.scale*placement.artUnits);
   if(x<-scale*300||x>W+scale*300)continue;
-  ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,seg.clipY));ctx.clip();
-  if(object.hero)drawLandmarkInstance(object.hero,x,p.y,scale,'world');else drawDistrictProp(x,p.y,scale,object.seg,side);ctx.restore();
+  ctx.save();ctx.beginPath();ctx.rect(0,0,W,currentNode.archetype==='expressway'?H:Math.max(0,seg.clipY));ctx.clip();
+  clipNearRoad(object.seg);
+  if(object.hero)drawLandmarkInstance(object.hero,x,anchor.y,scale,'world');else drawDistrictProp(x,p.y,scale,object.seg,side);ctx.restore();
  }
  const upcoming=timeline.find(h=>h.seg>=start);
  if(upcoming){const remaining=Math.max(0,(upcoming.seg*SEGMENT_LENGTH-playerZ)/WORLD_SPEED/3.6);updateLandmarkBanner(`${scene().label} · ${upcoming.name} · ${Math.round(remaining)} m`);}
@@ -4161,7 +4277,7 @@ function drawDistrictProp(x,y,s,idx,side){
  if(kind==='tea'){drawTaiwanMountainPine(x,y,s*.85);if(idx%48===0)drawV40StreetLamp(x,y,s*.75,idx);return;}
  if(kind==='park'){drawTaiwanMountainPine(x,y,s);if(idx%48===16)drawV40StreetLamp(x,y,s*.7,idx);return;}
  if(kind==='marina'||kind==='water'){if(side<0)drawWaterfrontEmbankment(x,y,s);else (useV34?drawV40V34TaipeiShophouse(x,y,s,idx+10):drawTaipeiShophouse(x,y,s,idx+10));return;}
- if(kind==='spring'){if(idx%32===0)drawTaiwanMountainPine(x,y,s*.9);else drawV40V34TaipeiShophouse(x,y,s*.85,idx);return;}
+ if(kind==='spring'){if(side<0){drawWaterfrontEmbankment(x,y,s);return;}if(idx%32===0)drawTaiwanMountainPine(x,y,s*.9);else drawV40V34TaipeiShophouse(x,y,s*.85,idx);return;}
  if(kind==='dome'){if(side<0)drawTaiwanMountainPine(x,y,s*.85);else (useV34?drawV40V34TaipeiShophouse(x,y,s*.86,idx):drawTaipeiSkyscrapers(x,y,s*.8,idx));return;}
  if(kind==='xinyi'){if(useV34)drawV40V34TaipeiShophouse(x,y,s*.86,idx);else drawTaipeiSkyscrapers(x,y,s*1.1,idx);return;}
  if(kind==='market'||kind==='lantern'){
@@ -4436,7 +4552,7 @@ function updateV39HUD(){
  const sc=scene(),state={grip:'GRIP 循跡',brake:'BRAKE 重心前移',armed:'READY 點煞・切彎',entry:'TURN IN 入彎',drift:'DRIFT 補油控線',recover:'EXIT 反打收尾'}[driftState];
  document.getElementById('street-name').textContent=`${currentNode.id} / ${sc.label}`;
  document.getElementById('street-detail').textContent=`${currentNode.id==='2B'?'高架橋面 · ':''}${sc.lanes} 線道 · 路寬 ${Math.round(sc.width*100)}% · ${autoGear?'AT 自排':'MT 手排'} · 競技同規格`;
- hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting&&isDrifting?`BOOST DRIFT · 邊噴邊集 ${Math.round(nitro)}%`:boosting?`NITRO 300 · 剩 ${Math.max(0,nitro/25).toFixed(1)} 秒`:roadGrip<.8?'OFF ROAD 回到路面':state;
+ hudStage.textContent=sc.label;document.getElementById('drive-state').textContent=driveGear==='R'?'R 倒退 · A 回前進':boosting&&isDrifting?`BOOST DRIFT · 集氣 ${Math.round(nitro)}%`:boosting?`NITRO 300 · ${boostRemaining.toFixed(1)} 秒 · 庫存 ${nitroStock}`:roadGrip<.8?'OFF ROAD 回到路面':state;
  const brake=inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0;
  const gas=(inputHeld('ArrowUp')||inputHeld('KeyW')||gamepadInput.gas||nitroLatch)&&!brake;
  document.getElementById('gas-fill').style.width=gas?'100%':'0';document.getElementById('brake-fill').style.width=brake?'100%':'0';
@@ -4448,7 +4564,7 @@ updateModeUI();updateRadioChoice();
 
 
 // ============================================================================
-// V41 CLEAR ARCADE ART + SEAMLESS ROUTE PASS
+// V42 CLEAR ARCADE ART + SEAMLESS ROUTE PASS
 // ============================================================================
 function v41Hash(n){
   n=Math.imul((n|0)^0x9e3779b9,0x85ebca6b);n^=n>>>13;n=Math.imul(n,0xc2b2ae35);n^=n>>>16;
@@ -4482,11 +4598,11 @@ function finishStageTransition(){
   distanceOffset+=STAGE_SWITCH*SEGMENT_LENGTH;
   setStage(tr.nextLevel,tr.nextColumn,false,tr.choice==='left'?'LEFT FLOW':'RIGHT FLOW',tr.choice,true);
   playerZ=Math.max(0,remainder);
-  playerX=clamp(playerX,-drivableHalf()*.85,drivableHalf()*.85);
+  playerX=clamp(playerX,-drivableHalf()*.85,drivableHalf()*.85);resetDrivingState();
   styleMessage('DISTRICT FLOW',tr.next.name+' · KEEP IT MOVING');
 }
 
-function drawV41TaipeiBlock(x,y,s,idx,variant=0){
+function drawV42TaipeiBlock(x,y,s,idx,variant=0){
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);
   const seed=idx*97+variant*331+currentNode.seed*17;
   const floors=3+Math.floor(v41Hash(seed)*4);
@@ -4536,13 +4652,13 @@ function drawV41TaipeiBlock(x,y,s,idx,variant=0){
   ctx.fillStyle='#6b7778';ctx.fillRect(-w*.25,-h-10,w*.43,10);
   ctx.fillStyle='#d7dcda';ctx.beginPath();ctx.ellipse(w*.22,-h-15,7,8,0,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#4a5c61';ctx.beginPath();ctx.moveTo(-w*.1,-h-10);ctx.lineTo(-w*.1,-h-26);ctx.lineTo(-w*.18,-h-19);ctx.stroke();
-  if(currentNode.archetype!=='expressway'){
+  if(variant!==3&&currentNode.archetype!=='expressway'){
     for(let m=0;m<2;m++){const sx=-18+m*32;ctx.fillStyle=m?'#eceff2':'#d83d4d';ctx.beginPath();ctx.arc(sx-6,-3,4,0,Math.PI*2);ctx.arc(sx+7,-3,4,0,Math.PI*2);ctx.fill();ctx.fillRect(sx-3,-11,8,5);ctx.strokeStyle='#27343d';ctx.beginPath();ctx.moveTo(sx+4,-10);ctx.lineTo(sx+10,-16);ctx.stroke();}
   }
   ctx.restore();
 }
-function drawTaipeiShophouse(x,y,s,idx){drawV41TaipeiBlock(x,y,s,idx,1);}
-function drawV40V34TaipeiShophouse(x,y,s,idx){drawV41TaipeiBlock(x,y,s,idx,2);}
+function drawTaipeiShophouse(x,y,s,idx){drawV42TaipeiBlock(x,y,s,idx,1);}
+function drawV40V34TaipeiShophouse(x,y,s,idx){drawV42TaipeiBlock(x,y,s,idx,2);}
 
 function drawTaipeiSkyscrapers(x,y,s,idx){
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);
@@ -4569,9 +4685,9 @@ function drawV40V34CityPanorama(base){
       const seed=i*61+layer*701+currentNode.seed*29;
       const parallax=playerX*(8+layer*9)+playerZ*speed;
       const x=((i*step+(layer*21)-parallax+W*4)%(W+step*4))-step*2;
-      const w=step*(.58+v41Hash(seed)*.35),h=24+v41Hash(seed+1)*(58+layer*54);
+      const w=step*(.58+v41Hash(seed)*.35),h=18+v41Hash(seed+1)*(38+layer*26);
       const cols=['#31506b','#29445f','#203850'];
-      ctx.globalAlpha=alpha;ctx.fillStyle=night?cols[layer]:v41Pick(['#587b88','#6a8790','#78959a'],seed+3);
+      ctx.globalAlpha=alpha;ctx.fillStyle=night?cols[layer]:v41Pick(['#71939c','#7b9b9f','#89a8ac'],seed+3);
       ctx.fillRect(x,base-h,w,h);
       if(v41Hash(seed+4)>.68){ctx.fillRect(x+w*.18,base-h-7,w*.58,7);}
       ctx.fillStyle=night?'#f1c777':'#d9eef0';ctx.globalAlpha=night?.58:.30;
@@ -4625,9 +4741,6 @@ function drawLandmarkInstance(h,x,y,s,layer){
   ctx.shadowColor='rgba(6,14,20,.28)';ctx.shadowBlur=Math.min(18,Math.max(2,s*8));ctx.shadowOffsetY=Math.min(6,s*3);
   ctx.drawImage(art.canvas,x+art.left*s,y+art.top*s,art.width*s,art.height*s);
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
-  const glow=ctx.createLinearGradient(x,y-art.height*s,x,y);
-  glow.addColorStop(0,skyMood==='sunset'?'rgba(255,226,184,.09)':'rgba(120,190,255,.08)');glow.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.fillStyle=glow;ctx.globalCompositeOperation='screen';ctx.fillRect(x-art.width*s*.55,y-art.height*s,art.width*s*1.1,art.height*s);
   ctx.restore();
 }
 
@@ -4681,8 +4794,8 @@ let accumulator = 0;
 function loop(now){
   const dt = Math.min(0.25, Math.max(0, (now - lastTime) / 1000));
   lastTime = now;
+  pollGamepads();
   if(gameStarted && !paused && !gameOver && !inRadioScreen){
-    pollGamepads();
     accumulator += dt;
     while(accumulator >= 1/60){
       update(1/60); accumulator -= 1/60;
