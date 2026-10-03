@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V44</title>
+<title>台北極速傳說｜Taipei Sunset Drive V45</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -155,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V44 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V45 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -505,8 +505,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V44 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V44</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V45 · V34 ART × V39 3D</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V45</span></h1>
       <div class="subtitle">OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -1300,7 +1300,8 @@ let roadGrip = 1, isDrafting = false;
 let score = 0, timeLeft = 85;
 let styleCombo = 1, styleBank = 0, totalStyle = 0, styleIdle = 0, driftTime = 0;
 let nitro=0,nitroStock=0,boostRemaining=0,nitroWasHeld=false,driftChargeRate=0,boosting=false;
-let momentBoostWindow=0,momentBoostArmed=false;
+let momentBoostWindow=0,momentBoostArmed=false,boostKick=0;
+let shiftCutTimer=0,shiftPunch=0,lastShiftSpeed=0;
 const NITRO_RULES=Object.freeze({capacity:2,duration:2.8,minSpeed:60});
 
 // ============================================================
@@ -1366,8 +1367,9 @@ function updateNitroHUD(){
 }
 function activateNitro(){
   if(!gameStarted||!raceActive||paused||gameOver||crashSequence||driveGear!=='D'||motionDirection!==1||speed<NITRO_RULES.minSpeed||nitroStock===0||boostRemaining>0)return false;
-  nitroStock--;boostRemaining=NITRO_RULES.duration;nitroLatch=true;
-  styleMessage('NITRO!', '甩尾中繼續集氣 · 儲存 '+nitroStock+'/2');playBlowOffSound();return true;
+  nitroStock--;boostRemaining=NITRO_RULES.duration;nitroLatch=true;boostKick=1;
+  flash=Math.max(flash,.07);screenShake=Math.max(screenShake,3.2);
+  styleMessage('NITRO!', 'BOOST 325 · 甩尾中仍可集氣 · 儲存 '+nitroStock+'/2');playBlowOffSound();return true;
 }
 function chargeDriftNitro(dt){
   if(driftChargeRate<=0||roadGrip<.8||crashSequence||nitroStock>=NITRO_RULES.capacity)return;
@@ -1518,7 +1520,7 @@ function resetGame(){
   clearInputs(); distanceOffset = 0; simulationTime = 0; hudClock = 0; isDrifting = false; isDrafting = false;
   bubbleTimer = 0; styleTimer = 0; stageCardTimer = 0; celebrationTimer = 0;
   score=0; timeLeft=v34Mode==='arcade'?dipSettings.time:stageTimeBudget(selectedRoute.level,selectedRoute.column)+20;
-  resetDrivingState(); nitro=0;nitroStock=0;boostRemaining=0;nitroWasHeld=false;driftChargeRate=0; boosting=false; lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; momentBoostWindow=0;momentBoostArmed=false;cleanDriftTime=0; raceElapsed=0;
+  resetDrivingState(); nitro=0;nitroStock=0;boostRemaining=0;nitroWasHeld=false;driftChargeRate=0; boosting=false; boostKick=0;shiftCutTimer=0;shiftPunch=0;lateralVelocity=0; brakeEntry=0; brakeWasHeld=false; exitBoost=0; momentBoostWindow=0;momentBoostArmed=false;cleanDriftTime=0; raceElapsed=0;
   styleCombo = 1; styleBank = 0; totalStyle = 0; styleIdle = 0; driftTime = 0;
   screenShake = 0; flash = 0; collisionCooldown = 0;
   speed=0;currentGear='LOW';driveGear='D';motionDirection=1;reverseWindow=0;nitroLatch=false;gearDWasHeld=false;gearRWasHeld=false;rpm=800;
@@ -1651,8 +1653,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V44',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V44</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V45',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V45</span>',
   subtitle: 'OutRunners 街機公路風格 · 甩尾集氮、儲存加速器。15 個街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -1712,11 +1714,16 @@ function processGearInputs(dt){
 }
 function shiftGear(targetGear){
   if(currentGear === targetGear) return;
-  currentGear = targetGear;
+  const previous=currentGear;lastShiftSpeed=speed;currentGear = targetGear;
+  shiftCutTimer=autoGear?.10:.15;
+  const sweetUp=previous==='LOW'&&targetGear==='HIGH'&&speed>=145&&speed<=188;
+  shiftPunch=sweetUp?.24:0;
+  rpm=targetGear==='HIGH'?Math.max(1400,rpm*.62):Math.min(8200,rpm*1.22);
   gearBadge.textContent=driveGear==='R'?'R':`D · ${currentGear}`;
   gearBadge.classList[currentGear === 'HIGH' ? 'add' : 'remove']('high');
+  screenShake=Math.max(screenShake,sweetUp?2.2:1.1);flash=Math.max(flash,sweetUp?.035:.015);
   playGearShiftSound();
-  say(currentGear === 'HIGH' ? 'HIGH GEAR! 🚀' : 'LOW GEAR! ⚙️');
+  say(currentGear === 'HIGH' ? (sweetUp?'PERFECT SHIFT! HIGH 🚀':'HIGH GEAR · 拉高速') : 'LOW GEAR · 強扭力 ⚙️');
 }
 function toggleGear(){
   if(autoGear){say('AT 自排會自動切換 LOW / HIGH');return;}
@@ -2304,9 +2311,10 @@ function update(dt){
   const right=inputHeld('ArrowRight')||inputHeld('KeyL');
 
   if(autoGear&&driveGear==='D'){
-    if(currentGear === 'LOW' && speed >= 175) shiftGear('HIGH');
-    else if(currentGear === 'HIGH' && speed < 130) shiftGear('LOW');
+    if(currentGear === 'LOW' && speed >= 168) shiftGear('HIGH');
+    else if(currentGear === 'HIGH' && speed < 118) shiftGear('LOW');
   }
+  shiftCutTimer=Math.max(0,shiftCutTimer-dt);shiftPunch=Math.max(0,shiftPunch-dt);boostKick=Math.max(0,boostKick-dt*1.65);
 
   const steerTarget=left||right?(right?1:0)-(left?1:0):gamepadInput.steer||(gyroEnabled?gyroSteer:0);
   steer=lerp(steer,steerTarget,1-Math.exp(-dt*(left||right?22:16)));
@@ -2323,14 +2331,17 @@ function update(dt){
   isDrafting=driveGear==='D'&&motionDirection===1&&traffic.some(car=>car.z-playerZ>1200&&car.z-playerZ<5500&&Math.abs(playerX-car.x)<.22&&speed>200);
   draftHud.classList[isDrafting?'add':'remove']('show');
   const desiredDirection=driveGear==='R'?-1:1;
-  const gearMax=desiredDirection<0?45:boosting?COMPETITION.boostSpeed:currentGear==='LOW'?COMPETITION.lowSpeed:COMPETITION.topSpeed;
+  const gp=gearDriveProfile(currentGear,speed,boosting),gearMax=desiredDirection<0?45:gp.max;
   if(motionDirection!==desiredDirection){speed=Math.max(0,speed-320*dt);if(speed===0)motionDirection=desiredDirection;}
   else if(brakeHeld||helperPulse>0){speed=Math.max(0,speed-COMPETITION.brake*dt);}
   else if(accelHeld){
-    const torque=Math.max(0,1-speed/gearMax);
-    const pull=currentGear==='LOW'?COMPETITION.accel*(.6+torque*.95):COMPETITION.accel*(speed<135?.28:.35+torque*.85);
-    speed+=(pull+(boosting?40:0)+(isDrafting?5:0)+(exitBoost>0?34:0))*dt;
-  }else speed=Math.max(0,speed-18*dt);
+    const torqueFade=Math.max(.10,1-speed/Math.max(1,gearMax));
+    const carFactor=clamp((currentCar.accel||68)/68,.84,1.16);
+    const shiftFactor=shiftCutTimer>0?.12:1;
+    const pull=COMPETITION.accel*gp.torque*(.48+torqueFade*.82)*carFactor*shiftFactor;
+    const nitroPush=boosting?112:0,momentPush=exitBoost>0?62:0,shiftPush=shiftPunch>0?22:0;
+    speed+=(pull+nitroPush+momentPush+shiftPush+(isDrafting?7:0))*dt;
+  }else speed=Math.max(0,speed-19*dt);
   speed=clamp(speed,0,motionDirection===desiredDirection?gearMax:COMPETITION.boostSpeed);
 
   // Tachometer RPM
@@ -2371,12 +2382,8 @@ function update(dt){
     roadGrip = 0.50; speed -= (26 + speed * 0.075) * dt;
     screenShake = Math.max(screenShake, 1.2);
     if(Math.random() < dt * 14) addParticle(W / 2 + rand(-95, 95), H - 65, rand(-50, 50), rand(-50, -15), rand(0.35, 0.7), rand(8, 15), 'dust');
-
-    // Roadside Tree / Billboard Collision Check
-    const nearestSegIdx = Math.floor(playerZ / SEGMENT_LENGTH);
-    if((nearestSegIdx % 18 === 0 || nearestSegIdx % 65 === 12) && Math.abs(playerX)>roadFactor()*1.12 && speed > 150){
-      triggerCrash(null, { x: W / 2 + (playerX > 0 ? 80 : -80), y: H - 85 }, true);
-    }
+    // V45 acceptance rule: decorative roadside art never creates an invisible collider.
+    // Physical impacts are limited to rendered traffic and explicit hard road barriers.
   }
   resolveRoadBoundary((playerZ+PLAYER_DEPTH)/SEGMENT_LENGTH);
   if(crashSequence){updateHUD();return;}
@@ -2436,7 +2443,7 @@ function update(dt){
       playerZ=lerp(previousPlayer.z,playerZ,contact.t);playerX=lerp(previousPlayer.x,playerX,contact.t);
       car.near=true;triggerCrash(car,{x:W/2,y:H-85},false);
       if(crashSequence){updateHUD();return;}
-    }else if(!car.near&&car.hitTimer<=0){
+    }else if(car.screenBox&&!car.near&&car.hitTimer<=0){
       const dz=car.z-playerZ-PLAYER_DEPTH,half=trafficHalfWidth(car)+PLAYER_HALF_WIDTH;
       const gap=Math.abs(playerX-car.x)-half;
       if(Math.abs(dz)<480&&gap>.01&&gap<.09)nearMiss(car);
@@ -2567,6 +2574,16 @@ function drawRoad(){
     const slice = (center1, center2, half1, half2, road, rumble, lanes) => {
       polygon(center1 - half1 * 1.08, near.y, center1 + half1 * 1.08, near.y, center2 + half2 * 1.08, far.y, center2 - half2 * 1.08, far.y, rumble);
       polygon(center1 - half1, near.y, center1 + half1, near.y, center2 + half2, far.y, center2 - half2, far.y, road);
+      // V45 asphalt depth: restrained tar seams, patched bands and reflector studs keep the road from reading as a flat ribbon.
+      if(phase%7===0){
+        const seam1=center1-half1*.18,seam2=center2-half2*.18;
+        ctx.strokeStyle='rgba(12,18,24,.20)';ctx.lineWidth=Math.max(.6,half1*.006);ctx.beginPath();ctx.moveTo(seam1,near.y);ctx.lineTo(seam2,far.y);ctx.stroke();
+      }
+      if(phase%19===4){polygon(center1-half1*.72,near.y-1,center1+half1*.58,near.y-1,center2+half2*.53,far.y,center2-half2*.64,far.y,'rgba(20,25,31,.10)');}
+      if(phase%10===0){
+        ctx.fillStyle='rgba(238,241,218,.62)';
+        for(const lane of lanes){ctx.beginPath();ctx.ellipse(center1+half1*lane,near.y-2,Math.max(1,half1*.012),Math.max(.7,half1*.004),0,0,Math.PI*2);ctx.fill();}
+      }
       for(const side of [-1, 1]){
         const x1 = center1 + side * half1 * 0.96, x2 = center2 + side * half2 * 0.96;
         polygon(x1 - half1 * 0.01, near.y, x1 + half1 * 0.01, near.y, x2 + half2 * 0.01, far.y, x2 - half2 * 0.01, far.y, '#f5f5f0');
@@ -2632,9 +2649,8 @@ function drawTaiwanExpresswaySign(x, y, s, idx){
   ctx.fillStyle = '#3a4b56'; ctx.fillRect(-3, -55, 6, 55); // 鋼柱
   ctx.fillStyle = '#0e703c'; ctx.fillRect(-48, -85, 96, 32); // 綠底白字
   ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.5; ctx.strokeRect(-48, -85, 96, 32);
-  ctx.fillStyle = '#ffffff'; ctx.font = '900 9px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   const signText = idx % 2 === 0 ? '市民高架 往 基隆' : '建國高架 往 大安';
-  ctx.fillText(signText, 0, -69);
+  v40FitSignText(signText,-44,-82,88,26,9,'#ffffff');
   ctx.restore();
 }
 
@@ -2662,7 +2678,7 @@ function drawSkyLantern(x, y, s){
 }
 
 // 台北摩天大樓群
-function drawTaipeiSkyscrapers(x, y, s, idx){
+function legacyV40_drawTaipeiSkyscrapers(x, y, s, idx){
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   ctx.fillStyle = idx % 2 === 0 ? '#131e30' : '#192b45'; ctx.fillRect(-28, -85, 56, 85);
   ctx.fillStyle = idx % 2 === 0 ? '#00e5ff' : '#ffd200'; ctx.globalAlpha = 0.55;
@@ -2801,7 +2817,7 @@ function drawRainbowBridge(x, y, s){
 }
 
 // 4D: 台北101基座與信義信義百貨街大樓 (Taipei 101 Street Level)
-function drawTaipei101StreetLevel(x,y,s){drawCloudTower(x,y,s);}
+function legacyV40_drawTaipei101StreetLevel(x,y,s){drawCloudTower(x,y,s);}
 
 // 5A (GOAL A): 淡水漁人碼頭白色情人橋 (Lover's Bridge & Marina)
 function drawMaokongTeaPavilion(x, y, s){
@@ -2825,7 +2841,7 @@ function drawMaokongTeaPavilion(x, y, s){
 // ============================================================
 
 // 台灣街道騎樓公寓 (Taipei Urban Shophouse with Neon Signs, AC Units & Metal Roof)
-function drawTaipeiShophouse(x, y, s, idx){
+function legacyV40_drawTaipeiShophouse(x, y, s, idx){
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   const side = (idx % 2 === 0) ? -1 : 1;
   const bW = 68, bH = 115;
@@ -2984,8 +3000,7 @@ function drawSegaBillboard(x, y, s, text){
   ctx.fillStyle = '#222b3d'; ctx.fillRect(-3, -45, 6, 45);
   ctx.fillStyle = '#0054a6'; ctx.fillRect(-42, -75, 84, 30);
   ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.strokeRect(-42, -75, 84, 30);
-  ctx.fillStyle = '#ffffff'; ctx.font = '900 14px "Arial Black",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(text, 0, -60);
+  v40FitSignText(text,-38,-72,76,24,14,'#ffffff');
   ctx.restore();
 }
 
@@ -3003,8 +3018,7 @@ function drawCheckpointGate(p, label='CHECK POINT'){
     }
   }
   ctx.fillStyle = '#0a1d33'; ctx.fillRect(p.x - width * 0.32, top + barH * 0.15, width * 0.64, barH * 0.7);
-  ctx.fillStyle = '#ffd200'; ctx.font = `900 ${barH * 0.42}px Arial`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(label, p.x, top + barH * 0.5);
+  v40FitSignText(label,p.x-width*.30,top+barH*.20,width*.60,barH*.60,barH*.42,'#ffd200');
   ctx.restore();
 }
 
@@ -3024,11 +3038,8 @@ function drawRouteGantry(p, n, index){
     ctx.fillStyle = g; ctx.fillRect(x, top, plateW, plateH);
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.strokeRect(x, top, plateW, plateH);
     if(plateW > 50){
-      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#ffe570'; ctx.font = `900 ${plateH * 0.24}px Arial`;
-      ctx.fillText(`${side < 0 ? '◀ EASY' : 'HARD ▶'}`, x + 8, top + plateH * 0.3);
-      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${plateH * 0.36}px Arial`;
-      ctx.fillText(node.name, x + 8, top + plateH * 0.72);
+      v40FitSignText(`${side < 0 ? '◀ EASY' : 'HARD ▶'}`,x+6,top+plateH*.10,plateW-12,plateH*.32,plateH*.22,'#ffe570');
+      v40FitSignText(node.name,x+6,top+plateH*.44,plateW-12,plateH*.46,plateH*.34,'#ffffff');
     }
   }
   ctx.restore();
@@ -3195,9 +3206,13 @@ function drawRivalCar(car,x,y,s){
   for(const wx of [-w*.38,w*.38]){ctx.beginPath();ctx.ellipse(wx,0,w*.12,10,0,0,Math.PI*2);ctx.fill();}
   ctx.beginPath();ctx.ellipse(side*w*.40+dx*.72,dy*.55,w*.11,9,0,0,Math.PI*2);ctx.fill();
   // Vehicle-specific volume/details.
-  if(spec.bus){ctx.fillStyle='#f1f4ee';ctx.fillRect(-w*.45,-h*.45,w*.9,h*.17);ctx.fillStyle='#0b1520';ctx.fillRect(-w*.28,-h*.89,w*.56,8);ctx.fillStyle='#ff9b22';ctx.font='900 6px monospace';ctx.textAlign='center';ctx.fillText('307 台北車站',0,-h*.89+6);}
+  if(spec.bus){ctx.fillStyle='#f1f4ee';ctx.fillRect(-w*.45,-h*.45,w*.9,h*.17);ctx.fillStyle='#0b1520';ctx.fillRect(-w*.28,-h*.89,w*.56,8);v40FitSignText('307 台北車站',-w*.27,-h*.89,w*.54,8,6,'#ff9b22');}
   if(spec.blueTruck){ctx.fillStyle='#2c5282';ctx.fillRect(-w*.44,-h*.42,w*.88,h*.34);ctx.strokeStyle='#8eb4d0';ctx.strokeRect(-w*.44,-h*.42,w*.88,h*.34);ctx.fillStyle='#b7791f';ctx.fillRect(-w*.27,-h*.48,22,14);}
   if(spec.taxi){ctx.fillStyle='#ff3150';ctx.beginPath();ctx.roundRect(-12,roofTop-10,24,7,2);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 5px sans-serif';ctx.textAlign='center';ctx.fillText('TAXI',0,roofTop-4);}
+  // Side door seam, rocker highlight and rims keep traffic readable as a vehicle volume at speed.
+  ctx.strokeStyle='#d8edf055';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(side*w*.43+dx*.16,rearTop*.78+dy*.16);ctx.lineTo(side*w*.45+dx*.62,-8+dy*.62);ctx.stroke();
+  ctx.strokeStyle='#0b141c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(side*w*.45,-5);ctx.lineTo(side*w*.45+dx*.74,dy*.74-5);ctx.stroke();
+  ctx.fillStyle='#768b93';ctx.beginPath();ctx.arc(side*w*.40+dx*.72,dy*.55,4.2,0,Math.PI*2);ctx.fill();
   ctx.fillStyle='#ff344f';ctx.fillRect(-w*.40,-h*.25,w*.20,8);ctx.fillRect(w*.20,-h*.25,w*.20,8);
   ctx.fillStyle='#f6f3df';ctx.fillRect(-9,-h*.20,18,7);
   const changing=Math.abs((car.laneTarget??car.x)-car.x)>.08,blinkOn=changing&&(Math.floor(simulationTime*7)%2===0);
@@ -3357,10 +3372,11 @@ function drawParticles(dt){
 }
 
 function drawSpeedLines(){
-  if(speed < 235 && !isDrafting) return;
-  const strength = isDrafting ? 1.4 : clamp((speed - 235) / 58, 0, 1.2);
-  ctx.save(); ctx.globalAlpha = 0.12 * strength; ctx.strokeStyle = isDrafting ? '#00e5ff' : '#fff'; ctx.lineWidth = isDrafting ? 2.5 : 2;
-  for(let i = 0; i < (isDrafting ? 24 : 16); i++){
+  if(speed < 225 && !isDrafting && !boosting && exitBoost<=0) return;
+  const boostStrength=boosting?2.25:exitBoost>0?1.65:0;
+  const strength = Math.max(boostStrength,isDrafting ? 1.4 : clamp((speed - 225) / 62, 0, 1.25));
+  ctx.save(); ctx.globalAlpha = 0.13 * strength; ctx.strokeStyle = (boosting||isDrafting) ? '#bffcff' : exitBoost>0?'#ffe59a':'#fff'; ctx.lineWidth = (boosting||isDrafting) ? 2.6 : 2;
+  for(let i = 0; i < (boosting?36:isDrafting?24:exitBoost>0?26:16); i++){
     const x = (i * 84 + simulationTime * 550) % W, y = 170 + (i * 43) % 280;
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (x - W / 2) * 0.05, y + 28); ctx.stroke();
   }
@@ -3575,7 +3591,12 @@ function render(dt){
   presentArcade();
 }
 
-function presentArcade(){displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);displayCtx.drawImage(arcadeBuffer,0,0,W,H);}
+function presentArcade(){
+ displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);
+ const active=clamp((boosting?.42:0)+(exitBoost>0?.24:0)+boostKick*.58,0,1),crop=Math.round(active*11);
+ displayCtx.drawImage(arcadeBuffer,crop,crop,W-crop*2,H-crop*2,0,0,W,H);
+ if(active>.08){displayCtx.save();displayCtx.globalAlpha=active*.08;displayCtx.globalCompositeOperation='screen';displayCtx.drawImage(arcadeBuffer,crop+3,crop,W-crop*2,H-crop*2,0,0,W,H);displayCtx.restore();}
+}
 
 // Original architecture details with a restrained arcade palette.
 function arcadeFooting(w){
@@ -3598,7 +3619,7 @@ function drawGuanghuaDigital(x,y,s){
  ctx.fillStyle='#385c63';ctx.fillRect(-66,-19,50,19);ctx.fillStyle='#f4ca75';ctx.fillRect(-70,-21,57,4);for(let xx=-60;xx<-18;xx+=11){glassPanel(xx,-16,8,14);}
  ctx.fillStyle='#30564c';for(const xx of [-92,18,103]){ctx.fillRect(xx-4,-11,9,10);ctx.beginPath();ctx.arc(xx,-14,8,0,Math.PI*2);ctx.fill();}ctx.restore();
 }
-function drawGrandHotelPalace(x,y,s){
+function legacyV40_drawGrandHotelPalace(x,y,s){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(103);
  ctx.fillStyle='#782d30';ctx.beginPath();ctx.moveTo(80,-99);ctx.lineTo(103,-84);ctx.lineTo(103,0);ctx.lineTo(80,0);ctx.fill();ctx.fillStyle='#e0c39c';ctx.fillRect(-87,-97,168,97);
  for(let fl=0;fl<8;fl++){const yy=-8-fl*11;ctx.fillStyle='#642e35';ctx.fillRect(-87,yy-9,168,2);ctx.fillStyle='#bc3a32';ctx.fillRect(-89,yy,173,3);ctx.fillStyle='#ecb974';ctx.fillRect(-88,yy,171,1);for(let xx=-81;xx<81;xx+=13){ctx.fillStyle='#483f41';ctx.fillRect(xx+3,yy-8,7,6);ctx.fillStyle='#d95839';ctx.fillRect(xx,yy-10,3,13);ctx.fillStyle='#f7d796';ctx.fillRect(xx,yy-10,1,12);}}
@@ -3621,7 +3642,7 @@ function drawTaipeiDome(x,y,s){
  ctx.fillStyle='#ebdeb9';ctx.fillRect(-121,-27,242,3);for(let xx=-100;xx<111;xx+=11)glassPanel(xx,-23,7,18);
  ctx.fillStyle='#142f3f';ctx.fillRect(-27,-17,54,17);ctx.fillStyle='#e5ce8d';ctx.fillRect(-29,-18,58,2);ctx.restore();
 }
-function drawCloudTower(x,y,s){
+function legacyV40_drawCloudTower(x,y,s){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);arcadeFooting(48);
  ctx.fillStyle='#31566b';ctx.fillRect(-45,-42,90,42);ctx.fillStyle='#a9c8ba';ctx.fillRect(-44,-41,68,39);ctx.fillStyle='#d4e3ce';ctx.fillRect(-44,-42,90,3);
  for(let xx=-36;xx<22;xx+=11)glassPanel(xx,-29,8,28);ctx.fillStyle='#688e96';ctx.fillRect(24,-39,21,39);for(let yy=-30;yy<-4;yy+=8){ctx.fillStyle='#315667';ctx.fillRect(27,yy,14,3);}
@@ -3846,7 +3867,17 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'44.0',dashWindow:.45,topSpeed:280,boostSpeed:300,lowSpeed:190,accel:60,turn:1.05,brake:125,nitroCharge:28,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'45.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:68,turn:1.05,brake:125,nitroCharge:32,hitHalfWidth:62});
+const GEAR_RULES=Object.freeze({
+ LOW:{max:185,lowTorque:1.34,highTorque:.62},
+ HIGH:{max:285,lowTorque:.34,highTorque:1.02}
+});
+function gearDriveProfile(gear,speedNow,isBoost=false){
+ const rule=GEAR_RULES[gear]||GEAR_RULES.LOW;
+ const blend=clamp((speedNow-95)/90,0,1);
+ const torque=lerp(rule.lowTorque,rule.highTorque,blend);
+ return {max:isBoost?COMPETITION.boostSpeed:rule.max,torque};
+}
 let helperWasHeld=false,helperPulse=0,counterTime=0,neutralTime=0;
 let driftRearmBlocked=false;
 let driftState='grip',brakeHoldTime=0,brakeLoss=0,driftAge=0,driftCooldown=0,brakeVisual=0;
@@ -3857,20 +3888,20 @@ function resetDrivingState(){
  helperWasHeld=false;helperPulse=0;counterTime=0;neutralTime=0;
  driftRearmBlocked=false;driftState='grip';brakeHoldTime=0;brakeLoss=0;driftAge=0;driftCooldown=0;
  brakeEntry=0;brakeWasHeld=false;brakeVisual=0;driftAngle=0;yawRate=0;slipAngle=0;coastWindow=0;previousGas=false;
- isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;lateralVelocity=0;slideTrails=[];
+ isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;boostKick=0;shiftCutTimer=0;shiftPunch=0;lateralVelocity=0;slideTrails=[];
 }
-// V44 drift calibration: fast counter-steer recovery plus a KartRider-inspired throttle re-tap moment boost.
-const DRIFT44=Object.freeze({
- entryMinSpeed:82, entryRamp:.14, counterRecover:.18, neutralRecover:.34,
- maxBodyYaw:42, baseYaw:11, steerYaw:20, speedYaw:6.5, curveYaw:2.8,
- baseSlip:7.2, steerSlip:9.6, counterYawTrim:.32, counterSlipTrim:.30,
- yawResponse:18, recoverResponse:25, slipResponse:15, recoverSlipResponse:22,
- driftPathYaw:1.72, gripPathYaw:2.70, steerPath:.39, driftLateralResponse:11.5,
- exitBoost:.36, momentWindow:.46, rearmYaw:1.5, rearmSlip:1.0
+// V45 drift calibration: quicker initiation, stronger slip feedback, decisive counter-steer and a skill-timed re-throttle boost.
+const DRIFT45=Object.freeze({
+ entryMinSpeed:76, entryRamp:.11, counterRecover:.15, neutralRecover:.30,
+ maxBodyYaw:45, baseYaw:12, steerYaw:22, speedYaw:7.2, curveYaw:3.0,
+ baseSlip:7.8, steerSlip:10.4, counterYawTrim:.26, counterSlipTrim:.25,
+ yawResponse:21, recoverResponse:29, slipResponse:17, recoverSlipResponse:25,
+ driftPathYaw:1.86, gripPathYaw:2.70, steerPath:.42, driftLateralResponse:12.5,
+ exitBoost:.48, momentWindow:.55, rearmYaw:1.35, rearmSlip:.9
 });
 function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  const helper=inputHeld('ShiftLeft')||inputHeld('ShiftRight')||gamepadInput.drift;
- if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT44.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
+ if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT45.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
  helperWasHeld=helper;helperPulse=Math.max(0,helperPulse-dt);
  const previousBrake=brakeWasHeld,sign=Math.abs(steerTarget)>.10?Math.sign(steerTarget):0;
  const gasPressed=accelHeld&&!previousGas,gasReleased=!accelHeld&&previousGas;
@@ -3882,20 +3913,21 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!driftRearmBlocked&&brakeHoldTime>=.012){brakeEntry=.46;if(!isDrifting)driftState='brake';}
  }else{
   brakeEntry=Math.max(0,brakeEntry-dt*1.25);
-  if(!isDrifting&&Math.abs(slipAngle)<DRIFT44.rearmSlip&&Math.abs(driftAngle)<DRIFT44.rearmYaw)driftRearmBlocked=false;
+  if(!isDrifting&&Math.abs(slipAngle)<DRIFT45.rearmSlip&&Math.abs(driftAngle)<DRIFT45.rearmYaw)driftRearmBlocked=false;
  }
  if(previousGas&&!accelHeld&&!brakeHeld)coastWindow=.26;else coastWindow=Math.max(0,coastWindow-dt);
  momentBoostWindow=Math.max(0,momentBoostWindow-dt);
  if(momentBoostWindow>0&&!isDrifting){
   if(gasReleased)momentBoostArmed=true;
   if(momentBoostArmed&&gasPressed&&!brakeHeld&&roadGrip>.8&&driveGear==='D'&&motionDirection===1){
-   exitBoost=Math.max(exitBoost,DRIFT44.exitBoost);momentBoostWindow=0;momentBoostArmed=false;
-   styleMessage('MOMENT BOOST!','放油再補油成功 · 保持甩尾節奏');
+   exitBoost=Math.max(exitBoost,DRIFT45.exitBoost);momentBoostWindow=0;momentBoostArmed=false;boostKick=Math.max(boostKick,.62);
+   flash=Math.max(flash,.035);screenShake=Math.max(screenShake,1.8);
+   styleMessage('MOMENT BOOST!','放油再補油成功 · 小噴接續氮氣');
   }
  }
  previousGas=accelHeld;brakeWasHeld=brakeHeld;exitBoost=Math.max(0,exitBoost-dt);
  const liftEntry=coastWindow>0&&Math.abs(curve)>.55&&Math.abs(curve)<2.05&&sign===Math.sign(curve)&&speed>138;
- if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT44.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
+ if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT45.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
   isDrifting=true;driftDirection=sign;driftState='entry';driftAge=0;cleanDriftTime=0;counterTime=0;neutralTime=0;brakeEntry=0;coastWindow=0;
  }
  let targetYaw,targetSlip=0;
@@ -3909,24 +3941,24 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(counter&&coastWindow>0&&accelHeld&&driftState!=='recover'&&counterTime>.10){
    driftDirection=sign;counterTime=0;driftAge=.08;coastWindow=0;cleanDriftTime=0;
   }
-  if(counterTime>DRIFT44.counterRecover||neutralTime>DRIFT44.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
+  if(counterTime>DRIFT45.counterRecover||neutralTime>DRIFT45.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
    driftState='recover';driftRearmBlocked=true;targetYaw=0;targetSlip=0;
-   if(Math.abs(driftAngle)<DRIFT44.rearmYaw&&Math.abs(slipAngle)<DRIFT44.rearmSlip){
+   if(Math.abs(driftAngle)<DRIFT45.rearmYaw&&Math.abs(slipAngle)<DRIFT45.rearmSlip){
     if(cleanDriftTime>.30&&roadGrip>.8&&!brakeHeld){
-      momentBoostWindow=Math.max(momentBoostWindow,DRIFT44.momentWindow);momentBoostArmed=!accelHeld;
+      momentBoostWindow=Math.max(momentBoostWindow,DRIFT45.momentWindow);momentBoostArmed=!accelHeld;
       styleMessage('MOMENT BOOST READY','反打收尾 · 放油再補油觸發小噴');
      }
     isDrifting=false;driftState='grip';driftDirection=0;cleanDriftTime=0;counterTime=0;neutralTime=0;
    }
   }else{
-   driftState=driftAge<DRIFT44.entryRamp?'entry':'drift';
+   driftState=driftAge<DRIFT45.entryRamp?'entry':'drift';
    const into=Math.max(0,steer*driftDirection);
-   const entryEase=clamp(driftAge/DRIFT44.entryRamp,0,1);
-   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT44.curveYaw:0;
-   const yawFull=DRIFT44.baseYaw+into*DRIFT44.steerYaw+ratio*DRIFT44.speedYaw+curveAssist;
-   const slipFull=DRIFT44.baseSlip+into*DRIFT44.steerSlip;
-   const yawTrim=counter?DRIFT44.counterYawTrim:neutral?.78:1;
-   const slipTrim=counter?DRIFT44.counterSlipTrim:neutral?.78:1;
+   const entryEase=clamp(driftAge/DRIFT45.entryRamp,0,1);
+   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT45.curveYaw:0;
+   const yawFull=DRIFT45.baseYaw+into*DRIFT45.steerYaw+ratio*DRIFT45.speedYaw+curveAssist;
+   const slipFull=DRIFT45.baseSlip+into*DRIFT45.steerSlip;
+   const yawTrim=counter?DRIFT45.counterYawTrim:neutral?.78:1;
+   const slipTrim=counter?DRIFT45.counterSlipTrim:neutral?.78:1;
    targetYaw=driftDirection*yawFull*entryEase*yawTrim;
    targetSlip=driftDirection*slipFull*entryEase*slipTrim;
   }
@@ -3935,14 +3967,14 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!brakeHeld)driftState=brakeEntry>0?'armed':'grip';
  }
  if(targetYaw===undefined)targetYaw=0;
- targetYaw=clamp(targetYaw,-DRIFT44.maxBodyYaw,DRIFT44.maxBodyYaw);
- const omega=driftState==='recover'?DRIFT44.recoverResponse:DRIFT44.yawResponse;
+ targetYaw=clamp(targetYaw,-DRIFT45.maxBodyYaw,DRIFT45.maxBodyYaw);
+ const omega=driftState==='recover'?DRIFT45.recoverResponse:DRIFT45.yawResponse;
  const error=driftAngle-targetYaw,c=yawRate+omega*error,decay=Math.exp(-omega*dt);
- driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT44.maxBodyYaw,DRIFT44.maxBodyYaw);
+ driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT45.maxBodyYaw,DRIFT45.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
- slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT44.recoverSlipResponse:DRIFT44.slipResponse)));
+ slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT45.recoverSlipResponse:DRIFT45.slipResponse)));
  const nitroRequested=boostRemaining>0;
- const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT44.entryMinSpeed&&roadGrip>.8;
+ const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT45.entryMinSpeed&&roadGrip>.8;
  driftChargeRate=0;
  if(genuineCorner){
   cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.65:1.4);
@@ -3961,11 +3993,11 @@ function stepArcadeMotion(dt,curve){
  const frontGrip=clamp(1-excess/180,.65,1);
  // V40: body can look sideways without throwing the car across multiple lanes.
  const travelYaw=(driftAngle-slipAngle)*Math.PI/180;
- const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT44.driftPathYaw:DRIFT44.gripPathYaw)*(.45+.65*ratio);
- const steerAuthority=isDrifting?DRIFT44.steerPath:.18;
+ const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT45.driftPathYaw:DRIFT45.gripPathYaw)*(.45+.65*ratio);
+ const steerAuthority=isDrifting?DRIFT45.steerPath:.18;
  const turn=Math.min(1,speed/35)*(yawTurn+steer*steerAuthority)*(isDrifting?1:frontGrip);
  const outward=curve*.036*ratio*ratio;
- lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT44.driftLateralResponse:14)));
+ lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT45.driftLateralResponse:14)));
  playerX+=lateralVelocity*dt*motionDirection;
  if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.55+Math.abs(slipAngle)*.020)*dt);
  if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.018:.38)*dt);
@@ -4035,7 +4067,7 @@ function districtPlacement(index,side){
   const envelope=roadEnvelope(index),surface=districtSurface(index,side),waterside=surface==='water',highway=currentNode.archetype==='expressway';
   const artUnits=waterside?2600:highway?3000:6000;
   // The full facade, projecting signs and awnings stay beyond the curb.
-  const halfWorld=70*artUnits/(W/2),margin=waterside?.34:halfWorld/ROAD_WIDTH+.18;
+  const halfWorld=118*artUnits/(W/2),margin=waterside?.38:halfWorld/ROAD_WIDTH+.22;
   return {artUnits,offset:side*ROAD_WIDTH*roadFactor()*(envelope+margin),surface};
 }
 function resolveRoadBoundary(index){
@@ -4046,14 +4078,17 @@ function resolveRoadBoundary(index){
   const limit=Math.max(.10,lane.half+shoulder*roadFactor()-PLAYER_HALF_WIDTH);
   const delta=playerX-lane.center;
   if(Math.abs(delta)<=limit)return;
-  const side=Math.sign(delta);playerX=lane.center+side*limit;
+  const side=Math.sign(delta),penetration=Math.abs(delta)-limit;playerX=lane.center+side*limit;
   lateralVelocity=side*Math.min(0,lateralVelocity*side);
-  roadGrip=.65;driftChargeRate=0;speed=Math.max(0,speed-1.2);
-  if(speed>85&&collisionCooldown<=0)triggerCrash(null,{x:W/2+side*80,y:H-85},true);
+  roadGrip=.65;driftChargeRate=0;speed=Math.max(0,speed-(hard?2.8:1.2));
+  // A light brush is a scrape, not an unexplained crash. Only a deep hit against a visibly hard elevated barrier can crash.
+  if(hard&&penetration>.055*roadFactor()&&speed>105&&collisionCooldown<=0)triggerCrash(null,{x:W/2+side*80,y:H-85},true);
 }
 function trafficHalfWidth(car){return car.spec.w*.44*1400/(ROAD_WIDTH*W/2);}
 function trafficCollisionEligible(previous,car){
   if(!car||!car.spec||![car.x,car.z,car.previousX??car.x,car.previousZ??car.z].every(Number.isFinite))return false;
+  // V45: if the renderer cannot produce a visible body box this frame, the car cannot hit the player.
+  if(!car.screenBox||car.screenBox.b<=car.screenBox.t)return false;
   if(currentNode.archetype==='expressway'&&car.spec.scooter)return false;
   // Traffic is intentionally rendered only before the fork warning. Once it leaves that authored road zone,
   // it must stop being a collider too; this removes invisible "ghost car" impacts.
@@ -4186,7 +4221,7 @@ function prepareLandmarkFrame(){
   (h.seg>=start+DRAW_DISTANCE?landmarkFrame.horizon:landmarkFrame.world).push(h);
  }
 }
-function drawLandmarkInstance(h,x,y,s,layer){
+function legacyV40_drawLandmarkInstance(h,x,y,s,layer){
  if(landmarkDrawLog.some(p=>p.id===h.id))return;
  landmarkDrawLog.push({id:h.id,name:h.name,seg:h.seg,layer,x,y,scale:s,worldOffset:h.worldOffset,pixelWidth:h.sprite.width*s,pixelHeight:h.sprite.height*s});
  ctx.save();ctx.fillStyle='#15283266';ctx.beginPath();ctx.ellipse(x,y,Math.max(2,s*88),Math.max(1,s*5),0,0,Math.PI*2);ctx.fill();
@@ -4260,13 +4295,21 @@ const V40_ART={
  '5E':{sky:['#101233','#442665','#ba78ad'],ground:['#254d40','#1d4235'],mountain:'#2f3850',sun:'#f2e1ff',kind:'tea'}
 };
 function v40Art(){return V40_ART[currentNode.id]||{sky:scene().sunset,ground:scene().ground,mountain:'#526b70',sun:'#ffe5a0',kind:scene().type};}
-function v40FitSignText(text,x,y,width,height,fontSize,color='#fff'){
- ctx.save();ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';
- let size=fontSize;ctx.font=`900 ${size}px TaipeiText, sans-serif`;
- while(size>4&&ctx.measureText(text).width>width){size-=.5;ctx.font=`900 ${size}px TaipeiText, sans-serif`;}
- ctx.fillText(text,x+width/2,y+height/2);ctx.restore();
+function fitSignTextLayout(text,width,height,fontSize){
+ const raw=String(text??''),safeW=Math.max(1,width-2),safeH=Math.max(1,height-2);
+ let displayText=raw,size=Math.min(fontSize,safeH*.86);
+ ctx.font=`900 ${size}px TaipeiText, sans-serif`;
+ while(size>2.5&&ctx.measureText(displayText).width>safeW){size-=.5;ctx.font=`900 ${size}px TaipeiText, sans-serif`;}
+ while(displayText.length>1&&ctx.measureText(displayText).width>safeW){displayText=displayText.slice(0,-1);}
+ if(displayText!==raw&&displayText.length>1){displayText=displayText.slice(0,-1)+'…';while(displayText.length>1&&ctx.measureText(displayText).width>safeW)displayText=displayText.slice(0,-2)+'…';}
+ return {displayText,size,width:ctx.measureText(displayText).width};
 }
-function drawV40V34CityPanorama(base){
+function v40FitSignText(text,x,y,width,height,fontSize,color='#fff'){
+ ctx.save();ctx.beginPath();ctx.rect(x,y,width,height);ctx.clip();ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';
+ const fit=fitSignTextLayout(text,width,height,fontSize);ctx.font=`900 ${fit.size}px TaipeiText, sans-serif`;
+ ctx.fillText(fit.displayText,x+width/2,y+height/2);ctx.restore();return fit;
+}
+function legacyV40_drawV40V34CityPanorama(base){
  const night=skyMood!=='sunset';
  ctx.save();
  for(let layer=0;layer<2;layer++)for(let i=-2;i<24;i++){
@@ -4301,7 +4344,7 @@ function drawV40LanternVillage(base){
  }
  ctx.globalAlpha=1;ctx.restore();
 }
-function drawV40V34TaipeiShophouse(x,y,s,idx){
+function legacyV40_drawV40V34TaipeiShophouse(x,y,s,idx){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
  const w=76,h=105+(idx%4)*14,night=skyMood!=='sunset',col=['#d9b48d','#abccc8','#eabca9','#a6bace'][idx%4];
  ctx.fillStyle='#26394a';ctx.fillRect(-w/2+8,-h+6,w,h);ctx.fillStyle=col;ctx.fillRect(-w/2,-h,w,h);ctx.fillStyle='#ffffff40';ctx.fillRect(-w/2,-h,6,h);
@@ -4707,10 +4750,17 @@ function drawV42TaipeiBlock(x,y,s,idx,variant=0){
   const floorH=22+Math.floor(v41Hash(seed+2)*5),h=30+floors*floorH;
   const facades=['#d3b08c','#b9c7bf','#d4c1b0','#a9b9c4','#c7b69d','#c1c7b1'];
   const facade=v41Pick(facades,seed+3),vol=buildingVolumeProfile(worldX,idx,seed),depth=vol.depth,dx=vol.dx,dy=vol.dy,face=vol.face;
-  // V44: full extruded side + roof planes make roadside architecture read as volume while passing at speed.
+  // V45: full extruded side + roof planes make roadside architecture read as volume while passing at speed.
   ctx.fillStyle='#43545d';ctx.beginPath();ctx.moveTo(face*w/2,-h);ctx.lineTo(face*w/2+dx,-h+dy);ctx.lineTo(face*w/2+dx,dy);ctx.lineTo(face*w/2,0);ctx.closePath();ctx.fill();
   ctx.fillStyle='#8b9a98';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h);ctx.lineTo(w/2+dx,-h+dy);ctx.lineTo(-w/2+dx,-h+dy);ctx.closePath();ctx.fill();
   ctx.fillStyle='#253640';ctx.beginPath();ctx.moveTo(face*(w/2+1),-30);ctx.lineTo(face*(w/2+depth*.72),-30+dy*.72);ctx.lineTo(face*(w/2+depth*.72),dy*.72);ctx.lineTo(face*(w/2+1),0);ctx.closePath();ctx.fill();
+  // Side facade windows and slab edges make the extrusion readable rather than a single dark polygon.
+  for(let sf=0;sf<Math.min(floors,5);sf++){
+    const sy=-44-sf*floorH,outer=face*w/2,inner=outer+dx*.72;
+    ctx.fillStyle=skyMood==='sunset'?'#2c4c58':'#e5bd6a';ctx.globalAlpha=skyMood==='sunset'?.72:.82;
+    ctx.beginPath();ctx.moveTo(outer,sy);ctx.lineTo(inner,sy+dy*.72);ctx.lineTo(inner,sy+dy*.72-10);ctx.lineTo(outer,sy-10);ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.strokeStyle='#9ba7a3';ctx.lineWidth=.55;ctx.beginPath();ctx.moveTo(outer,sy+2);ctx.lineTo(inner,sy+dy*.72+2);ctx.stroke();
+  }
   const fg=ctx.createLinearGradient(-w/2,0,w/2,0);
   fg.addColorStop(0,'#ffffff18');fg.addColorStop(.2,facade);fg.addColorStop(1,facade);
   ctx.fillStyle=fg;ctx.fillRect(-w/2,-h,w,h);
@@ -4723,6 +4773,7 @@ function drawV42TaipeiBlock(x,y,s,idx,variant=0){
   ctx.fillStyle=sign;ctx.fillRect(-w/2+6,-34,w-12,13);
   v40FitSignText(shop,-w/2+8,-33,w-16,11,8.5,'#fff8e8');
   const aw=v41Pick(['#e7d3a8','#ef725d','#4f9ea0','#d8b855'],seed+7);
+  ctx.fillStyle='#18242d88';ctx.beginPath();ctx.moveTo(-w/2+5,-14);ctx.lineTo(w/2-5,-14);ctx.lineTo(w/2-5+dx*.35,-10+dy*.35);ctx.lineTo(-w/2+5+dx*.35,-10+dy*.35);ctx.closePath();ctx.fill();
   for(let ax=-w/2+6,k=0;ax<w/2-6;ax+=10,k++){ctx.fillStyle=k%2?aw:'#f1ead8';ctx.fillRect(ax,-20,10,6);}
   for(let fl=0;fl<floors;fl++){
     const fy=-37-fl*floorH;
@@ -4761,9 +4812,12 @@ function drawTaipeiShophouse(x,y,s,idx){drawV42TaipeiBlock(x,y,s,idx,1);}
 function drawV40V34TaipeiShophouse(x,y,s,idx){drawV42TaipeiBlock(x,y,s,idx,2);}
 
 function drawTaipeiSkyscrapers(x,y,s,idx){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const worldX=x;ctx.save();ctx.translate(x,y);ctx.scale(s,s);
   const seed=idx*71+currentNode.seed*31,w=52+Math.floor(v41Hash(seed)*30),h=92+Math.floor(v41Hash(seed+1)*85);
-  const glass=v41Pick(['#244f67','#315d73','#3f667a','#243f61','#456d72'],seed+2);
+  const glass=v41Pick(['#244f67','#315d73','#3f667a','#243f61','#456d72'],seed+2),face=worldX<W/2?1:-1,depth=14+Math.floor(v41Hash(seed+8)*9),dx=face*depth,dy=-depth*.28;
+  ctx.fillStyle='#102835';ctx.beginPath();ctx.moveTo(face*w/2,-h);ctx.lineTo(face*w/2+dx,-h+dy);ctx.lineTo(face*w/2+dx,dy);ctx.lineTo(face*w/2,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#78929a';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h);ctx.lineTo(w/2+dx,-h+dy);ctx.lineTo(-w/2+dx,-h+dy);ctx.closePath();ctx.fill();
+  for(let yy=-h+14;yy<-12;yy+=15){ctx.fillStyle='#7fc0c244';ctx.beginPath();ctx.moveTo(face*w/2,yy);ctx.lineTo(face*w/2+dx*.82,yy+dy*.82);ctx.lineTo(face*w/2+dx*.82,yy+dy*.82+6);ctx.lineTo(face*w/2,yy+6);ctx.closePath();ctx.fill();}
   ctx.fillStyle='#152c3e';ctx.beginPath();ctx.moveTo(-w/2,-h);ctx.lineTo(w/2,-h-8);ctx.lineTo(w/2+12,-7);ctx.lineTo(w/2,0);ctx.lineTo(-w/2,0);ctx.closePath();ctx.fill();
   const g=ctx.createLinearGradient(-w/2,-h,w/2,0);g.addColorStop(0,'#b9e4e955');g.addColorStop(.26,glass);g.addColorStop(.72,'#17374d');g.addColorStop(1,'#92bdc733');
   ctx.fillStyle=g;ctx.fillRect(-w/2,-h,w,h);
