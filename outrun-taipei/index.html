@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V46</title>
+<title>台北極速傳說｜Taipei Sunset Drive V47</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -155,7 +155,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V46 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V47 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -505,8 +505,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V46 · V34 ART × V39 3D</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V46</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V47 · CLEAN ROOM 3D FEEL</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V47</span></h1>
       <div class="subtitle">90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -552,12 +552,12 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     <div class="car-selector">
       <label for="car-select">CAR</label>
       <select id="car-select">
-        <option value="testarossa">TS-86 經典紅敞篷 (Classic Red GT)</option>
+        <option value="red_roadster">TS-86 經典紅敞篷 (Classic Red GT)</option>
         <option value="taxi_rush">TAIPEI TAXI 疾速小黃特別版</option>
         <option value="black_gt">大度路傳奇 MIDNIGHT GT (Black Devil)</option>
-        <option value="cygnus_moto">山道之王 STREET-125 機車</option>
-        <option value="blue_veryca">藍色 BOX-80 小貨車</option>
-        <option value="porsche_911">東區銀箭 GT-92 S (German Classic)</option>
+        <option value="street_moto">山道之王 STREET-125 機車</option>
+        <option value="blue_box_truck">藍色 BOX-80 小貨車</option>
+        <option value="silver_gt">東區銀箭 GT-92 S (German Classic)</option>
       </select>
       <label style="margin-left:8px"><input type="checkbox" id="auto-gear-check"> 自動換檔</label>
     </div>
@@ -1194,6 +1194,18 @@ const V46_CLEAN_ROOM_ART=Object.freeze({
   preserve:'Taipei V45 routes, landmarks, physics, traffic rules and Twin Link',
   visualModel:'layered Taipei vista + local roadside rhythm'
 });
+const V47_CLEAN_ROOM_REFERENCE=Object.freeze({
+  observationOnly:true,sourceCode:false,sourceAssets:false,sourceAudio:false,sourceVehicleModels:false,
+  decompilation:false,instructionMapping:false,directSyntaxTranslation:false,
+  exactHandlingCurveCopy:false,distinctiveModeClone:false,distinctiveRouteUICopy:false,
+  licensedVehicleIdentity:false,independentImplementation:true,
+  preserve:'Taipei routes, landmarks, nitro, gears, visible collision rules and Twin Link'
+});
+const V47_ART=Object.freeze({
+  horizonBand:.505,edgeMassStride:30,foregroundScale:1.18,
+  paletteSource:'Taipei theme only',foreignStageMotifs:false,foreignVehicleIdentity:false
+});
+
 const V46_TAIPEI_ROUTE_GUARD=Object.freeze([
   ['1A','總統府 & 凱達格蘭大道','civic','urban'],
   ['2A','中山北路林蔭道 & 圓山大飯店','yuanshan','mountain'],
@@ -1303,22 +1315,22 @@ const TRAFFIC_TYPES = {
   blue_truck:{ name:'藍色小發財車 (BOX-80)', w:74, h:48, speedMin:130, speedMax:155, colors:['#1e66d0'], blueTruck:true },
   bus:       { name:'台北市區雙門公車', w:115, h:76, speedMin:125, speedMax:148, colors:['#1b6842','#0c4a8a'], bus:true },
   scooter:   { name:'街道速克達', w:46, h:44, speedMin:145, speedMax:175, colors:['#ff244f','#ffffff','#00e5ff'], scooter:true },
-  porsche:   { name:'經典跑車 GT-92', w:82, h:38, speedMin:195, speedMax:235, colors:['#ffffff','#20242c','#e61e2b'], wing:true },
-  corvette:  { name:'美式經典跑車 V8 COUPE', w:82, h:38, speedMin:190, speedMax:228, colors:['#0090ea','#ffffff','#ff244f'], wing:true },
-  beetle:    { name:'復古金龜車 RETRO COMPACT', w:74, h:46, speedMin:140, speedMax:172, colors:['#e88ea1','#7fd1c1','#f2c14e'] }
+  euro_gt:   { name:'經典跑車 GT-92', w:82, h:38, speedMin:195, speedMax:235, colors:['#ffffff','#20242c','#e61e2b'], wing:true },
+  v8_coupe:  { name:'美式經典跑車 V8 COUPE', w:82, h:38, speedMin:190, speedMax:228, colors:['#0090ea','#ffffff','#ff244f'], wing:true },
+  retro_compact:    { name:'復古金龜車 RETRO COMPACT', w:74, h:46, speedMin:140, speedMax:172, colors:['#e88ea1','#7fd1c1','#f2c14e'] }
 };
 
 
 const CAR_PROFILES = {
-  testarossa: { name:'TS-86 經典紅敞篷', baseHp:660, maxSpeed:293, lowMax:193, accel:58, turn:1.02, drift:1.0, color:'#e61e2b', accent:'#fff' },
+  red_roadster: { name:'TS-86 經典紅敞篷', baseHp:660, maxSpeed:293, lowMax:193, accel:58, turn:1.02, drift:1.0, color:'#e61e2b', accent:'#fff' },
   taxi_rush:  { name:'TAIPEI TAXI 疾速小黃', baseHp:680, maxSpeed:290, lowMax:192, accel:65, turn:1.15, drift:0.95, color:'#ffd200', accent:'#000' },
   black_gt:   { name:'大度路傳奇 MIDNIGHT GT', baseHp:800, maxSpeed:298, lowMax:195, accel:62, turn:1.04, drift:1.25, color:'#181c24', accent:'#ff2d75' },
-  cygnus_moto:{ name:'山道之王 STREET-125 機車', isBike:true, baseHp:600, maxSpeed:275, lowMax:180, accel:78, turn:1.35, drift:1.30, color:'#00e5ff', accent:'#ffd200' },
-  blue_veryca:{ name:'藍色 BOX-80 小貨車', isTruck:true, baseHp:640, maxSpeed:280, lowMax:175, accel:72, turn:0.95, drift:0.90, color:'#1e66d0', accent:'#fff' },
-  porsche_911:{ name:'東區銀箭 GT-92', baseHp:740, maxSpeed:305, lowMax:200, accel:64, turn:1.08, drift:1.15, color:'#f0f4f8', accent:'#e61e2b' }
+  street_moto:{ name:'山道之王 STREET-125 機車', isBike:true, baseHp:600, maxSpeed:275, lowMax:180, accel:78, turn:1.35, drift:1.30, color:'#00e5ff', accent:'#ffd200' },
+  blue_box_truck:{ name:'藍色 BOX-80 小貨車', isTruck:true, baseHp:640, maxSpeed:280, lowMax:175, accel:72, turn:0.95, drift:0.90, color:'#1e66d0', accent:'#fff' },
+  silver_gt:{ name:'東區銀箭 GT-92', baseHp:740, maxSpeed:305, lowMax:200, accel:64, turn:1.08, drift:1.15, color:'#f0f4f8', accent:'#e61e2b' }
 };
 
-let currentCar = CAR_PROFILES.testarossa;
+let currentCar = CAR_PROFILES.red_roadster;
 let currentGear='LOW';
 let driveGear='D',motionDirection=1,reverseWindow=0,nitroLatch=false,gearDWasHeld=false,gearRWasHeld=false,gearInputEvents=[],reverseInputTime=0;
 let rpm = 800;
@@ -1685,8 +1697,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V46',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V46</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V47',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V47</span>',
   subtitle: '90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -2351,7 +2363,9 @@ function update(dt){
   shiftCutTimer=Math.max(0,shiftCutTimer-dt);shiftPunch=Math.max(0,shiftPunch-dt);boostKick=Math.max(0,boostKick-dt*1.65);
 
   const steerTarget=left||right?(right?1:0)-(left?1:0):gamepadInput.steer||(gyroEnabled?gyroSteer:0);
-  steer=lerp(steer,steerTarget,1-Math.exp(-dt*(left||right?22:16)));
+  const steeringProfile=v47SteeringProfile(speed,isDrifting);
+  const steerRate=Math.abs(steerTarget)>.001?steeringProfile.response:V47_HANDLING.steerRelease;
+  steer=lerp(steer,steerTarget,1-Math.exp(-dt*steerRate));
   const segIndex=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,segments.length-1),seg=segments[segIndex];
   raceElapsed+=dt;stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,seg.curve);
   const nitroHeld=inputHeld('KeyN')||gamepadInput.nitro;
@@ -2385,7 +2399,7 @@ function update(dt){
     rpm = lerp(rpm, 1200 + (speed / currentCar.maxSpeed) * 7000, dt * 8);
   }
 
-  stepArcadeMotion(dt,seg.curve);
+  stepArcadeMotion(dt,seg.curve,accelHeld,brakeHeld);
 
   // Off-road bouncing & drag
   const localIndex = playerZ / SEGMENT_LENGTH;
@@ -2662,6 +2676,7 @@ function drawRoad(){
 
   if(currentNode.archetype==='expressway')drawElevatedRails(projected);
   drawV46RoadEdgeRhythm(projected);
+  drawV47ForegroundMass(projected);
   drawRoadside(Math.floor(playerZ / SEGMENT_LENGTH), t);
   drawStartingScene(Math.floor(playerZ / SEGMENT_LENGTH));
   drawForkObjects(Math.floor(playerZ / SEGMENT_LENGTH));
@@ -3325,7 +3340,7 @@ function buildVehicleMesh(){
   for(const sg of [-1,1]){box(sg<0?-72:65,sg<0?-65:72,53,69,-96,33,body,'bed-rail');for(let z=-83;z<28;z+=23)side(sg,z,z+3,55,67,73,'#a5c7d4','bed-rib');}
   box(-38,5,55,82,-63,-25,'#b68755','cargo');box(10,47,55,73,-21,16,'#cba170','cargo');
  }else{
-  const open=selectedCarId==='testarossa',roof=selectedCarId==='porsche_911'?79:77;
+  const open=selectedCarId==='red_roadster',roof=selectedCarId==='silver_gt'?79:77;
   add([[-65,44,-62],[65,44,-62],[56,roof,-25],[-56,roof,-25]],open?'#344653':glass,'rear-window');
   if(open){
    box(-56,56,43,46,-32,42,'#182d38','cockpit');for(const x of [-28,28])box(x-17,x+17,44,59,-29,5,x<0?'#a76e52':'#c39364','seat');
@@ -3635,8 +3650,11 @@ function render(dt){
 function presentArcade(){
  displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);
  const active=clamp((boosting?.42:0)+(exitBoost>0?.24:0)+boostKick*.58,0,1),crop=Math.round(active*11);
+ const speedRatio=clamp(speed/COMPETITION.topSpeed,0,1),lean=clamp((steer*.62+(driftAngle/40)*.78)*speedRatio*V47_HANDLING.cameraLeanMax,-V47_HANDLING.cameraLeanMax,V47_HANDLING.cameraLeanMax);
+ displayCtx.save();displayCtx.translate(W/2,H/2);displayCtx.rotate(lean);displayCtx.scale(1.006+Math.abs(lean)*1.7,1.006+Math.abs(lean)*1.7);displayCtx.translate(-W/2,-H/2);
  displayCtx.drawImage(arcadeBuffer,crop,crop,W-crop*2,H-crop*2,0,0,W,H);
- if(active>.08){displayCtx.save();displayCtx.globalAlpha=active*.08;displayCtx.globalCompositeOperation='screen';displayCtx.drawImage(arcadeBuffer,crop+3,crop,W-crop*2,H-crop*2,0,0,W,H);displayCtx.restore();}
+ if(active>.08){displayCtx.globalAlpha=active*.08;displayCtx.globalCompositeOperation='screen';displayCtx.drawImage(arcadeBuffer,crop+3,crop,W-crop*2,H-crop*2,0,0,W,H);}
+ displayCtx.restore();
 }
 
 // Original architecture details with a restrained arcade palette.
@@ -3908,7 +3926,7 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'46.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:68,turn:1.05,brake:125,nitroCharge:32,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'47.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:68,turn:1.05,brake:125,nitroCharge:32,hitHalfWidth:62});
 const GEAR_RULES=Object.freeze({
  LOW:{max:185,lowTorque:1.34,highTorque:.62},
  HIGH:{max:285,lowTorque:.34,highTorque:1.02}
@@ -3931,18 +3949,32 @@ function resetDrivingState(){
  brakeEntry=0;brakeWasHeld=false;brakeVisual=0;driftAngle=0;yawRate=0;slipAngle=0;coastWindow=0;previousGas=false;
  isDrifting=false;driftDirection=0;cleanDriftTime=0;exitBoost=0;momentBoostWindow=0;momentBoostArmed=false;boostKick=0;shiftCutTimer=0;shiftPunch=0;lateralVelocity=0;slideTrails=[];
 }
-// V46 drift calibration: quicker initiation, stronger slip feedback, decisive counter-steer and a skill-timed re-throttle boost.
-const DRIFT45=Object.freeze({
- entryMinSpeed:76, entryRamp:.11, counterRecover:.15, neutralRecover:.30,
- maxBodyYaw:45, baseYaw:12, steerYaw:22, speedYaw:7.2, curveYaw:3.0,
- baseSlip:7.8, steerSlip:10.4, counterYawTrim:.26, counterSlipTrim:.25,
- yawResponse:21, recoverResponse:29, slipResponse:17, recoverSlipResponse:25,
- driftPathYaw:1.86, gripPathYaw:2.70, steerPath:.42, driftLateralResponse:12.5,
- exitBoost:.48, momentWindow:.55, rearmYaw:1.35, rearmSlip:.9
+// V47 clean-room handling calibration: speed-stable steering, controllable weight transfer, precise drift trim and quick recovery.
+const DRIFT47=Object.freeze({
+ entryMinSpeed:78, entryRamp:.10, counterRecover:.17, neutralRecover:.24,
+ maxBodyYaw:40, baseYaw:11.4, steerYaw:20.2, speedYaw:6.4, curveYaw:2.6,
+ baseSlip:6.9, steerSlip:9.6, counterYawTrim:.20, counterSlipTrim:.18,
+ yawResponse:24, recoverResponse:34, slipResponse:20, recoverSlipResponse:30,
+ driftPathYaw:1.78, gripPathYaw:2.88, steerPath:.46, driftLateralResponse:14,
+ exitBoost:.48, momentWindow:.55, rearmYaw:1.15, rearmSlip:.75
 });
+const V47_HANDLING=Object.freeze({
+  independentModel:true,directSyntaxTranslation:false,gearDriftClone:false,heartModeClone:false,
+  steerResponseLow:18,steerResponseHigh:9.2,steerRelease:15.5,
+  authorityLow:1.04,authorityHigh:.78,liftGripGain:.16,brakeRotationGain:.10,
+  cameraLeanMax:.0105
+});
+function v47SteeringProfile(speedNow,drifting=false){
+  const t=clamp(speedNow/COMPETITION.topSpeed,0,1);
+  return {
+    response:lerp(V47_HANDLING.steerResponseLow,V47_HANDLING.steerResponseHigh,t)*(drifting?1.10:1),
+    authority:lerp(V47_HANDLING.authorityLow,V47_HANDLING.authorityHigh,t),
+    liftGrip:1+V47_HANDLING.liftGripGain*t
+  };
+}
 function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  const helper=inputHeld('ShiftLeft')||inputHeld('ShiftRight')||gamepadInput.drift;
- if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT45.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
+ if(helper&&!helperWasHeld&&!isDrifting&&speed>DRIFT47.entryMinSpeed&&driveGear==='D'&&motionDirection===1){helperPulse=.06;brakeEntry=.46;}
  helperWasHeld=helper;helperPulse=Math.max(0,helperPulse-dt);
  const previousBrake=brakeWasHeld,sign=Math.abs(steerTarget)>.10?Math.sign(steerTarget):0;
  const gasPressed=accelHeld&&!previousGas,gasReleased=!accelHeld&&previousGas;
@@ -3954,21 +3986,21 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!driftRearmBlocked&&brakeHoldTime>=.012){brakeEntry=.46;if(!isDrifting)driftState='brake';}
  }else{
   brakeEntry=Math.max(0,brakeEntry-dt*1.25);
-  if(!isDrifting&&Math.abs(slipAngle)<DRIFT45.rearmSlip&&Math.abs(driftAngle)<DRIFT45.rearmYaw)driftRearmBlocked=false;
+  if(!isDrifting&&Math.abs(slipAngle)<DRIFT47.rearmSlip&&Math.abs(driftAngle)<DRIFT47.rearmYaw)driftRearmBlocked=false;
  }
  if(previousGas&&!accelHeld&&!brakeHeld)coastWindow=.26;else coastWindow=Math.max(0,coastWindow-dt);
  momentBoostWindow=Math.max(0,momentBoostWindow-dt);
  if(momentBoostWindow>0&&!isDrifting){
   if(gasReleased)momentBoostArmed=true;
   if(momentBoostArmed&&gasPressed&&!brakeHeld&&roadGrip>.8&&driveGear==='D'&&motionDirection===1){
-   exitBoost=Math.max(exitBoost,DRIFT45.exitBoost);momentBoostWindow=0;momentBoostArmed=false;boostKick=Math.max(boostKick,.62);
+   exitBoost=Math.max(exitBoost,DRIFT47.exitBoost);momentBoostWindow=0;momentBoostArmed=false;boostKick=Math.max(boostKick,.62);
    flash=Math.max(flash,.035);screenShake=Math.max(screenShake,1.8);
    styleMessage('MOMENT BOOST!','放油再補油成功 · 小噴接續氮氣');
   }
  }
  previousGas=accelHeld;brakeWasHeld=brakeHeld;exitBoost=Math.max(0,exitBoost-dt);
  const liftEntry=coastWindow>0&&Math.abs(curve)>.55&&Math.abs(curve)<2.05&&sign===Math.sign(curve)&&speed>138;
- if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT45.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
+ if(driveGear==='D'&&motionDirection===1&&!isDrifting&&!driftRearmBlocked&&sign&&Math.abs(steer)>.12&&speed>DRIFT47.entryMinSpeed&&roadGrip>.8&&(brakeEntry>0||liftEntry)){
   isDrifting=true;driftDirection=sign;driftState='entry';driftAge=0;cleanDriftTime=0;counterTime=0;neutralTime=0;brakeEntry=0;coastWindow=0;
  }
  let targetYaw,targetSlip=0;
@@ -3982,24 +4014,24 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(counter&&coastWindow>0&&accelHeld&&driftState!=='recover'&&counterTime>.10){
    driftDirection=sign;counterTime=0;driftAge=.08;coastWindow=0;cleanDriftTime=0;
   }
-  if(counterTime>DRIFT45.counterRecover||neutralTime>DRIFT45.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
+  if(counterTime>DRIFT47.counterRecover||neutralTime>DRIFT47.neutralRecover||speed<68||roadGrip<.7||driftState==='recover'){
    driftState='recover';driftRearmBlocked=true;targetYaw=0;targetSlip=0;
-   if(Math.abs(driftAngle)<DRIFT45.rearmYaw&&Math.abs(slipAngle)<DRIFT45.rearmSlip){
+   if(Math.abs(driftAngle)<DRIFT47.rearmYaw&&Math.abs(slipAngle)<DRIFT47.rearmSlip){
     if(cleanDriftTime>.30&&roadGrip>.8&&!brakeHeld){
-      momentBoostWindow=Math.max(momentBoostWindow,DRIFT45.momentWindow);momentBoostArmed=!accelHeld;
+      momentBoostWindow=Math.max(momentBoostWindow,DRIFT47.momentWindow);momentBoostArmed=!accelHeld;
       styleMessage('MOMENT BOOST READY','反打收尾 · 放油再補油觸發小噴');
      }
     isDrifting=false;driftState='grip';driftDirection=0;cleanDriftTime=0;counterTime=0;neutralTime=0;
    }
   }else{
-   driftState=driftAge<DRIFT45.entryRamp?'entry':'drift';
+   driftState=driftAge<DRIFT47.entryRamp?'entry':'drift';
    const into=Math.max(0,steer*driftDirection);
-   const entryEase=clamp(driftAge/DRIFT45.entryRamp,0,1);
-   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT45.curveYaw:0;
-   const yawFull=DRIFT45.baseYaw+into*DRIFT45.steerYaw+ratio*DRIFT45.speedYaw+curveAssist;
-   const slipFull=DRIFT45.baseSlip+into*DRIFT45.steerSlip;
-   const yawTrim=counter?DRIFT45.counterYawTrim:neutral?.78:1;
-   const slipTrim=counter?DRIFT45.counterSlipTrim:neutral?.78:1;
+   const entryEase=clamp(driftAge/DRIFT47.entryRamp,0,1);
+   const curveAssist=Math.sign(curve)===driftDirection?Math.min(Math.abs(curve),1.8)*DRIFT47.curveYaw:0;
+   const yawFull=DRIFT47.baseYaw+into*DRIFT47.steerYaw+ratio*DRIFT47.speedYaw+curveAssist;
+   const slipFull=DRIFT47.baseSlip+into*DRIFT47.steerSlip;
+   const yawTrim=counter?DRIFT47.counterYawTrim:neutral?.78:1;
+   const slipTrim=counter?DRIFT47.counterSlipTrim:neutral?.78:1;
    targetYaw=driftDirection*yawFull*entryEase*yawTrim;
    targetSlip=driftDirection*slipFull*entryEase*slipTrim;
   }
@@ -4008,14 +4040,14 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
   if(!brakeHeld)driftState=brakeEntry>0?'armed':'grip';
  }
  if(targetYaw===undefined)targetYaw=0;
- targetYaw=clamp(targetYaw,-DRIFT45.maxBodyYaw,DRIFT45.maxBodyYaw);
- const omega=driftState==='recover'?DRIFT45.recoverResponse:DRIFT45.yawResponse;
+ targetYaw=clamp(targetYaw,-DRIFT47.maxBodyYaw,DRIFT47.maxBodyYaw);
+ const omega=driftState==='recover'?DRIFT47.recoverResponse:DRIFT47.yawResponse;
  const error=driftAngle-targetYaw,c=yawRate+omega*error,decay=Math.exp(-omega*dt);
- driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT45.maxBodyYaw,DRIFT45.maxBodyYaw);
+ driftAngle=clamp(targetYaw+(error+c*dt)*decay,-DRIFT47.maxBodyYaw,DRIFT47.maxBodyYaw);
  yawRate=clamp((yawRate-omega*c*dt)*decay,-190,190);
- slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT45.recoverSlipResponse:DRIFT45.slipResponse)));
+ slipAngle=lerp(slipAngle,targetSlip,1-Math.exp(-dt*(driftState==='recover'?DRIFT47.recoverSlipResponse:DRIFT47.slipResponse)));
  const nitroRequested=boostRemaining>0;
- const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT45.entryMinSpeed&&roadGrip>.8;
+ const genuineCorner=driveGear==='D'&&motionDirection===1&&isDrifting&&driftState!=='recover'&&accelHeld&&!brakeHeld&&Math.abs(slipAngle)>3.5&&speed>=DRIFT47.entryMinSpeed&&roadGrip>.8;
  driftChargeRate=0;
  if(genuineCorner){
   cleanDriftTime+=dt;driftTime+=dt;styleIdle=0;styleBank+=speed*dt*(nitroRequested?1.65:1.4);
@@ -4029,19 +4061,21 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  for(const trail of slideTrails)trail.life-=dt;slideTrails=slideTrails.filter(p=>p.life>0);
  if(isDrifting&&Math.abs(slipAngle)>2.5&&speed>70){const points=(currentCar.isBike?[1]:currentCar.isTruck?[-75,75]:[-81,81]).map(x=>vehicleProject([x,0,-66],driftAngle));slideTrails.push({life:.48,y:H-65,points,dir:driftDirection});if(slideTrails.length>32)slideTrails.shift();}
 }
-function stepArcadeMotion(dt,curve){
+function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
  const ratio=clamp(speed/COMPETITION.topSpeed,0,1.1),safe=clamp(270-Math.abs(curve)*26,115,270),excess=Math.max(0,speed-safe);
- const frontGrip=clamp(1-excess/180,.65,1);
- // V40: body can look sideways without throwing the car across multiple lanes.
+ const profile=v47SteeringProfile(speed,isDrifting);
+ const liftGrip=!isDrifting&&!accelHeld&&!brakeHeld?profile.liftGrip:1;
+ const frontGrip=clamp((1-excess/180)*liftGrip,.65,1.12);
  const travelYaw=(driftAngle-slipAngle)*Math.PI/180;
- const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT45.driftPathYaw:DRIFT45.gripPathYaw)*(.45+.65*ratio);
- const steerAuthority=isDrifting?DRIFT45.steerPath:.18;
- const turn=Math.min(1,speed/35)*(yawTurn+steer*steerAuthority)*(isDrifting?1:frontGrip);
+ const yawTurn=Math.sin(travelYaw)*(isDrifting?DRIFT47.driftPathYaw:DRIFT47.gripPathYaw)*(.45+.65*ratio);
+ const baseAuthority=isDrifting?DRIFT47.steerPath:.205*profile.authority;
+ const brakeRotation=!isDrifting&&brakeHeld?steer*V47_HANDLING.brakeRotationGain*(.35+.65*ratio):0;
+ const turn=Math.min(1,speed/35)*(yawTurn+steer*baseAuthority+brakeRotation)*(isDrifting?1:frontGrip);
  const outward=curve*.036*ratio*ratio;
- lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT45.driftLateralResponse:14)));
+ lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT47.driftLateralResponse:14.8)));
  playerX+=lateralVelocity*dt*motionDirection;
- if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.55+Math.abs(slipAngle)*.020)*dt);
- if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.018:.38)*dt);
+ if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.50+Math.abs(slipAngle)*.018)*dt);
+ if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.017:.34)*dt);
 }
 function playerVisualTransform(){return {yaw:driftAngle,travelYaw:driftAngle-slipAngle,mode:'rigid-3d',scaleX:1,shearX:0};}
 function drawSlideTrails(){
@@ -4505,6 +4539,63 @@ function drawV46RoadEdgeRhythm(road=projectedRoad){
   return drawn;
 }
 
+function v47DepthProfile(sc=scene()){
+  const family=v46SceneFamily(sc),sunset=skyMood==='sunset';
+  return {
+    family,
+    haze:sunset?'rgba(255,196,132,.10)':'rgba(168,224,230,.08)',
+    shadow:family==='urban'?'rgba(12,31,40,.22)':family==='expressway'?'rgba(9,29,38,.24)':family==='coastal'?'rgba(25,72,78,.16)':'rgba(28,63,45,.20)',
+    mass:family==='urban'?1.05:family==='expressway'?.92:family==='coastal'?.74:1.12
+  };
+}
+function drawV47CinematicDepth(base,sc=scene()){
+  const p=v47DepthProfile(sc);let drawn=0;ctx.save();
+  const haze=ctx.createLinearGradient(0,base-74,0,base+48);
+  haze.addColorStop(0,'rgba(255,255,255,0)');haze.addColorStop(.55,p.haze);haze.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=haze;ctx.fillRect(0,base-80,W,132);drawn++;
+  ctx.globalAlpha=.72;ctx.fillStyle=p.shadow;
+  for(let i=-1;i<8;i++){
+    const seed=currentNode.seed*131+i*53,x=i*(W/6)-((playerX*11+playerZ*.00004*(i%2?1.4:1))%(W/6));
+    const w=54+v41Hash(seed)*72,h=(26+v41Hash(seed+1)*52)*p.mass;
+    if(p.family==='mountain'){
+      ctx.beginPath();ctx.moveTo(x-w*.7,base+18);ctx.quadraticCurveTo(x,base-h,x+w*.8,base+18);ctx.closePath();ctx.fill();
+    }else{
+      ctx.fillRect(x,base-h,w,h+18);
+      if(p.family==='urban'&&v41Hash(seed+2)>.52)ctx.fillRect(x+w*.22,base-h-10,w*.50,10);
+    }
+    drawn++;
+  }
+  ctx.globalAlpha=1;ctx.restore();return drawn;
+}
+function drawV47ForegroundMass(road=projectedRoad){
+  const family=v46SceneFamily(),start=Math.floor(playerZ/SEGMENT_LENGTH),stride=V47_ART.edgeMassStride;let drawn=0;
+  for(const seg of road){
+    if(seg.index<start+8||seg.index%stride!==currentNode.seed%stride)continue;
+    const b=stripBounds(seg);if(!b||b.near.w<55)continue;
+    for(const side of [-1,1]){
+      const x=b.near.x+side*b.near.w*1.42,y=b.near.y,scale=clamp(b.near.w/210,.25,V47_ART.foregroundScale);
+      if(x<-150||x>W+150||y<0||y>H+40)continue;
+      ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+      if(family==='urban'){
+        ctx.fillStyle='#22383f';ctx.fillRect(side<0?-46:-12,-112,58,112);
+        ctx.fillStyle='#7f908a';ctx.fillRect(side<0?-52:-18,-34,70,8);
+        ctx.fillStyle=skyMood==='sunset'?'#f1c97b':'#93d7d2';ctx.globalAlpha=.45;ctx.fillRect(side<0?-38:-4,-92,28,34);
+      }else if(family==='expressway'){
+        ctx.fillStyle='#4f6269';ctx.fillRect(-7,-92,14,92);ctx.fillStyle='#70878d';ctx.fillRect(side<0?-62:0,-86,62,38);
+        ctx.strokeStyle='#9fb0b0';ctx.lineWidth=3;for(let k=8;k<55;k+=15){ctx.beginPath();ctx.moveTo(side<0?-k:k,-83);ctx.lineTo(side<0?-k:k,-51);ctx.stroke();}
+      }else if(family==='coastal'){
+        ctx.fillStyle='#667d79';ctx.fillRect(-4,-58,8,58);ctx.strokeStyle='#d9dfd2';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-48);ctx.lineTo(side*50,-43);ctx.stroke();
+        ctx.fillStyle='#365e5b';ctx.beginPath();ctx.arc(-side*18,-22,18,0,Math.PI*2);ctx.fill();
+      }else{
+        ctx.fillStyle='#244b35';for(let k=0;k<3;k++){ctx.beginPath();ctx.arc(side*k*12,-32-k*24,27-k*4,0,Math.PI*2);ctx.fill();}
+        ctx.fillStyle='#5a3f28';ctx.fillRect(-4,-45,8,45);
+      }
+      ctx.globalAlpha=1;ctx.restore();drawn++;
+    }
+  }
+  return drawn;
+}
+
 function drawIdentitySky(t){
  const sc=scene(),art=v40Art(),sunset=skyMood==='sunset',sky=sunset?art.sky:t.sky;
  const g=ctx.createLinearGradient(0,0,0,H*.60);g.addColorStop(0,sky[0]);g.addColorStop(.60,sky[1]);g.addColorStop(1,sky[2]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
@@ -4514,6 +4605,7 @@ function drawIdentitySky(t){
  else {ctx.fillStyle='#f4ffff42';for(let i=0;i<5;i++){const x=((i*237+simulationTime*6)%1180)-110,y=90+i%3*26;ctx.beginPath();ctx.ellipse(x,y,65,10,0,0,Math.PI*2);ctx.fill();}}
  const base=H*.51,mountain=['volcano','lantern','tea','spring','park','cape'].includes(sc.type);
  drawV46ScalerVista(base,sc);
+ drawV47CinematicDepth(base,sc);
  if(mountain){for(let layer=0;layer<3;layer++){ctx.fillStyle=layer===0?art.mountain:art.ground[Math.min(1,layer-1)];ctx.globalAlpha=.30+layer*.17;ctx.beginPath();ctx.moveTo(-40,base+20);for(let x=-40;x<=W+40;x+=32){const scroll=playerX*(12+layer*7)+playerZ*.00007*(layer+1),rugged=['volcano','lantern','tea','cape'].includes(sc.type);const yy=base-12+layer*14-Math.sin((x+scroll+layer*290)*.005)*28-(rugged?Math.abs(Math.sin((x+scroll)*.012+layer))*44:0);ctx.lineTo(x,yy);}ctx.lineTo(W+40,base+55);ctx.lineTo(-40,base+55);ctx.fill();}ctx.globalAlpha=1;}
  else drawCitySilhouette(base,sc);
  // V34's second panorama layer restores the dense illustrated Taipei feeling.
@@ -4658,6 +4750,7 @@ try{
     if(STAGES[d.route?.level]?.[d.route?.column]) selectedRoute={level:d.route.level,column:d.route.column};
   }
 }catch(e){}
+if(!CAR_PROFILES[selectedCarId]){selectedCarId='red_roadster';carSelect.value=selectedCarId;}
 if(!profilesV39[selectedCarId]) profilesV39[selectedCarId]={...defaultTuning,paint:CAR_PROFILES[selectedCarId].color};
 wanganTuning=sanitizeTuning(profilesV39[selectedCarId]);
 function persistV39(){
@@ -4808,7 +4901,7 @@ menuCar.innerHTML=carSelect.innerHTML;menuCar.value=selectedCarId;
 transmissionSelect.value=autoGear?'AT':'MT';autoGearCheck.checked=autoGear;
 function selectCarSkin(id){
  if(gameStarted&&!gameOver)return;
- profilesV39[selectedCarId]=sanitizeTuning(wanganTuning);selectedCarId=CAR_PROFILES[id]?id:'testarossa';
+ profilesV39[selectedCarId]=sanitizeTuning(wanganTuning);selectedCarId=CAR_PROFILES[id]?id:'red_roadster';
  carSelect.value=selectedCarId;menuCar.value=selectedCarId;
  wanganTuning=sanitizeTuning(profilesV39[selectedCarId]||{...defaultTuning,paint:CAR_PROFILES[selectedCarId].color});applyCarTuning();persistV39();updateModeUI();
 }
