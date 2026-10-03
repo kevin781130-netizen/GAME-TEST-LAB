@@ -32,7 +32,7 @@ body,html{width:100%;height:100%;overflow:hidden;background:#000;font-family:'No
 #hud-compass{position:absolute;bottom:180px;right:24px;width:120px;height:120px;z-index:11;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.6));}
 #hud-compass-canvas{width:100%;height:100%;}
 #hud-stunt-banner{position:absolute;top:25%;left:50%;transform:translate(-50%,-50%) scale(0);font-family:'Bungee',cursive;font-size:38px;color:#FFF;text-align:center;text-shadow:3px 3px 0 #000;pointer-events:none;transition:transform .15s cubic-bezier(.175,.885,.32,1.275);}
-.stunt-crazy-dash{color:#00E5FF!important;}.stunt-crazy-drift{color:#FFD700!important;}.stunt-crazy-through{color:#FF2277!important;}.stunt-crazy-hop{color:#00FF66!important;}.stunt-strike{color:#FF0055!important;font-size:56px!important;}
+.stunt-courier-dash{color:#00E5FF!important;}.stunt-courier-drift{color:#FFD700!important;}.stunt-courier-through{color:#FF2277!important;}.stunt-courier-hop{color:#00FF66!important;}.stunt-strike{color:#FF0055!important;font-size:56px!important;}
 #hud-combo-counter{font-size:24px;color:#00FFCC;display:block;margin-top:4px;}
 .tip-floating-popup{position:absolute;font-family:'Black Ops One',cursive;font-size:30px;color:#00FF66;text-shadow:2px 2px 0 #000;pointer-events:none;animation:floatUpFade .8s ease-out forwards;}
 @keyframes floatUpFade{0%{opacity:1;transform:translate(-50%,0) scale(.8);}50%{transform:translate(-50%,-35px) scale(1.25);}100%{opacity:0;transform:translate(-50%,-65px) scale(1);}}
@@ -111,7 +111,7 @@ body,html{font-family:'Noto Sans TC',system-ui,sans-serif}#phone-avatar svg{widt
 
 body,html{font-family:'Courier UI Symbols','Noto Sans TC',system-ui,sans-serif}select,input{font-family:inherit}
 /* 1.2 arcade treatment: original orange/teal visual identity. */
-#overlay-screen{background:linear-gradient(90deg,#0d2527f2,#0b2732da 45%,#0c223526 85%)}.brand-badge{background:#ffba48}.arcade-title-main{font-weight:950;text-shadow:4px 5px 0 #0b3540}.arcade-title-main span{color:#ffba48}.arcade-btn-start{background:#ffba48;box-shadow:0 5px 0 #ad6331;border-radius:9px}.mode-card.selected,.driver-card.selected{border-color:#ffba48;background:#9c6b271e}.build-line{line-height:1.9}#hud-fare-box,#hud-timer-container,#hud-customer-box,#nav-card{border-radius:9px;border-top:3px solid #ffbb49}#hud-timer{color:#ffcb58;font-style:italic;text-shadow:3px 3px 0 #4c3a28}#hud-total-fare{color:#f7f1d6;text-shadow:2px 3px 0 #162b2e}#nav-card{border-top-color:#00e5cf}.stunt-crazy-dash{color:#ffd36e!important}.stunt-crazy-through{color:#ffbe4b!important}#stunt-text{font-style:italic;text-shadow:3px 4px 0 #0d2832}#gear-label{font-size:8px;color:#b3ccd2;white-space:nowrap;margin-top:5px}#air-state{display:block;font-size:10px;color:#ffd36e;margin-top:6px}#speed-lines{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .12s;background:repeating-conic-gradient(from 12deg at 50% 58%,transparent 0deg 12deg,#ffd56955 12.1deg 12.35deg,transparent 12.5deg 19deg);mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%);-webkit-mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%)}#speed-lines.active{opacity:.65}#touch-jump,#touch-wheelie,#touch-upshift,#touch-downshift{position:absolute;pointer-events:auto;width:52px;height:32px;font-size:11px;border:1px solid #83b6ba66;border-radius:6px;color:#fff;background:#173d48d9;bottom:90px}#touch-jump{left:12px;background:#be842add;color:#fff9d4}#touch-wheelie{left:72px}#touch-upshift{right:12px;bottom:130px}#touch-downshift{right:72px;bottom:130px}#touch-dash{right:12px;bottom:90px}#hud-controls-panel{display:flex;bottom:242px;left:28px;flex-direction:row}.hud-toggle-btn{padding:4px 6px;font-size:9px;border:1px solid #91afb94d}
+#overlay-screen{background:linear-gradient(90deg,#0d2527f2,#0b2732da 45%,#0c223526 85%)}.brand-badge{background:#ffba48}.arcade-title-main{font-weight:950;text-shadow:4px 5px 0 #0b3540}.arcade-title-main span{color:#ffba48}.arcade-btn-start{background:#ffba48;box-shadow:0 5px 0 #ad6331;border-radius:9px}.mode-card.selected,.driver-card.selected{border-color:#ffba48;background:#9c6b271e}.build-line{line-height:1.9}#hud-fare-box,#hud-timer-container,#hud-customer-box,#nav-card{border-radius:9px;border-top:3px solid #ffbb49}#hud-timer{color:#ffcb58;font-style:italic;text-shadow:3px 3px 0 #4c3a28}#hud-total-fare{color:#f7f1d6;text-shadow:2px 3px 0 #162b2e}#nav-card{border-top-color:#00e5cf}.stunt-courier-dash{color:#ffd36e!important}.stunt-courier-through{color:#ffbe4b!important}#stunt-text{font-style:italic;text-shadow:3px 4px 0 #0d2832}#gear-label{font-size:8px;color:#b3ccd2;white-space:nowrap;margin-top:5px}#air-state{display:block;font-size:10px;color:#ffd36e;margin-top:6px}#speed-lines{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .12s;background:repeating-conic-gradient(from 12deg at 50% 58%,transparent 0deg 12deg,#ffd56955 12.1deg 12.35deg,transparent 12.5deg 19deg);mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%);-webkit-mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%)}#speed-lines.active{opacity:.65}#touch-jump,#touch-wheelie,#touch-upshift,#touch-downshift{position:absolute;pointer-events:auto;width:52px;height:32px;font-size:11px;border:1px solid #83b6ba66;border-radius:6px;color:#fff;background:#173d48d9;bottom:90px}#touch-jump{left:12px;background:#be842add;color:#fff9d4}#touch-wheelie{left:72px}#touch-upshift{right:12px;bottom:130px}#touch-downshift{right:72px;bottom:130px}#touch-dash{right:12px;bottom:90px}#hud-controls-panel{display:flex;bottom:242px;left:28px;flex-direction:row}.hud-toggle-btn{padding:4px 6px;font-size:9px;border:1px solid #91afb94d}
 @media(max-width:760px){#hud-controls-panel{display:none}#air-state{font-size:8px}#gear-label{font-size:7px}#resource-box{bottom:170px}#hud-dash-cluster{bottom:245px}#radar-container{bottom:133px}#route-name{bottom:245px}#objective-box{bottom:310px}#hud-stunt-banner{top:55%;max-width:85vw}#touch-dash{width:72px}#phone-message{background:#102f3bec}#nav-card{border-top-width:2px}}@media(max-width:760px) and (max-height:740px){#hud.phone-active #objective-box,#hud.phone-active #hud-dash-cluster{opacity:0}#objective-box{bottom:285px}#hud-stunt-banner{top:67%}}
 @media(prefers-reduced-motion:reduce){#speed-lines{display:none}.mode-card,.driver-card,#hud-stunt-banner{transition:none}}
 .driver-avatar{overflow:hidden;border-color:#93bdb566;width:60px;height:62px;border-radius:13px}.driver-avatar svg{display:block;width:100%;height:100%}
@@ -197,7 +197,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;box-
 #cabinet-overlay.fever span{color:#fff2ad;text-shadow:0 0 8px #ff7b3d}
 #cabinet-overlay.underground b{background:linear-gradient(180deg,#9df7f3,#4fc6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 #cabinet-overlay.underground span{color:#ffda69;text-shadow:0 0 8px #00d9ff}
-#hud-stunt-banner .stunt-crazy-through,#hud-stunt-banner .stunt-crazy-dash{transform:skewX(-7deg)}
+#hud-stunt-banner .stunt-courier-through,#hud-stunt-banner .stunt-courier-dash{transform:skewX(-7deg)}
 
 /* Comic arcade presentation; layout stays compatible with keyboard and touch. */
 :root{--comic-ink:#172b43;--comic-paper:#fff3cd;--comic-green:#9cff47;--comic-red:#ff6858}
@@ -229,6 +229,42 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;box-
 .v5-order-card>small{font-weight:900;letter-spacing:.16em;color:#b84737}.v5-order-card h2{margin:8px 0 6px;font-size:clamp(22px,4vw,36px);line-height:1.05}.v5-order-card p{margin:0 0 18px;font-weight:700}
 .v5-order-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.v5-order-grid button{min-height:130px;border:3px solid #20374c;border-radius:14px;background:#fff8df;color:#17334c;padding:14px;text-align:left;box-shadow:0 6px 0 #20374c;cursor:pointer}.v5-order-grid button:hover,.v5-order-grid button:focus{transform:translateY(-2px);outline:4px solid #73d9d1;outline-offset:2px}.v5-order-grid b{display:block;font-size:20px;margin-bottom:9px}.v5-order-grid span{display:block;font-size:13px;line-height:1.45}.v5-order-card em{display:block;margin-top:15px;font-style:normal;font-weight:800;font-size:12px;opacity:.72}
 @media(max-width:650px){.v5-order-card{padding:17px}.v5-order-grid{grid-template-columns:1fr}.v5-order-grid button{min-height:auto}.v5-order-card>small,.v5-order-card em{font-size:10px}}
+
+/* Original express-receipt art: mint/amber ink, cut ticket edge and bold numerals. */
+#hud-timer,#hud-total-fare,#hud-customer-timer{font-variant-numeric:tabular-nums;font-weight:1000;letter-spacing:-1px}
+#hud-timer{color:#fff4ac;text-shadow:2px 3px 0 #071923,0 0 18px #ffbd3033}
+#hud-fare-box{border-left:6px solid #6cf5ca;background:linear-gradient(115deg,#0b2734f5,#18394ee8)}
+#hud-customer-box{border-top:5px solid #ffcd62}
+#hud-stunt-banner{font-style:italic;letter-spacing:.6px;text-shadow:2px 2px #081b25}
+#technique-card{position:absolute;top:17%;right:20px;max-width:240px;pointer-events:none;padding:8px 18px 9px 12px;background:#0a2537e8;border-left:4px solid #66efc2;clip-path:polygon(0 0,100% 0,94% 100%,0 100%);color:#f4ffef;box-sizing:border-box}
+#technique-card small{display:block;font-size:9px;letter-spacing:1px;color:#83c8cf}
+#skill-feedback{display:block;font-size:19px;font-weight:900;font-style:italic;line-height:1.4}
+#skill-feedback[data-kind=launch]{color:#ffdf78}#skill-feedback[data-kind=stop]{color:#ff9e91}#skill-feedback[data-kind=exit]{color:#70f1d0}#skill-feedback[data-kind=hop]{color:#9ccaff}
+#skill-chain{font-size:11px;font-weight:800;letter-spacing:.6px}
+#skill-coach-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#061722df;z-index:400;padding:16px;box-sizing:border-box}
+.skill-coach-panel{box-sizing:border-box;width:min(720px,100%);max-height:90dvh;overflow:auto;border:3px solid #7ce8c8;background:#112f41;padding:24px;border-radius:14px;color:#f2f8e7;box-shadow:8px 8px 0 #061b2d}
+.skill-coach-panel h2{font-size:30px;font-style:italic;margin:0 0 8px;color:#ffe091}.skill-coach-panel>p{font-size:13px;line-height:1.65;color:#b9d5dc}
+.skill-drills{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.skill-drills button{font:inherit;text-align:left;background:#1b4356;color:#f1faef;border:2px solid #568d9c;border-radius:9px;padding:16px;cursor:pointer;min-height:115px}
+.skill-drills button:hover,.skill-drills button:focus-visible{border-color:#ffe38b;background:#24536a;outline:3px solid #ffe38b;outline-offset:2px}
+.skill-drills b{display:block;font-size:19px;color:#79f0c5;margin-bottom:7px}.skill-drills span{font-size:12px;line-height:1.7;display:block}
+#btn-coach-close,#btn-drill-retry,#btn-drill-exit{font:800 12px 'Noto Sans TC';padding:8px 12px;border:2px solid #7bd5c1;border-radius:7px;background:#122f40;color:#ecffe8;cursor:pointer;min-height:36px}
+#skill-coach-hud{display:none;position:absolute;bottom:240px;left:20px;width:300px;max-width:calc(100vw - 40px);padding:12px;background:#0b2b3bf2;border:2px solid #84e2c5;border-radius:8px;box-sizing:border-box;pointer-events:auto}
+#drill-title{color:#ffe091;display:block;font-size:17px}#drill-hint{font-size:12px;line-height:1.6;color:#d2ecec;margin:8px 0}
+@media(max-width:760px){#technique-card{top:29%;right:10px;max-width:175px;padding:5px 14px 6px 8px}#skill-feedback{font-size:14px}#technique-card small{font-size:7px}#skill-chain{font-size:9px}.skill-coach-panel{padding:16px}.skill-drills{grid-template-columns:1fr;gap:8px}.skill-drills button{min-height:75px;padding:12px}#skill-coach-hud{bottom:185px;left:10px;width:260px}}
+@media(max-height:500px){#technique-card{top:32%;right:12px;max-width:180px}#skill-feedback{font-size:13px}#technique-card small{display:none}#skill-coach-hud{bottom:105px;left:10px;width:270px;padding:8px}#drill-hint{margin:4px 0;font-size:10px}.skill-drills{grid-template-columns:1fr 1fr}.skill-coach-panel h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){#hud-stunt-banner,#technique-card{animation:none!important;transition:none!important}}
+
+#hud.coach-active #objective-box,#hud.coach-active #hud-customer-box,#hud.coach-active #nav-card{display:none!important}
+#hud.coach-active #hud-controls-panel{display:none!important}
+#skill-coach-hud{z-index:30}
+#hud.coach-active #technique-card,#hud.coach-active #hud-status-toast{display:none!important}
+@media(max-width:760px){#skill-coach-hud{top:140px;bottom:auto;left:10px;width:calc(100vw - 20px)}}
+@media(max-height:500px){#skill-coach-hud{top:140px;bottom:auto;left:110px;width:min(360px,calc(100vw - 125px))}}
+
+/* Text route instructions and a fixed-color GPS trail replace the giant arrow. */
+#arcade-arrow,#arcade-direction>small,#hud-compass{display:none!important}
+#arcade-direction{min-height:0;height:auto}
 </style><script>/* Three.js r128 — MIT License
 The MIT License
 
@@ -261,22 +297,22 @@ THE SOFTWARE.
 </script></head><body>
 <div id="arcade-splash" aria-hidden="true"><div id="arcade-splash-title"></div><div id="arcade-splash-detail"></div></div><div id="speed-lines" aria-hidden="true"></div><canvas id="game-canvas" aria-label="台北機車外送 3D 遊戲"></canvas><div id="cabinet-overlay" aria-hidden="true"><b>SUPER COURIER TAIPEI</b><span>ARCADE CABINET VISION</span></div>
 <div id="loading-screen"><div id="loading-text">正在準備台北街頭…</div><div id="loading-bar"><div id="loading-fill"></div></div><p id="loading-error"></p></div>
-<div id="overlay-screen"><main class="launch-shell"><div class="brand-line"><span class="brand-badge">台北快送</span>SUPER COURIER / TAIPEI</div><h1 class="arcade-title-main">超級外送員<br><span>時間就是運費。</span></h1><p class="arcade-subtitle">騎過台北的日常。快切、甩尾、飛越下一個路口。</p><div class="menu-brief"><span><b>01</b>商家取貨</span><span><b>02</b>限時配送</span><span><b>03</b>技巧加薪</span></div>
+<div id="overlay-screen"><main class="launch-shell"><div class="brand-line"><span class="brand-badge">台北快送</span>SUPER COURIER / TAIPEI</div><h1 class="arcade-title-main">超級外送員<br><span>時間就是運費。</span></h1><p class="arcade-subtitle">騎過台北的日常。停穩、回正、接好下一張配送單。</p><div class="menu-brief"><span><b>01</b>商家取貨</span><span><b>02</b>限時配送</span><span><b>03</b>技巧加薪</span></div>
 <div class="selection-heading">01 / 選擇班表</div><div class="mode-select-grid">
 <div class="mode-card selected" data-mode="ARCADE"><div class="mode-card-title">街機接力</div><div class="mode-card-desc">105 秒起跑。快速送達、連送續命。</div></div>
 <div class="mode-card" data-mode="WORK_5MIN"><div class="mode-card-title">五分鐘班</div><div class="mode-card-desc">固定 300 秒。挑戰每班最高收入。</div></div>
 <div class="mode-card" data-mode="RUSH"><div class="mode-card-title">120 秒衝刺</div><div class="mode-card-desc">更長距離、更高張力。路線與手感的考驗。</div></div>
 <div class="mode-card" data-mode="PRACTICE"><div class="mode-card-title">自由練習</div><div class="mode-card-desc">不限班表時間。熟悉街道與取送流程。</div></div></div>
 <div class="district-row"><label for="start-district">起跑區域</label><select id="start-district" aria-label="選擇配送起點"></select><button id="city-map-button">台北路網 ↗</button></div><div class="selection-heading">02 / 選擇配送夥伴</div><div class="driver-select-grid">
-<div class="driver-card selected" data-driver="lin"><div class="driver-avatar" style="background:#bb852e">豪</div><div class="driver-name">阿豪</div><div class="driver-title">均衡快手</div><div class="driver-cab-name">都會輕型機車</div></div><div class="driver-card " data-driver="chen"><div class="driver-avatar" style="background:#31716a">福</div><div class="driver-name">阿福</div><div class="driver-title">長途快送</div><div class="driver-cab-name">長途快送機車</div></div><div class="driver-card " data-driver="mei"><div class="driver-avatar" style="background:#a35171">琪</div><div class="driver-name">小琪</div><div class="driver-title">彎道專家</div><div class="driver-cab-name">靈巧街頭機車</div></div><div class="driver-card " data-driver="zhou"><div class="driver-avatar" style="background:#456781">周</div><div class="driver-name">老周</div><div class="driver-title">穩健派送</div><div class="driver-cab-name">穩健載貨機車</div></div></div><button id="btn-start" class="arcade-btn-start">開始配送　→</button><div class="action-links-row"><button id="btn-open-manual" class="text-link-btn">操作與規則</button><button id="btn-toggle-shift-mode" class="text-link-btn" >排檔：自排</button><button id="mute-button" class="text-link-btn">音效：開</button><button id="motion-button" class="text-link-btn">動態效果：完整</button><button id="voice-button" class="text-link-btn">客人語音：開</button><button id="fullscreen-button" class="text-link-btn">全螢幕</button></div><p id="record-line" class="record-line"></p><details class="scoreboard"><summary>本機 TOP 5 / 目前班表</summary><table aria-label="本機前五名"><tbody id="leaderboard-body"></tbody></table></details><p class="build-line">方向鍵 騎乘 · ↓ 煞停後自動倒車 · Space 起跳 · Z→A 噴焰 · Shift 孤輪<br>獨立原創街機外送遊戲 · 搞笑街機進化版 4.1.0 · Recovery Pass · 台北街道為遊戲化縮尺</p></main><div class="city-tag"><small>YOUR CITY. YOUR ROUTE.</small><strong>TAIPEI / 台北</strong></div></div>
+<div class="driver-card selected" data-driver="lin"><div class="driver-avatar" style="background:#bb852e">豪</div><div class="driver-name">阿豪</div><div class="driver-title">均衡快手</div><div class="driver-cab-name">都會輕型機車</div></div><div class="driver-card " data-driver="chen"><div class="driver-avatar" style="background:#31716a">福</div><div class="driver-name">阿福</div><div class="driver-title">長途快送</div><div class="driver-cab-name">長途快送機車</div></div><div class="driver-card " data-driver="mei"><div class="driver-avatar" style="background:#a35171">琪</div><div class="driver-name">小琪</div><div class="driver-title">彎道專家</div><div class="driver-cab-name">靈巧街頭機車</div></div><div class="driver-card " data-driver="zhou"><div class="driver-avatar" style="background:#456781">周</div><div class="driver-name">老周</div><div class="driver-title">穩健派送</div><div class="driver-cab-name">穩健載貨機車</div></div></div><button id="btn-start" class="arcade-btn-start">開始配送　→</button><div class="action-links-row"><button id="btn-skill-coach" class="text-link-btn">技巧教練</button><button id="btn-technique-profile" class="text-link-btn">操控：配送輔助</button><button id="btn-open-manual" class="text-link-btn">操作與規則</button><button id="btn-toggle-shift-mode" class="text-link-btn" >排檔：自排</button><button id="mute-button" class="text-link-btn">音效：開</button><button id="motion-button" class="text-link-btn">動態效果：完整</button><button id="voice-button" class="text-link-btn">客人語音：開</button><button id="fullscreen-button" class="text-link-btn">全螢幕</button></div><p id="record-line" class="record-line"></p><details class="scoreboard"><summary>本機 TOP 5 / 目前班表</summary><table aria-label="本機前五名"><tbody id="leaderboard-body"></tbody></table></details><p class="build-line">方向鍵 騎乘 · ↓ 煞停後自動倒車 · Space 起跳 · Z→A 噴焰 · Shift 孤輪<br>獨立原創街機外送遊戲 · 街機技巧版 5.1.0 · 台北街道為遊戲化縮尺</p></main><div class="city-tag"><small>YOUR CITY. YOUR ROUTE.</small><strong>TAIPEI / 台北</strong></div></div>
 <div id="hud"><div id="hud-fare-box"><div class="hud-label-tag">本班收入 / NT$</div><div id="hud-total-fare">$0</div><div id="hud-current-fare">完成 0 單</div><span id="chain-value">0 連送</span></div><div id="hud-timer-container"><div id="hud-timer-label">班表剩餘</div><div id="hud-timer">105</div></div><div id="hud-customer-box"><div class="order-header"><span id="order-state">等待取貨</span><div id="hud-mode-badge">街機接力</div></div><div id="order-customer">下一站商家</div><div id="hud-customer-timer">30</div><div id="hud-destination">目的地</div><div id="hud-distance">0m</div><div class="delivery-track"><div id="delivery-progress"></div></div><button id="target-button">B 換單</button></div>
-<div id="hud-dash-cluster"><div id="hud-gear-shifter"><div id="gear-d" class="gear-item active-d">騎</div><div id="gear-r" class="gear-item">退</div></div><div id="hud-speed-gauge"><div id="hud-speed">0</div><div id="hud-speed-unit">KM / H</div><small id="gear-label">AUTO / 自排</small></div></div><div id="radar-container"><canvas id="radar-canvas" width="140" height="140"></canvas></div><div id="route-name">忠孝東西路</div><div id="nav-card"><div id="arcade-direction"><canvas id="arcade-arrow" width="240" height="120"></canvas><small>FOLLOW THE GREEN ARROW</small><span id="current-layer">TAIPEI / 地面</span></div><div id="hud-compass"><canvas id="hud-compass-canvas" width="240" height="240"></canvas></div><div class="nav-copy"><div class="nav-eyebrow"><span id="nav-phase">取貨</span><span id="nav-floor">地面 → 地面</span></div><div class="nav-main"><strong id="nav-instruction">直走</strong><b id="nav-turn-distance">0 m</b></div><p id="nav-next-road">跟隨路線</p><small id="nav-route-total">商家取貨</small></div></div><div id="hud-stunt-banner"><span id="stunt-text"></span><span id="hud-combo-counter"></span></div><div id="hud-status-toast" role="status"></div><div id="objective-box"><div id="objective-line">前往商家</div><div id="order-item">$ 彩色取貨圈 · STOP 綠色停車框</div><div class="stop-track"><div id="stop-progress"></div></div><small id="air-state">Space 起跳 · Shift 孤輪</small><small id="combo-chip">技巧連段</small></div>
-<div id="hud-controls-panel"><button id="btn-weather" class="hud-toggle-btn">天氣：晴</button><button id="btn-daynight" class="hud-toggle-btn">時間：白天</button><button id="btn-quality" class="hud-toggle-btn">畫質：高</button></div><button id="hud-map-button" aria-label="開啟台北路網">路網</button><button id="pause-button" aria-label="暫停遊戲">Ⅱ 暫停</button><div id="resource-box"><div class="resource-label"><span id="boost-label">E 極速起步</span></div><div class="resource-track"><div id="boost-fill"></div></div><div class="resource-label"><span>貨物完整度</span><span id="cargo-value">—</span></div><div class="resource-track"><div id="cargo-fill"></div></div></div></div>
+<div id="hud-dash-cluster"><div id="hud-gear-shifter"><div id="gear-d" class="gear-item active-d">騎</div><div id="gear-r" class="gear-item">退</div></div><div id="hud-speed-gauge"><div id="hud-speed">0</div><div id="hud-speed-unit">KM / H</div><small id="gear-label">AUTO / 自排</small></div></div><div id="radar-container"><canvas id="radar-canvas" width="140" height="140"></canvas></div><div id="route-name">忠孝東西路</div><div id="nav-card"><div id="arcade-direction"><canvas id="arcade-arrow" width="240" height="120"></canvas><small>配送路線與樓層</small><span id="current-layer">TAIPEI / 地面</span></div><div id="hud-compass"><canvas id="hud-compass-canvas" width="240" height="240"></canvas></div><div class="nav-copy"><div class="nav-eyebrow"><span id="nav-phase">取貨</span><span id="nav-floor">地面 → 地面</span></div><div class="nav-main"><strong id="nav-instruction">直走</strong><b id="nav-turn-distance">0 m</b></div><p id="nav-next-road">跟隨路線</p><small id="nav-route-total">商家取貨</small></div></div><div id="hud-stunt-banner"><span id="stunt-text"></span><span id="hud-combo-counter"></span></div><div id="hud-status-toast" role="status"></div><div id="objective-box"><div id="objective-line">前往商家</div><div id="order-item">配送票牌取貨 · 停穩收單</div><div class="stop-track"><div id="stop-progress"></div></div><small id="air-state">Space 起跳 · Shift 孤輪</small><small id="combo-chip">技巧連段</small></div>
+<div id="technique-card" aria-hidden="true"><small>TAIPEI EXPRESS / STYLE</small><strong id="skill-feedback">技巧待命</strong><span id="skill-chain">技巧連段</span></div><div id="skill-coach-hud"><strong id="drill-title"></strong><p id="drill-hint"></p><button id="btn-drill-retry">重試</button> <button id="btn-drill-exit">回自由配送</button></div><div id="hud-controls-panel"><button id="btn-skill-coach-hud" class="hud-toggle-btn">技巧教練</button><button id="btn-weather" class="hud-toggle-btn">天氣：晴</button><button id="btn-daynight" class="hud-toggle-btn">時間：白天</button><button id="btn-quality" class="hud-toggle-btn">畫質：高</button></div><button id="hud-map-button" aria-label="開啟台北路網">路網</button><button id="pause-button" aria-label="暫停遊戲">Ⅱ 暫停</button><div id="resource-box"><div class="resource-label"><span id="boost-label">E 極速起步</span></div><div class="resource-track"><div id="boost-fill"></div></div><div class="resource-label"><span>貨物完整度</span><span id="cargo-value">—</span></div><div class="resource-track"><div id="cargo-fill"></div></div></div></div>
 <div id="mobile-touch-controls"><div class="touch-group"><button data-key="ArrowLeft" aria-label="左轉">←</button><button data-key="ArrowRight" aria-label="右轉">→</button><button data-key="ControlLeft" aria-label="甩尾">甩尾</button></div><div class="touch-group touch-right"><button id="touch-jump" data-key="Space">跳躍</button><button id="touch-wheelie" data-key="ShiftLeft">孤輪</button><button id="touch-upshift" data-key="KeyA">A 升</button><button id="touch-downshift" data-key="KeyZ">Z 降</button><button id="touch-dash" data-key="KeyE">噴焰</button><button class="brake" data-key="KeyS" aria-label="煞車及自動倒車">煞車／倒車</button><button class="gas" data-key="KeyW">油門</button></div></div>
 <aside id="phone-message" role="status" aria-live="polite"><div class="phone-portrait"><div id="phone-avatar">📊</div><span id="phone-event-tag">VOICE</span></div><div class="phone-body"><div id="phone-sender">客人</div><div id="phone-meta">語音訊息</div><p id="phone-text"></p><div id="rider-reply" style="display:none"><b>你 ↪</b><span id="rider-reply-text"></span></div><div class="phone-actions"><small id="reply-key-hint">Q 回一句</small><button id="phone-reply-button">Q　回一句</button></div></div><div class="voice-bars"><i></i><i></i><i></i><i></i></div></aside><div id="pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title"><div class="pause-card"><h2 id="pause-title">休息一下。</h2><p>班表與訂單計時已暫停。<br>方向鍵 騎乘 · ↓ 煞停後自動倒車 · Space 起跳 · Ctrl 甩尾 · X 道路救援（扣 5 秒）</p><button id="resume-button">繼續配送</button><button id="retry-button">重新開始這一班</button><button id="finish-button">結算並結束本班</button><button id="menu-button">結束並回到主選單</button></div></div>
 <div id="license-screen"><div class="license-card"><div class="license-header"><div class="license-title">本班配送成績</div><div style="color:#abc4cc;font-size:11px">TAIPEI EXPRESS</div></div><div class="license-body"><div class="license-photo-frame"><span id="license-photo-letter">豪</span><span id="license-photo-driver" class="license-photo-name">阿豪</span></div><div class="license-details"><div class="license-stat-line"><span>本班收入</span><span id="lic-fare">$0</span></div><div class="license-stat-line"><span>成功送達</span><span id="lic-customers">0</span></div><div class="license-stat-line"><span>快速送達</span><span id="lic-speedy">0</span></div><div class="license-stat-line"><span>最高連段</span><span id="lic-combo">0</span></div><div class="license-stat-line"><span>配送紀錄</span><span id="lic-mode-score">0</span></div></div></div><div id="license-rank-stamp" class="license-stamp">S</div></div><p id="result-note"></p><p id="receipt-detail"></p><button id="btn-restart" class="arcade-btn-start">回到班表　→</button></div>
-<div id="city-map-modal" role="dialog" aria-modal="true" aria-label="台北配送路網"><div class="city-map-card"><h2>台北配送路網</h2><button id="map-layer-button">查看 B1 地下街</button><p>16 個配送區域 · 四條河道 · Y / R / Z 地下街</p><canvas id="city-map-canvas" width="900" height="780"></canvas><button id="close-map-button">關閉路網</button></div></div><div id="manual-modal" role="dialog" aria-modal="true" aria-label="配送手冊"><div class="manual-content"><div class="manual-title">超級外送員 · 配送手冊</div><div class="manual-section"><h4>先完成你的第一單</h4><p>1. 選擇 16 區起點。紅圈短衝單（220–480 m）、黃圈跨區單（480–880 m）、綠圈橫越台北（880–1400 m）。B 或畫面「換單」切換附近三家商家，大型綠色箭頭與路線導向選單商家。你也可在其他商家圈內取貨。</p><p>2. 進入取貨圈，速度低於 5.4 km/h，停穩 0.7 秒自動裝貨。</p><p>3. 取貨後，跟著綠色導航前往騎樓門口、巷口、捷運出口旁或地下街等交付區。</p><p>4. 在綠色 STOP 停車框內、同一樓層停穩 0.7 秒，於訂單倒數歸零前交付。</p></div><div class="manual-section"><h4>操作與技巧</h4><p>W / ↑ 油門 · S / ↓ 煞車；自排按住 S / ↓，煞停 0.82 秒自動切 R 倒車；按油門回 D。停穩取貨只需放開煞車 · ←/→ 或 J/L 轉向。</p><p>Space：起跳。Shift：翹孤輪。Ctrl + 轉向：甩尾；轉向時快切 Z→A 也可觸發短甩尾。速度越快跳越高。草地、廣場、坡道皆可騎；黃色箭頭跳台可飛越車輛並登上低平台與屋頂。</p><p>A 升檔 / Z 降檔；自排為 A 前進 / Z 倒車。0.45 秒內 Z→A：消耗 35 氮氣噴焰加速，冷卻 1.25 秒。E 為簡易氮氣鍵。T 切換自排／手排。手排為 R / N / 1–4 檔。Q 回嘴（12 秒冷卻） · Tab 台北路網 · C 切換視角 · Esc/P 暫停 · M 音效 · X 救援回道路（扣 5 秒與 8% 完整度）。</p><p>標準手把：左搖桿轉向、RT 油門、LT 煞車／倒車、A 噴焰加速、B 甩尾、X 起跳、Y 孤輪、LB 降檔、RB 升檔、Start 暫停。Start 可暫停／繼續；Select 換單。恢復時需先放開搖桿與按鍵，避免突然暴衝。手機使用螢幕按鈕。</p></div><div class="manual-section"><h4>收入與班表</h4><p>運費依路線距離計算。配送途中甩尾、孤輪、越障與擦身超車可累積技巧獎勵，4 秒內接續可提高倍率，最高 2 倍。空車不賺技巧獎勵。</p><p>碰撞減少貨物完整度並中斷連段。收入 =（基本運費 + 技巧獎勵 + 剩餘秒數 × 2）×（0.4 + 完整度比例 × 0.6）× 連送倍率。每成功連送一單，從第二單起加 0.05 倍，上限 1.30 倍。逾時不付款並中斷連送；技巧連段仍由碰撞中斷。</p><p>剩餘交期 ≥50%：SPEEDY；≥20%：GOOD；其餘 JUST IN TIME。街機續時為 16／11／7 秒 + 距離獎勵（最多 10 秒）+ 連送獎勵（最多 6 秒），單次最多 32 秒，班表剩餘最多 150 秒。五分鐘班與衝刺模式不續時。送達演出 1.1 秒內，班表與訂單計時皆暫停。</p><p>自由練習不限班表時間，訂單仍有限時。練習紀錄不列入正式班表排行榜。排行榜僅在這台瀏覽器儲存，沒有連線排名。</p></div><div class="manual-section"><h4>四名騎士的優勢</h4><p>阿豪：跳高約 +25%，空中轉向 +35%。阿福：氮氣每次 28 點，回充 +30%，直線極速最高。小琪：甩尾轉向 +25%，出彎抓地更快。老周：草地阻力 −65%，碰撞貨損由 12% 降為 6%。</p></div><div class="manual-section"><h4>4.0 搞笑台北街機版</h4><p>飽和卡通色塊、三階漫畫光影、大頭騎士、笑臉地標與台式招牌。接單圈設在路邊店前，$ 圖示與紅／黃／綠距離分級；取貨後用大型綠箭頭導向目的地，綠色 STOP 停車框的範圍就是實際交付判定。速度低於 5.4 km/h、同樓層停穩 0.7 秒才完成。</p><p>地下街真正位於 B1，Y 區沿北車北側市民大道東西向，R 區往中山與雙連，Z 區位於站前忠孝西路下方。六條改編坡道可連續騎進騎出，沒有傳送門。導航顯示地面／B1 與應走的入口；路網按鈕可切換地下街平面圖。機車、牆面、入口側牆、天花板與樓層均有碰撞。X 可救援到附近地面出口。</p><p>地下街為遊戲化縮尺，坡道改編自出入口群；真實出入口主要是階梯、電扶梯與電梯，遊戲內騎乘是搞笑街機設定。連通廊採簡化拓撲，不包含列車月台或付費區。全市道路為人工取樣的經緯度錨點，仍有省略與近似，並非逐棟測量或可用於導航的地圖。</p><p>16 種客人、48 章支線與擴充吐槽素材。取貨後可選穩送、技巧單或兩站合單；地下目的地會把「入口 → 下坡 → B1 區域 → STOP」直接寫在導航卡並切換 B1 雷達。語音由瀏覽器系統合成，無可用語音時仍有字幕，可單獨關閉。4.1 Recovery Pass 仍需真正瀏覽器/WebGL、手機效能與版面驗收。</p></div><button id="btn-close-manual" class="manual-close-btn">了解，出發！</button></div></div>
-<script>/* GENERATED OPENSTREETMAP DATA PLACEHOLDER.
+<div id="city-map-modal" role="dialog" aria-modal="true" aria-label="台北配送路網"><div class="city-map-card"><h2>台北配送路網</h2><button id="map-layer-button">查看 B1 地下街</button><p>16 個配送區域 · 四條河道 · Y / R / Z 地下街</p><canvas id="city-map-canvas" width="900" height="780"></canvas><button id="close-map-button">關閉路網</button></div></div><div id="manual-modal" role="dialog" aria-modal="true" aria-label="配送手冊"><div class="manual-content"><div class="manual-title">超級外送員 · 配送手冊</div><div class="manual-section"><h4>先完成你的第一單</h4><p>1. 選擇 16 區起點。配送票牌直接顯示路線公尺數與交付地點，所有票牌使用同一色。B 或畫面「換單」切換附近三家商家，依路線與路名文字前往，也可到其他商家取貨。</p><p>2. 靠近商家票牌，速度低於 5.4 km/h，停穩 0.7 秒自動裝貨。</p><p>3. 取貨後，依路線、路名與樓層提示前往騎樓門口、巷口、捷運出口旁或地下街等交付區。</p><p>4. 靠近交付票牌、同一樓層停穩 0.7 秒，於訂單倒數歸零前交付。</p></div><div class="manual-section"><h4>操作與技巧</h4><p>W / ↑ 油門 · S / ↓ 煞車；自排按住 S / ↓，煞停 0.82 秒自動切 R 倒車；按油門回 D。停穩取貨只需放開煞車 · ←/→ 或 J/L 轉向。</p><p>Space：起跳。Shift：翹孤輪。Ctrl + 轉向：甩尾。速度越快跳越高。草地、廣場、坡道皆可騎；黃色箭頭跳台可飛越車輛並登上低平台與屋頂。</p><p>A 升檔 / Z 降檔；自排為 A 前進 / Z 倒車。E 消耗 35 氮氣加速，冷卻 1.25 秒；排檔只用於選檔，不會觸發加速或甩尾。T 切換自排／手排。手排為 R / N / 1–4 檔。Q 回嘴（12 秒冷卻） · Tab 台北路網 · C 切換視角 · Esc/P 暫停 · M 音效 · X 救援回道路（扣 5 秒與 8% 完整度）。</p><p>標準手把：左搖桿轉向、RT 油門、LT 煞車／倒車、A 噴焰加速、B 甩尾、X 起跳、Y 孤輪、LB 降檔、RB 升檔、Start 暫停。Start 可暫停／繼續；Select 換單。恢復時需先放開搖桿與按鍵，避免突然暴衝。手機使用螢幕按鈕。</p></div><div class="manual-section"><h4>5.1 街機技巧與教練</h4><p>E 噴焰、Ctrl 甩尾和 Space 跳躍照常使用。新增自排 D 檔持續煞車輔助：30 km/h 以上放油門、按住煞車至少 0.14 秒，漸進減速收單；不需切倒檔。甩尾後鬆開甩尾鍵可短暫加強回正，不需噴焰連招。跳躍練習只要求安全落地。手排與 R 檔不觸發急煞輔助。所有移動仍受原有碰撞與 B1 天花板約束。</p><p>選單可切回「一般操控」，關閉新增的技巧輔助。技巧教練提供四個 30 秒練習，沿用目前快遞員與台北起跑區，不改路網、不加入訓練障礙。練習不接單、不計收入或排名；碰撞或逾時可重試。回自由配送後仍為不限時練習，正式班表請回選單選擇。</p></div><div class="manual-section"><h4>收入與班表</h4><p>運費依路線距離計算。配送途中甩尾、孤輪、越障與擦身超車可累積技巧獎勵，4 秒內接續可提高倍率，最高 2 倍。空車不賺技巧獎勵。</p><p>碰撞減少貨物完整度並中斷連段。收入 =（基本運費 + 技巧獎勵 + 剩餘秒數 × 2）×（0.4 + 完整度比例 × 0.6）× 連送倍率。每成功連送一單，從第二單起加 0.05 倍，上限 1.30 倍。逾時不付款並中斷連送；技巧連段仍由碰撞中斷。</p><p>剩餘交期 ≥50%：SPEEDY；≥20%：GOOD；其餘 JUST IN TIME。街機續時為 16／11／7 秒 + 距離獎勵（最多 10 秒）+ 連送獎勵（最多 6 秒），單次最多 32 秒，班表剩餘最多 150 秒。五分鐘班與衝刺模式不續時。送達演出 1.1 秒內，班表與訂單計時皆暫停。</p><p>自由練習不限班表時間，訂單仍有限時。練習紀錄不列入正式班表排行榜。排行榜僅在這台瀏覽器儲存，沒有連線排名。</p></div><div class="manual-section"><h4>四名騎士的優勢</h4><p>阿豪：跳高約 +25%，空中轉向 +35%。阿福：氮氣每次 28 點，回充 +30%，直線極速最高。小琪：甩尾轉向 +25%，出彎抓地更快。老周：草地阻力 −65%，碰撞貨損由 12% 降為 6%。</p></div><div class="manual-section"><h4>4.0 搞笑台北街機版</h4><p>飽和卡通色塊、三階漫畫光影、大頭騎士、笑臉地標與台式招牌。配送票牌設在原有路邊店前，使用同一色並顯示距離數字；取貨後依路線、路名與樓層文字前往交付票牌，不使用接單光圈、大型旋轉箭頭或 STOP 圍框。速度低於 5.4 km/h、同樓層停穩 0.7 秒才完成。</p><p>地下街真正位於 B1，Y 區沿北車北側市民大道東西向，R 區往中山與雙連，Z 區位於站前忠孝西路下方。六條改編坡道可連續騎進騎出，沒有傳送門。導航顯示地面／B1 與應走的入口；路網按鈕可切換地下街平面圖。機車、牆面、入口側牆、天花板與樓層均有碰撞。X 可救援到附近地面出口。</p><p>地下街為遊戲化縮尺，坡道改編自出入口群；真實出入口主要是階梯、電扶梯與電梯，遊戲內騎乘是搞笑街機設定。連通廊採簡化拓撲，不包含列車月台或付費區。全市道路為人工取樣的經緯度錨點，仍有省略與近似，並非逐棟測量或可用於導航的地圖。</p><p>16 種客人、48 章支線與擴充吐槽素材。取貨後可選穩送、技巧單或兩站合單；地下目的地會把「入口 → 下坡 → B1 區域 → 交付票牌」直接寫在導航卡並切換 B1 雷達。語音由瀏覽器系統合成，無可用語音時仍有字幕，可單獨關閉。4.1 Recovery Pass 仍需真正瀏覽器/WebGL、手機效能與版面驗收。</p></div><button id="btn-close-manual" class="manual-close-btn">了解，出發！</button></div></div>
+<div id="skill-coach-modal" role="dialog" aria-modal="true" aria-labelledby="skill-coach-title"><div class="skill-coach-panel"><h2 id="skill-coach-title">台北快送 · 技巧教練</h2><p>用你選的快遞員、機車與台北起跑區練習，每回合 30 秒。練習不接單、不計收入與排行榜。開始練習會結束目前班表；只查看教學時，班表暫停。</p><div class="skill-drills"><button id="drill-launch"><b>01 噴焰起步</b><span>低速時 E／手把 A。手機「噴焰」。用原本能量與冷卻規則練習加速。</span></button><button id="drill-stop"><b>02 急煞收單</b><span>30 km/h 以上，放開油門並持續煞車。手把 LT；手機「煞車／倒車」。不需排檔。</span></button><button id="drill-exit"><b>03 甩尾回正</b><span>Ctrl + 轉向後放開 Ctrl。手把放開 B；手機放開「甩尾」。不需加速連招。</span></button><button id="drill-hop"><b>04 跳躍穩落</b><span>Space 起跳，放油門安全落地。手把 X；手機「跳躍」。注意 B1 天花板。</span></button></div><button id="btn-coach-close">返回 · Esc</button></div></div><script>/* GENERATED OPENSTREETMAP DATA PLACEHOLDER.
  * Run tools/geodata/compile_taipei_osm.py against an ODbL-licensed .osm extract.
  * When populated, this file is geographic data under ODbL 1.0, not Apache-2.0 code.
  */
@@ -1547,13 +1583,13 @@ class SuperCourierTaipei extends TaipeiCityGame {
   step(dt){this.elapsed+=dt;if(this.selectedMode!=='PRACTICE'){this.gameTime-=dt;if(this.gameTime<=0){this.gameTime=0;this.endGame();return;}}this.collisionCooldown=Math.max(0,this.collisionCooldown-dt);this.comboTTL-=dt;if(this.comboTTL<=0)this.comboCount=0;
     this.updateVehiclePhysics(dt);this.updateCivilianTraffic(dt);this.updateScooters(dt);this.updateCustomers(dt);this.updateRain(dt);this.navAge-=dt;if(this.navAge<=0){this.updateNavigation();this.navAge=.6;}}
   pollGamepad(){const pads=navigator.getGamepads?navigator.getGamepads():[];const p=Array.from(pads).find(Boolean);if(!p){if(this.padConnected){this.keys={};this.padConnected=false;}return;}this.padConnected=true;const a=p.axes[0]||0;this.padSteer=Math.abs(a)>.16?a:0;this.padDrift=!!p.buttons[1]?.pressed;this.padGas=p.buttons[7]?.value||0;this.padBrake=p.buttons[6]?.value||0;const dash=!!p.buttons[0]?.pressed;if(dash&&!this.padDash)this.triggerDash();this.padDash=dash;const pause=!!p.buttons[9]?.pressed;if(pause&&!this.padPause)this.pause();this.padPause=pause;}
-  triggerDash(){if(this.gameState!=='PLAYING'||this.boost<35||this.dashTime>0)return;this.boost-=35;this.dashTime=.8;this.carSpeed=Math.max(this.carSpeed,20);this.audio.playBoost();this.showExhaustFlames();this.showComboBanner('極速起步','stunt-crazy-dash');}
+  triggerDash(){if(this.gameState!=='PLAYING'||this.boost<35||this.dashTime>0)return;this.boost-=35;this.dashTime=.8;this.carSpeed=Math.max(this.carSpeed,20);this.audio.playBoost();this.showExhaustFlames();this.showComboBanner('極速起步','stunt-courier-dash');}
   updateVehiclePhysics(dt){const steer=(this.keys.KeyD||this.keys.ArrowRight?1:0)-(this.keys.KeyA||this.keys.ArrowLeft?1:0)+(this.padConnected?this.padSteer:0);const gas=!!(this.keys.KeyW||this.keys.ArrowUp)||(this.padConnected&&this.padGas>.15);const brake=!!(this.keys.KeyS||this.keys.ArrowDown)||(this.padConnected&&this.padBrake>.15);const drifting=!!(this.keys.Space||this.padConnected&&this.padDrift)&&Math.abs(steer)>.1&&this.carSpeed>10;this.boost=Math.min(100,this.boost+dt*12);this.dashTime=Math.max(0,this.dashTime-dt);const max=this.currentDriver.topSpeed/3.6;const acceleration=this.currentDriver.accel/90*13;
     if(gas){const dir=this.isManualShift&&this.currentGear==='R'?-1:1;this.carSpeed+=dir*acceleration*dt;if(!this.isManualShift)this.currentGear='D';}else if(brake){if(this.carSpeed>0)this.carSpeed=Math.max(0,this.carSpeed-30*dt);else if(!this.isManualShift){this.carSpeed=Math.max(-8,this.carSpeed-8*dt);this.currentGear='R';}}else this.carSpeed*=Math.exp(-1.2*dt);
     if(this.dashTime>0)this.carSpeed+=25*dt;this.carSpeed=Math.max(-8,Math.min(max*(this.dashTime>0?1.5:1),this.carSpeed));
     const speedRatio=Math.min(Math.abs(this.carSpeed)/6,1);this.carRotY-=Math.max(-1,Math.min(1,steer))*this.currentDriver.steerRate*.63*speedRatio*dt*(this.carSpeed>=0?1:-1)*(drifting?1.45:1);
     let diff=this.carRotY-(this.heading??this.carRotY);diff=Math.atan2(Math.sin(diff),Math.cos(diff));this.heading+=diff*Math.min(dt*(drifting?3:13),1);this.driftFactor=drifting?Math.min(1,this.driftFactor+dt*4):Math.max(0,this.driftFactor-dt*4);
-    if(drifting){this.driftTime+=dt;if(this.driftTime>=.85){this.addTip(18);this.showComboBanner('滑行轉彎','stunt-crazy-drift');this.customerMessage('drift');this.driftTime=0;}}else this.driftTime=0;
+    if(drifting){this.driftTime+=dt;if(this.driftTime>=.85){this.addTip(18);this.showComboBanner('滑行轉彎','stunt-courier-drift');this.customerMessage('drift');this.driftTime=0;}}else this.driftTime=0;
     const old=this.carPos.clone();this.carPos.x+=Math.sin(this.heading)*this.carSpeed*dt;this.carPos.z+=Math.cos(this.heading)*this.carSpeed*dt;this.carPos.y=this.getTerrainHeight(this.carPos.x,this.carPos.z)+.16;
     const road=this.snapRoad(this.carPos);if(road.distance>12){this.carSpeed*=Math.exp(-2*dt);if(road.distance>20){this.carPos.copy(old);this.hit('偏離道路');}}
     if(this.colliders){const c=this.colliders.find(b=>Math.abs(this.carPos.x-b.x)<b.w/2+.5&&Math.abs(this.carPos.z-b.z)<b.d/2+1.0);if(c){this.carPos.copy(old);this.hit('碰撞建築');}}
@@ -1561,7 +1597,7 @@ class SuperCourierTaipei extends TaipeiCityGame {
   }
   hit(label){if(this.collisionCooldown>0)return;this.collisionCooldown=.9;this.carSpeed*=-.2;this.comboCount=0;this.comboTTL=0;const damage=12*(this.currentDriver.perk?.cargo||1);if(this.activeCustomer){this.integrity=Math.max(0,this.integrity-damage);this.customerMessage('crash');}this.audio.playCrash();this.showStatusToast(label+(this.activeCustomer?' · 貨物完整度 −'+damage+'%':''));}
   rescue(){const r=this.snapRoad(this.carPos);this.carPos.set(r.x,this.getTerrainHeight(r.x,r.z)+.16,r.z);this.carRotY=this.heading=Math.atan2(r.b.x-r.a.x,r.b.z-r.a.z);this.carSpeed=0;this.keys={};if(this.selectedMode!=='PRACTICE')this.gameTime=Math.max(.1,this.gameTime-5);if(this.activeCustomer)this.integrity=Math.max(0,this.integrity-8);this.showStatusToast(this.selectedMode==='PRACTICE'?'已扶正機車，回到道路':'已扶正機車 · −5 秒');}
-  updateCivilianTraffic(dt){this.traffic.forEach(t=>{t.progress+=dt*t.speed/t.length;if(t.progress>=1)t.progress=0;const p=t.progress;const dx=t.b.x-t.a.x,dz=t.b.z-t.a.z;t.group.position.set(t.a.x+dx*p-dz/t.length*2,0,t.a.z+dz*p+dx/t.length*2);t.group.position.y=this.getTerrainHeight(t.group.position.x,t.group.position.z)+.5;const d=this.carPos.distanceTo(t.group.position);if(d<2.0){this.hit('碰撞車流');t.wasClose=true;}else if(d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送','stunt-crazy-through');this.customerMessage('near');t.wasClose=true;}if(d>12)t.wasClose=false;});}
+  updateCivilianTraffic(dt){this.traffic.forEach(t=>{t.progress+=dt*t.speed/t.length;if(t.progress>=1)t.progress=0;const p=t.progress;const dx=t.b.x-t.a.x,dz=t.b.z-t.a.z;t.group.position.set(t.a.x+dx*p-dz/t.length*2,0,t.a.z+dz*p+dx/t.length*2);t.group.position.y=this.getTerrainHeight(t.group.position.x,t.group.position.z)+.5;const d=this.carPos.distanceTo(t.group.position);if(d<2.0){this.hit('碰撞車流');t.wasClose=true;}else if(d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送','stunt-courier-through');this.customerMessage('near');t.wasClose=true;}if(d>12)t.wasClose=false;});}
   updateScooters(dt){this.scooters.forEach(s=>{s.progress+=dt*s.speed/s.length;if(s.progress>=1)s.progress=0;s.group.position.set(s.a.x+(s.b.x-s.a.x)*s.progress,0.3,s.a.z+(s.b.z-s.a.z)*s.progress);s.group.position.y=this.getTerrainHeight(s.group.position.x,s.group.position.z)+.3;if(this.carPos.distanceTo(s.group.position)<1.2)this.hit('擦撞機車');});}
   addTip(amount){if(!this.activeCustomer)return;const multiplier=1+Math.min(this.comboCount,10)*.1;super.addTip(Math.round(amount*multiplier));this.comboTTL=4;}
   spawnWorldCustomers(){super.spawnWorldCustomers();}
@@ -1574,7 +1610,7 @@ class SuperCourierTaipei extends TaipeiCityGame {
   nearestMerchant(){let result=null,dist=Infinity;this.customers.forEach(c=>{if(!c.isBoarded&&!(c.cooldown>0)){const d=this.carPos.distanceTo(c.group.position);if(d<dist){dist=d;result=c;}}});return result;}
   boardCustomer(c){if(this.activeCustomer)return;this.activeCustomer=c;c.isBoarded=true;this.currentTip=0;this.comboCount=0;this.integrity=100;this.interact=0;c.warnedHalf=false;c.warnedUrgent=false;this.messageCounts={};const route=this.findRoute(this.carPos,c.destination.pos);const distance=this.routeDistance(route);c.baseFare=Math.round(110+distance*.72);this.activeCustomerTimer=Math.max(40,Math.ceil(distance/8.6+26));if(this.selectedMode==='ARCADE')this.activeCustomerTimer*=1.08;if(this.selectedMode==='RUSH')this.activeCustomerTimer*=.88;this.activeCustomerInitialTime=this.activeCustomerTimer;
     this.audio.playCash();this.showStatusToast('已取貨：'+c.item+' → '+c.destination.name);document.getElementById('hud-destination').style.display='block';document.getElementById('hud-customer-timer').style.display='block';document.getElementById('hud-distance').style.display='block';document.getElementById('hud-destination').textContent=c.destination.name;this.updateNavigation();this.customerMessage('pickup',true);}
-  deliverCustomer(){if(!this.activeCustomer)return;const c=this.activeCustomer;this.customerMessage(this.integrity>=88?'success':'damaged',true);const ratio=this.activeCustomerTimer/this.activeCustomerInitialTime;const bonus=Math.round(Math.max(0,this.activeCustomerTimer)*2);const fare=Math.round((c.baseFare+this.currentTip+bonus)*(.4+.6*this.integrity/100));this.totalFare+=fare;this.deliveredCount++;if(ratio>=.45)this.speedyCount++;const time=this.selectedMode==='ARCADE'?Math.min(18,Math.round(6+this.activeCustomerTimer*.18)):0;this.gameTime+=time;this.audio.playCash();this.showComboBanner('送達！ NT$ '+fare+(time?' · +'+time+'s':''),'stunt-crazy-dash');this.finishOrder(true);}
+  deliverCustomer(){if(!this.activeCustomer)return;const c=this.activeCustomer;this.customerMessage(this.integrity>=88?'success':'damaged',true);const ratio=this.activeCustomerTimer/this.activeCustomerInitialTime;const bonus=Math.round(Math.max(0,this.activeCustomerTimer)*2);const fare=Math.round((c.baseFare+this.currentTip+bonus)*(.4+.6*this.integrity/100));this.totalFare+=fare;this.deliveredCount++;if(ratio>=.45)this.speedyCount++;const time=this.selectedMode==='ARCADE'?Math.min(18,Math.round(6+this.activeCustomerTimer*.18)):0;this.gameTime+=time;this.audio.playCash();this.showComboBanner('送達！ NT$ '+fare+(time?' · +'+time+'s':''),'stunt-courier-dash');this.finishOrder(true);}
   finishOrder(success){const c=this.activeCustomer;if(!c)return;c.cooldown=success?9:14;c.isBoarded=false;c.destination=this.orderDestination(c,++this.orderSerial);this.activeCustomer=null;this.currentTip=0;this.comboCount=0;this.comboTTL=0;this.interact=0;this.hideOrder();this.updateNavigation();}
   hideOrder(){['hud-destination','hud-customer-timer','hud-distance'].forEach(id=>document.getElementById(id).style.display='none');}
   buildNavigation(){this.segments=[];this.roadGraph.forEach((r,ri)=>{for(let i=0;i<r.length-1;i++)this.segments.push({a:r[i],b:r[i+1],ri,points:[{...r[i],t:0},{...r[i+1],t:1}]});});const seg=this.segments;
@@ -2311,7 +2347,7 @@ class FrenzyCourier extends ArcadeCourier {
     // Only destination markers; old duplicate lane meshes and tall beam are intentionally retired.
     this.scene.fog.density=.00058;
     this.bikeShadow=this.mesh(this.scene,new THREE.CircleGeometry(1.1,24).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0x102730,transparent:true,opacity:.35,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));this.bikeShadow.scale.set(.7,1,1.5);
-    this.destBeam.children.forEach(m=>m.visible=false);const ring=this.mesh(this.destBeam,new THREE.RingGeometry(7.5,9,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0xffd260,side:THREE.DoubleSide,transparent:true,opacity:.9,depthWrite:false}));this.deliveryGroundRing=ring;
+    this.destBeam.children.forEach(m=>m.visible=false);const ring=this.mesh(this.destBeam,new THREE.RingGeometry(7.5,9,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0xffd260,side:THREE.DoubleSide,transparent:true,opacity:.9,depthWrite:false}));this.deliveryGroundRing=ring;ring.visible=false;
     const marker=this.makeLabel('DELIVERY / 交付區','#ffd260');marker.position.set(0,7,0);this.destBeam.add(marker);
   }
   buildStuntRig() {
@@ -2378,11 +2414,10 @@ class FrenzyCourier extends ArcadeCourier {
   shiftGear(direction) {
     if(this.gameState!=='PLAYING')return;
     this.autoReverse=false;this.reverseHold=0;
-    const quick=direction>0&&this.elapsed-this.shiftWindow<=.45&&this.elapsed-this.shiftWindow>=0;
-    if(direction<0)this.shiftWindow=this.elapsed;else this.shiftWindow=-99;
+    // Gear selection only: no reverse/drive sequence activates a power move.
+    this.shiftWindow=-99;
     if(this.isManualShift){this.manualGear=Math.max(-1,Math.min(4,this.manualGear+direction));this.currentGear=this.manualGear===-1?'R':this.manualGear===0?'N':String(this.manualGear);this.shiftDip=.09;}
     else this.currentGear=direction>0?'D':'R';
-    if(quick){if(this.manualGear<=0&&this.isManualShift)this.manualGear=1;this.currentGear=this.isManualShift?String(this.manualGear):'D';this.triggerDash('quick');}
     this.refreshGearUI();
   }
   refreshGearUI() {
@@ -2395,13 +2430,13 @@ class FrenzyCourier extends ArcadeCourier {
     if(this.gameState!=='PLAYING'||this.boost<cost||this.boostCooldown>0||this.dashTime>0)return false;
     this.autoReverse=false;this.reverseHold=0;this.boost-=cost;this.boostCooldown=1.25;this.dashTime=1.05;this.carSpeed=Math.max(this.carSpeed,22);this.currentGear=this.isManualShift?String(Math.max(1,this.manualGear)):'D';
     if(this.isManualShift&&this.manualGear<1)this.manualGear=1;
-    this.audio.playBoost();this.showExhaustFlames();this.stuntStats.boosts++;this.showComboBanner(source==='quick'?'快切噴焰！':'氮氣爆發！','stunt-crazy-dash');this.stuntMessage('boost');return true;
+    this.audio.playBoost();this.showExhaustFlames();this.stuntStats.boosts++;this.showComboBanner('氮氣爆發！','stunt-courier-dash');this.stuntMessage('boost');return true;
   }
   tryJump(velocity=10.5,ramp=false) {
     if(this.gameState!=='PLAYING'||!this.isGrounded||this.jumpCooldown>0)return false;
     velocity=(velocity+(ramp?0:Math.min(3.5,Math.abs(this.carSpeed)*.12)))*(this.currentDriver.perk?.jump||1);
     this.isGrounded=false;this.carVy=velocity;this.jumpCooldown=.65;this.airTime=0;this.airDistance=0;this.airCleared.clear();this.stuntStats.jumps++;this.airStart=this.carPos.clone();
-    this.audio.playBoost();this.showComboBanner(ramp?'飛躍跳台！':'單輪彈跳！','stunt-crazy-through');this.stuntMessage('jump');return true;
+    this.audio.playBoost();this.showComboBanner(ramp?'飛躍跳台！':'單輪彈跳！','stunt-courier-through');this.stuntMessage('jump');return true;
   }
   pollGamepad() {
     super.pollGamepad();const p=Array.from(navigator.getGamepads?navigator.getGamepads():[]).find(Boolean);if(!p)return;
@@ -2438,7 +2473,7 @@ class FrenzyCourier extends ArcadeCourier {
     const speedRatio=Math.min(Math.abs(this.carSpeed)/6,1),airControl=this.isGrounded?1:.55*(perk.air||1);
     this.carRotY-=Math.max(-1,Math.min(1,steer))*this.currentDriver.steerRate*.68*speedRatio*dt*(this.carSpeed>=0?1:-1)*(drifting?1.65*(perk.drift||1):1-.20*Math.min(1,Math.abs(this.carSpeed)/max))*airControl;
     let diff=Math.atan2(Math.sin(this.carRotY-this.heading),Math.cos(this.carRotY-this.heading));this.heading+=diff*Math.min(dt*(drifting?3:14*(perk.grip||1)),1);this.driftFactor=drifting?Math.min(1,this.driftFactor+dt*4):Math.max(0,this.driftFactor-dt*4);
-    if(drifting){this.driftTime+=dt;if(this.driftTime>=.85){this.addTip(18);this.showComboBanner('甩尾快送！','stunt-crazy-drift');this.customerMessage('drift');this.driftTime=0;}}else this.driftTime=0;
+    if(drifting){this.driftTime+=dt;if(this.driftTime>=.85){this.addTip(18);this.showComboBanner('甩尾快送！','stunt-courier-drift');this.customerMessage('drift');this.driftTime=0;}}else this.driftTime=0;
     const old=this.carPos.clone(),driveTarget={x:old.x+Math.sin(this.heading)*this.carSpeed*dt,z:old.z+Math.cos(this.heading)*this.carSpeed*dt};const motion=this.sweepStaticMotion(old,driveTarget);this.carPos.x=motion.x;this.carPos.z=motion.z;if(motion.hit){this.hit('擦撞牆面！');this.nudgeFromWall(old,motion);}else this.wallContactTime=Math.max(0,this.wallContactTime-dt*2.5);
     const ground=this.rideSurface(this.carPos,old.y);let rampHeight=0;
     for(const r of this.ramps){const p=this.localXZ(this.carPos,r),d=r.d||8;if(Math.abs(p.x)<r.w/2&&p.z>-d/2&&p.z<d/2+.5){const rampTop=(r.y??this.getTerrainHeight(r.x,r.z))+.16+Math.max(0,Math.min(1,(p.z+d/2)/d))*r.height;rampHeight=Math.max(rampHeight,rampTop-ground);const forward=Math.cos(this.heading-r.angle)*this.carSpeed;if(this.isGrounded&&p.z>d/2-.8&&forward>9){this.carPos.y=Math.max(this.carPos.y,ground+rampHeight);this.tryJump(r.launch||13,true);}}}
@@ -2454,7 +2489,7 @@ class FrenzyCourier extends ArcadeCourier {
     this.distanceDriven+=Math.hypot(this.carPos.x-old.x,this.carPos.z-old.z);
     const wheelie=!!(this.keys.ShiftLeft||this.keys.ShiftRight||this.padConnected&&this.padWheelie)&&this.carSpeed>8&&this.isGrounded;
     const target=wheelie?.48:!this.isGrounded?.18:0;this.wheelieAngle+=(target-this.wheelieAngle)*(1-Math.exp(-dt*10));
-    if(wheelie){this.wheelieTime+=dt;if(this.wheelieTime>=1.8){this.wheelieTime=0;this.stuntStats.wheelies++;this.addTip(24);this.showComboBanner('孤輪快送！','stunt-crazy-through');}}else this.wheelieTime=0;
+    if(wheelie){this.wheelieTime+=dt;if(this.wheelieTime>=1.8){this.wheelieTime=0;this.stuntStats.wheelies++;this.addTip(24);this.showComboBanner('孤輪快送！','stunt-courier-through');}}else this.wheelieTime=0;
     const fwd=this.getTerrainHeight(this.carPos.x+Math.sin(this.carRotY)*1.2,this.carPos.z+Math.cos(this.carRotY)*1.2),back=this.getTerrainHeight(this.carPos.x-Math.sin(this.carRotY)*1.2,this.carPos.z-Math.cos(this.carRotY)*1.2),slope=this.isGrounded?Math.atan2(fwd-back,2.4):0;
     this.carGroup.position.copy(this.carPos);this.carGroup.position.y+=.88*Math.sin(this.wheelieAngle)+.39*(1-Math.cos(this.wheelieAngle));this.carGroup.rotation.y=this.carRotY;
     if(this.bikeRig){this.bikeRig.rotation.x=-slope-this.wheelieAngle;this.bikeRig.rotation.z=this.reducedMotion?0:steer*(.16+this.driftFactor*.18)*speedRatio;}
@@ -2463,7 +2498,7 @@ class FrenzyCourier extends ArcadeCourier {
   }
   landJump() {
     const distance=this.airDistance,count=this.airCleared.size;this.isGrounded=true;this.carVy=0;this.maxJumpDistance=Math.max(this.maxJumpDistance,distance);this.stuntStats.clearances+=count;
-    if(distance>4){this.addTip(Math.min(65,Math.round(distance*.9))+count*30);this.showComboBanner((count?'飛越 '+count+' 個障礙！':'漂亮落地！')+' '+Math.round(distance)+' m','stunt-crazy-through');}
+    if(distance>4){this.addTip(Math.min(65,Math.round(distance*.9))+count*30);this.showComboBanner((count?'飛越 '+count+' 個障礙！':'漂亮落地！')+' '+Math.round(distance)+' m','stunt-courier-through');}
     this.airCleared.clear();this.airTime=0;
   }
   updateEffects(dt) {
@@ -2473,13 +2508,14 @@ class FrenzyCourier extends ArcadeCourier {
       for(let i=0;i<64;i++){this.sparkLives[i]-=dt;if(this.sparkLives[i]>0){const v=this.sparkVelocities[i];this.sparkPositions.setXYZ(i,this.sparkPositions.getX(i)+v.x*dt,this.sparkPositions.getY(i)+v.y*dt,this.sparkPositions.getZ(i)+v.z*dt);}else this.sparkPositions.setXYZ(i,this.carPos.x,-100,this.carPos.z);}this.sparkPositions.needsUpdate=true;}
     this.cityObstacles.forEach(o=>{if(o.knocked){const t=Math.min(1,this.elapsed-o.knockedAt);o.group.rotation.x=t*1.5;o.group.position.x=o.x+Math.sin(o.kickAngle)*t*2;o.group.position.z=o.z+Math.cos(o.kickAngle)*t*2;}});
     this.updateTrafficSignals();
-    for(const p of this.pedestrians){const dx=p.group.position.x-this.carPos.x,dz=p.group.position.z-this.carPos.z,d=Math.hypot(dx,dz);p.avoid=Math.max(0,p.avoid-dt);if(d<3.2){p.avoid=.8;const n=d||1;p.group.position.x=p.baseX+dx/n*1.4;p.group.position.z=p.baseZ+dz/n*1.4;}else if(p.avoid<=0){const sway=Math.sin(this.elapsed*p.speed+p.sway)*1.15;p.group.position.x+=(p.baseX+Math.sin(p.angle)*sway-p.group.position.x)*Math.min(1,dt*3);p.group.position.z+=(p.baseZ+Math.cos(p.angle)*sway-p.group.position.z)*Math.min(1,dt*3);}p.group.position.y=this.getTerrainHeight(p.group.position.x,p.group.position.z);}
+    // Ambient sidewalk motion is independent of the rider; no proximity zones.
+    for(const p of this.pedestrians){const sway=Math.sin(this.elapsed*p.speed+p.sway)*1.15;p.group.position.x+=(p.baseX+Math.sin(p.angle)*sway-p.group.position.x)*Math.min(1,dt*3);p.group.position.z+=(p.baseZ+Math.cos(p.angle)*sway-p.group.position.z)*Math.min(1,dt*3);p.group.position.y=this.getTerrainHeight(p.group.position.x,p.group.position.z);}
     if(this.ferrisWheel)this.ferrisWheel.rotation.z=this.elapsed*.025;
     if(this.mrtTrain){const total=this.mrtSegments.reduce((n,s)=>n+s.len,0);let d=(this.elapsed*12)%total;for(const s of this.mrtSegments){if(d>s.len){d-=s.len;continue;}this.mrtTrain.visible=!s.underground;const t=d/s.len,x=s.a.x+(s.b.x-s.a.x)*t,z=s.a.z+(s.b.z-s.a.z)*t;this.mrtTrain.position.set(x,this.getTerrainHeight(x,z)+11.7,z);this.mrtTrain.rotation.y=Math.atan2(s.b.x-s.a.x,s.b.z-s.a.z);break;}}
     if(this.bikeShadow){const h=this.carPos.y-this.getTerrainHeight(this.carPos.x,this.carPos.z);this.bikeShadow.material.opacity=.35/(1+h*.18);this.bikeShadow.scale.set(.7+h*.07,1,1.5+h*.1);}
     const underground=(this.undergroundZones||[]).find(z=>this.overlaps(this.carPos,z,-.2)),inside=!!underground;
     if(inside!==this.inUnderground){this.inUnderground=inside;const cabinet=document.getElementById('cabinet-overlay');if(cabinet){cabinet.classList.toggle('underground',inside);cabinet.querySelector('span').textContent=inside?'UNDERGROUND FEVER / 地下街爆走':'ARCADE CABINET VISION';}
-      if(inside){this.showComboBanner('地下街爆走！','stunt-crazy-through');this.audio.playHorn(520);if(this.activeCustomer&&this.elapsed-this.lastMessageAt>6){const actor=COURIER_PERSONAS[this.activeCustomer.persona%COURIER_PERSONAS.length],line=COURIER_UNDERGROUND_LINES[this.activeCustomer.persona%COURIER_UNDERGROUND_LINES.length];this.lastMessageAt=this.elapsed;this.messageUntil=this.elapsed+7;this.showPhoneLine(actor,line,'banter',underground.name);}}}
+      if(inside){this.showComboBanner('地下街爆走！','stunt-courier-through');this.audio.playHorn(520);if(this.activeCustomer&&this.elapsed-this.lastMessageAt>6){const actor=COURIER_PERSONAS[this.activeCustomer.persona%COURIER_PERSONAS.length],line=COURIER_UNDERGROUND_LINES[this.activeCustomer.persona%COURIER_UNDERGROUND_LINES.length];this.lastMessageAt=this.elapsed;this.messageUntil=this.elapsed+7;this.showPhoneLine(actor,line,'banter',underground.name);}}}
     const fever=this.dashTime>0||Math.abs(this.carSpeed)>28||this.comboCount>=4;const cabinet=document.getElementById('cabinet-overlay');if(cabinet)cabinet.classList.toggle('fever',fever);
     document.getElementById('speed-lines').classList.toggle('active',(on||fever)&&!this.reducedMotion);
   }
@@ -2491,7 +2527,7 @@ class FrenzyCourier extends ArcadeCourier {
     this.traffic.forEach(t=>{this.advanceTraffic(t,dt,2.35);
       const d=Math.hypot(this.carPos.x-t.group.position.x,this.carPos.z-t.group.position.z),h=this.carPos.y-this.getTerrainHeight(t.group.position.x,t.group.position.z);
       const q=this.localXZ(this.carPos,{x:t.group.position.x,z:t.group.position.z,angle:t.group.rotation.y}),size=t.group.userData,close=Math.abs(q.x)<size.width/2+.4&&Math.abs(q.z)<size.length/2+.65,top=size.height+.25;
-      if(close&&h<top){this.hit('擦撞車流');t.wasClose=true;}else if(close&&!this.isGrounded&&h>=top)this.airCleared.add('traffic'+this.traffic.indexOf(t));else if(d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送！','stunt-crazy-through');this.customerMessage('near');t.wasClose=true;}if(d>12)t.wasClose=false;});
+      if(close&&h<top){this.hit('擦撞車流');t.wasClose=true;}else if(close&&!this.isGrounded&&h>=top)this.airCleared.add('traffic'+this.traffic.indexOf(t));else if(d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送！','stunt-courier-through');this.customerMessage('near');t.wasClose=true;}if(d>12)t.wasClose=false;});
   }
   updateScooters(dt) {this.scooters.forEach((s,i)=>{this.advanceTraffic(s,dt,4);const d=Math.hypot(this.carPos.x-s.group.position.x,this.carPos.z-s.group.position.z),h=this.carPos.y-this.getTerrainHeight(s.group.position.x,s.group.position.z);if(d<1.2&&h<1.5)this.hit('擦撞機車');else if(d<1.2&&!this.isGrounded&&h>=1.5)this.airCleared.add('scooter'+i);});}
   rescue(){super.rescue();this.autoReverse=false;this.reverseHold=0;this.isGrounded=true;this.carVy=0;this.airCleared.clear();this.wheelieAngle=0;this.wheelieTime=0;}
@@ -2659,11 +2695,11 @@ class RushHourCourier extends FrenzyCourier {
   decorateOrder(c){
     const d=this.routeDistance(this.findRoute(c.group.position,c.destination.pos));
     const tier=DELIVERY_TIERS.find(t=>d<t.max)||DELIVERY_TIERS[DELIVERY_TIERS.length-1];
-    c.routeMeters=d;c.tier={...tier};
+    c.routeMeters=d;c.tier={...tier,color:0x83c8cf,css:'#83c8cf'};
     c.ring.material.color.setHex(c.tier.color);c.icon.material.color.setHex(c.tier.color);
     // Labels are replaced and disposed, never appended on every completed order.
     if(c.arcadeLabel){c.group.remove(c.arcadeLabel);c.arcadeLabel.material.map.dispose();c.arcadeLabel.material.dispose();}
-    c.arcadeLabel=this.makeLabel(c.tier.name+' · '+Math.round(d)+' m\n'+c.destination.name,c.tier.css);
+    c.arcadeLabel=this.makeLabel('取貨 · '+Math.round(d)+' m\n'+c.destination.name,c.tier.css);
     c.arcadeLabel.position.set(0,6.4,0);c.group.add(c.arcadeLabel);
   }
   startGame(){
@@ -2852,7 +2888,7 @@ class RushHourCourier extends FrenzyCourier {
     this.customerMessage(this.integrity>=88?'success':'damaged',true);this.audio.playCash();
     this.finishOrder(true);this.carSpeed=0;this.dashTime=0;this.clearInputs();
     this.celebrationTime=1.1;this.showArcadeSplash(grade,'NT$ '+fare.toLocaleString()+(added?'  /  +'+added.toFixed(1).replace('.0','')+' 秒':'')+'  /  '+this.deliveryChain+' 連送',1.1);
-    this.showComboBanner('送達！ NT$ '+fare+(added?' · +'+Math.round(added)+'s':''),'stunt-crazy-dash');
+    this.showComboBanner('送達！ NT$ '+fare+(added?' · +'+Math.round(added)+'s':''),'stunt-courier-dash');
   }
   finishOrder(success){
     if(!this.activeCustomer)return;
@@ -2874,14 +2910,6 @@ class RushHourCourier extends FrenzyCourier {
   }
   triggerDash(source='button'){
     if(this.celebrationTime>0)return false;return super.triggerDash(source);
-  }
-  shiftGear(direction){
-    const quick=direction>0&&this.elapsed-this.shiftWindow>=0&&this.elapsed-this.shiftWindow<=.45;
-    const moving=this.carSpeed>10;const steering=!!(this.keys.ArrowLeft||this.keys.ArrowRight||this.keys.KeyJ||this.keys.KeyL||Math.abs(this.padSteer)>.16);
-    super.shiftGear(direction);
-    if(this.gameState==='PLAYING'&&quick&&steering&&moving&&this.isGrounded){
-      this.quickDriftTime=.95;this.showComboBanner('快切甩尾！','stunt-crazy-drift');
-    }
   }
   updateVehiclePhysics(dt){
     const held=this.keys.ControlLeft;if(this.quickDriftTime>0)this.keys.ControlLeft=true;
@@ -3320,7 +3348,7 @@ class TaipeiStreetCourierBase extends RushHourCourier {
     for(const [i,t]of this.traffic.entries()){
       const old=t.group.position.clone();this.advanceTraffic(t,dt,2.35);
       const touched=this.collideMoving(t,old,dt,'traffic'+i),d=Math.hypot(this.carPos.x-t.group.position.x,this.carPos.z-t.group.position.z);
-      if(!touched&&d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送！','stunt-crazy-through');this.customerMessage('near');t.wasClose=true;}
+      if(!touched&&d<5&&Math.abs(this.carSpeed)>12&&!t.wasClose){this.addTip(22);this.showComboBanner('擦身快送！','stunt-courier-through');this.customerMessage('near');t.wasClose=true;}
       if(d>12)t.wasClose=false;
     }
   }
@@ -3540,8 +3568,8 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
     const label=c.arcadeLabel;label.scale.set(10,3.1,1);label.position.y=5.5;
     // Clear stacked old shop labels so one task beacon owns the silhouette.
     for(const s of [...c.group.children])if(s.isSprite&&s!==label){c.group.remove(s);s.material.map?.dispose();s.material.dispose();}
-    if(!c.moneyMark){c.moneyMark=this.makeLabel('接單 $',c.tier.css);c.moneyMark.scale.set(3.8,1.2,1);c.moneyMark.position.set(0,3.45,0);c.group.add(c.moneyMark);}
-    c.moneyMark.material.color.setHex(c.tier.color);c.ring.material.opacity=.95;
+    if(!c.moneyMark){c.moneyMark=this.makeLabel('配送取貨',c.tier.css);c.moneyMark.scale.set(3.8,1.2,1);c.moneyMark.position.set(0,3.45,0);c.group.add(c.moneyMark);}
+    c.moneyMark.material.color.setHex(0x83c8cf);c.ring.visible=false;c.icon.visible=false;
   }
   flushExtraInstances(){
     const previous=this.instanceMeshes;this.flushInstances();this.instanceMeshes=[...previous,...this.instanceMeshes];
@@ -3770,7 +3798,6 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
       if(c.moneyMark){c.moneyMark.position.y=3.45+(this.reducedMotion?0:Math.sin(this.elapsed*2.7+c.wavePhase)*.15);c.moneyMark.visible=distance<160;}
       if(c.arcadeLabel)c.arcadeLabel.visible=c===this.nearestMerchant()||distance<35;
     }
-    if(this.stopFrame&&this.activeCustomer)this.stopFrame.material.opacity=this.reducedMotion?.65:.58+Math.sin(this.elapsed*3)*.10;
   }
   inStopZone(pos,stop){
     if(!this.isGrounded||Math.abs(pos.y-stop.pos.y-.16)>.8)return false;
@@ -3794,17 +3821,15 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
     if(this.interact>0)document.getElementById('objective-line').textContent=(this.activeCustomer?'交付中':'取貨中')+' '+Math.min(100,Math.round(this.interact/.7*100))+'%';
   }
   buildStopFrame(){
-    const mat=new THREE.MeshBasicMaterial({color:0x93ff4f,transparent:true,opacity:.66,side:THREE.DoubleSide,depthWrite:false});
-    this.stopFrame=new THREE.Mesh(new THREE.BufferGeometry(),mat);this.stopFrame.name='STOP / visible delivery boundary';this.scene.add(this.stopFrame);this.stopFrame.visible=false;
-    this.stopLabel=this.makeLabel('STOP\n煞停交付', '#b1ff66');this.stopLabel.scale.set(7,2.2,1);this.scene.add(this.stopLabel);this.stopLabel.visible=false;
+    // A small delivery ticket replaces the enclosing luminous stop boundary.
+    this.stopFrame=new THREE.Object3D();this.stopFrame.visible=false;
+    this.stopLabel=this.makeLabel('交付\n停穩收單','#83c8cf');this.stopLabel.scale.set(7,2.2,1);this.scene.add(this.stopLabel);this.stopLabel.visible=false;
     this.destBeam.children.forEach(m=>m.visible=false);
   }
   updateStopFrame(){
-    if(!this.stopFrame)return;const stop=this.activeCustomer?.destination;
-    this.stopFrame.visible=this.stopLabel.visible=!!stop&&this.isBelowGround(this.carPos)===(stop.layer==='B1');if(!stop)return;
-    const w=stop.stopW/2,d=stop.stopD/2,v=[],edges=[[[-w,-d],[w,-d]],[[w,-d],[w,d]],[[w,d],[-w,d]],[[-w,d],[-w,-d]]];
-    for(const [[x,z],[xx,zz]] of edges)v.push(x,.05,z,xx,.05,zz,x,1.7,z,x,1.7,z,xx,.05,zz,xx,1.7,zz);
-    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(v,3));this.stopFrame.geometry.dispose();this.stopFrame.geometry=geometry;this.stopFrame.position.copy(stop.pos);this.stopFrame.rotation.y=stop.angle||0;
+    if(!this.stopFrame)return;
+    const stop=this.activeCustomer?.destination;this.stopFrame.visible=false;
+    this.stopLabel.visible=!!stop&&this.isBelowGround(this.carPos)===(stop.layer==='B1');if(!stop)return;
     this.stopLabel.scale.set(stop.layer==='B1'?5:7,stop.layer==='B1'?1.1:2.2,1);
     this.stopLabel.position.set(stop.pos.x,stop.pos.y+(stop.layer==='B1'?2.85:4.3),stop.pos.z);this.destBeam.visible=false;
   }
@@ -3817,7 +3842,7 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
       for(let d=0;d<len;d+=10){const t=d/len,tt=Math.min(1,(d+10)/len),al=point(a,b,t,-1,rx,rz),ar=point(a,b,t,1,rx,rz),bl=point(a,b,tt,-1,rx,rz),br=point(a,b,tt,1,rx,rz);vertices.push(...al,...ar,...bl,...ar,...br,...bl);}
       for(let d=5;d<len&&count<100&&travel+d<650;d+=10){const p=point(a,b,d/len,0,rx,rz);dummy.position.set(...p);dummy.rotation.set(0,Math.atan2(dx,dz),0);dummy.updateMatrix();this.routeChevrons.setMatrixAt(count++,dummy.matrix);}travel+=len;
     }
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));this.roadRibbon.geometry.dispose();this.roadRibbon.geometry=geo;this.roadRibbon.material.color.setHex(0x8dff58);this.routeChevrons.material.color.setHex(0x8dff58);this.routeChevrons.count=count;this.routeChevrons.instanceMatrix.needsUpdate=true;
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));this.roadRibbon.geometry.dispose();this.roadRibbon.geometry=geo;this.roadRibbon.material.color.setHex(0x83c8cf);this.routeChevrons.visible=false;this.routeChevrons.count=0;this.routeChevrons.instanceMatrix.needsUpdate=true;
   }
   updateNavigation(){
     super.updateNavigation();this.updateStopFrame();
@@ -3825,18 +3850,13 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
     const entry=this.route.find(p=>p.layer==='ramp'),below=this.isBelowGround(this.carPos),destinationBelow=this.isBelowGround(target);
     document.getElementById('nav-floor').textContent=(below?'B1 地下':'地面')+' → '+(destinationBelow?'B1 地下':'地面');
     if(below!==destinationBelow&&entry){document.getElementById('nav-next-road').textContent=(destinationBelow?'從此下地下街：':'從此返回地面：')+entry.entry;}
-    document.getElementById('nav-phase').textContent=this.activeCustomer?'送達 / STOP':'接單 / $';
+    document.getElementById('nav-phase').textContent=this.activeCustomer?'配送交付':'商家取貨';
     this.updateArcadeArrow();
   }
-  updateArcadeArrow(){
-    const ahead=this.route.find(p=>Math.hypot(p.x-this.carPos.x,p.z-this.carPos.z)>5);
-    const cv=document.getElementById('arcade-arrow'),c=cv.getContext('2d');c.clearRect(0,0,240,120);if(!ahead)return;
-    let a=Math.atan2(ahead.x-this.carPos.x,ahead.z-this.carPos.z)-this.carRotY;a=Math.atan2(Math.sin(a),Math.cos(a));
-    c.save();c.translate(120,58);c.rotate(-a);c.beginPath();c.moveTo(0,-46);c.lineTo(49,0);c.lineTo(21,0);c.lineTo(21,43);c.lineTo(-21,43);c.lineTo(-21,0);c.lineTo(-49,0);c.closePath();c.lineWidth=11;c.strokeStyle='#172841';c.stroke();c.fillStyle='#9cff47';c.fill();c.lineWidth=3;c.strokeStyle='#f5ffd6';c.stroke();c.restore();
-  }
-  updateCompass(){super.updateCompass();this.updateArcadeArrow();}
+  updateArcadeArrow(){document.getElementById('arcade-arrow').getContext('2d').clearRect(0,0,240,120);}
+  updateCompass(){document.getElementById('hud-compass-canvas').getContext('2d').clearRect(0,0,240,240);}
   updateHUD(){
-    super.updateHUD();document.getElementById('order-item').textContent=this.activeCustomer?this.activeCustomer.shop+' / '+this.activeCustomer.item:'$ 彩色取貨圈 · STOP 綠色停車框';
+    super.updateHUD();document.getElementById('order-item').textContent=this.activeCustomer?this.activeCustomer.shop+' / '+this.activeCustomer.item:'配送票牌取貨 · 停穩收單';
     document.getElementById('current-layer').textContent=this.isBelowGround(this.carPos)?'B1 / 地下街':'TAIPEI / 地面';
   }
   updateCamera(dt=.016){
@@ -4238,4 +4258,136 @@ const TAIPEI_ART_DISTRICTS=[
   ctx.restore();
  };
  P.drawCityMap=function(){oldDrawCityMap.call(this);if(this.mapLayer==='surface')this.drawOpenTransitMap();};
-})();</script></body></html>
+})();
+/* Original courier techniques derived from public, player-visible rules.
+ * No Crazy Taxi program, texture, model, sound or numeric tuning is imported. */
+const COURIER_SKILL_DRILLS=[
+ {id:'launch',name:'噴焰起步',hint:'低速時按 E／手把 A／手機「噴焰」。',goal:'低於 11 km/h 起步，完成一次噴焰加速。'},
+ {id:'stop',name:'急煞收單',hint:'加速到 30 km/h，放油門並持續煞車；手機「煞車／倒車」。',goal:'在 D 檔持續煞車停穩；手把 LT，放開 RT，不需排檔。'},
+ {id:'exit',name:'甩尾回正',hint:'Ctrl + 轉向後放開 Ctrl，讓車身回正；手機放開「甩尾」。',goal:'甩尾後放開甩尾鍵完成回正；手把放開 B，不需加速連招。'},
+ {id:'hop',name:'跳躍穩落',hint:'Space 起跳，放油門安全落地；手機「跳躍」，注意天花板。',goal:'單次跳躍後安全落地；手把 X，不需空中加速。'}
+];
+
+(()=>{
+ const P=TaipeiStreetCourier.prototype;
+ const old={};for(const name of ['init','startGame','toMenu','clearInputs','triggerDash','tryJump','updateVehiclePhysics','hit','step','updateCustomers','updateHUD','handleKeyDown','showComboBanner','updateCamera','pollGamepad'])old[name]=P[name];
+ const el=id=>document.getElementById(id);
+ P.courierSkillState=function(){
+  return this.courierSkills||(this.courierSkills={time:0,brakeHeld:0,driftHeld:false,stopTime:0,stopPending:0,exitTime:0,cooldown:0,feedbackUntil:0,feedback:'技巧待命',kind:'ready'});
+ };
+ P.resetCourierSkillInputs=function(){const s=this.courierSkillState();s.brakeHeld=0;s.driftHeld=false;s.stopTime=s.stopPending=s.exitTime=0;s.jumpPending=false;};
+ P.init=async function(){
+  this.courierAdvanced=true;this.courierSkillState();await old.init.call(this);
+  this.streetVersion='5.1.0';
+  el('btn-technique-profile').addEventListener('click',()=>this.toggleCourierTechniques());
+  for(const id of ['btn-skill-coach','btn-skill-coach-hud'])el(id).addEventListener('click',()=>this.openCourierCoach());
+  el('btn-coach-close').addEventListener('click',()=>this.closeCourierCoach());
+  for(const d of COURIER_SKILL_DRILLS)el('drill-'+d.id).addEventListener('click',()=>this.startCourierDrill(d.id));
+  el('btn-drill-retry').addEventListener('click',()=>{if(this.courierDrill)this.startCourierDrill(this.courierDrill.id);});
+  el('btn-drill-exit').addEventListener('click',()=>this.leaveCourierDrill());
+  this.updateHUD();
+ };
+ P.toggleCourierTechniques=function(){
+  if(!['TITLE','PAUSED','PLAYING'].includes(this.gameState)||this.courierDrill)return;
+  this.courierAdvanced=!this.courierAdvanced;this.resetCourierSkillInputs();
+  el('btn-technique-profile').textContent='操控：'+(this.courierAdvanced?'配送輔助':'一般操控');
+  this.showStatusToast(this.courierAdvanced?'啟用持續急煞、甩尾回正與跳躍穩落':'原本操控 · 既有油門、煞車、甩尾與跳躍保留');
+ };
+ P.openCourierCoach=function(){
+  if(!['TITLE','PLAYING','PAUSED'].includes(this.gameState))return;
+  if(el('city-map-modal').style.display==='flex'||el('manual-modal').style.display==='flex')return;
+  this.coachReturnState=this.gameState;if(this.gameState==='PLAYING')this.pause();
+  el('skill-coach-modal').style.display='flex';el('btn-coach-close').focus?.();
+ };
+ P.closeCourierCoach=function(){
+  el('skill-coach-modal').style.display='none';
+  if(this.coachReturnState==='PLAYING'&&this.gameState==='PAUSED')this.resume();
+  this.coachReturnState=null;
+ };
+ P.startGame=function(){
+  this.courierDrill=null;this.courierSkills=null;this.resetCourierSkillInputs();
+  el('skill-coach-modal').style.display='none';this.coachReturnState=null;
+  return old.startGame.call(this);
+ };
+ P.toMenu=function(){this.courierDrill=null;this.resetCourierSkillInputs();el('skill-coach-modal').style.display='none';this.coachReturnState=null;return old.toMenu.call(this);};
+ P.clearInputs=function(){this.resetCourierSkillInputs();return old.clearInputs.call(this);};
+ P.startCourierDrill=function(id){
+  const def=COURIER_SKILL_DRILLS.find(d=>d.id===id);if(!def||!this.arcadeReady||this.contextLost)return false;
+  this.selectedMode='PRACTICE';this.courierAdvanced=true;el('btn-technique-profile').textContent='操控：配送輔助';
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('selected',c.dataset.mode==='PRACTICE'));
+  this.startGame();if(this.gameState!=='PLAYING')return false;
+  this.courierDrill={id,status:'running',remaining:30,elapsed:0,phase:'ready',clean:true};
+  this.showStatusToast(def.name+' · '+def.hint);this.updateHUD();return true;
+ };
+ P.leaveCourierDrill=function(){this.courierDrill=null;this.resetCourierSkillInputs();this.clearInputs();this.showStatusToast('自由練習配送 · 可回班表選擇正式模式');this.updateHUD();};
+ P.finishCourierDrill=function(success,reason){
+  const d=this.courierDrill;if(!d||d.status!=='running')return;
+  d.status=success?'passed':'failed';d.reason=reason;this.resetCourierSkillInputs();this.clearInputs();
+  this.showStatusToast(success?'技巧完成！ '+d.elapsed.toFixed(1)+' 秒 · 可重試或回自由配送':reason+' · 按重試再練一次');
+ };
+ P.courierSkillFeedback=function(text,kind){
+  const s=this.courierSkillState();s.feedback=text;s.kind=kind;s.feedbackUntil=s.time+1.6;
+  el('skill-feedback').textContent=text;el('skill-feedback').dataset.kind=kind;
+ };
+ P.tryJump=function(...args){
+  const result=old.tryJump.apply(this,args);if(result&&this.courierAdvanced){const s=this.courierSkillState();s.jumpPending=true;this.courierSkillFeedback('跳躍起步！','hop');if(this.courierDrill?.id==='hop')this.courierDrill.phase='air';}return result;
+ };
+ P.triggerDash=function(...args){
+  const speed=Math.abs(this.carSpeed),result=old.triggerDash.apply(this,args);if(!result||!this.courierAdvanced)return result;
+  this.courierSkillFeedback('噴焰加速！','launch');if(speed<3&&this.courierDrill?.id==='launch')this.finishCourierDrill(true,'完成噴焰起步');return result;
+ };
+ P.updateVehiclePhysics=function(dt){
+  const s=this.courierSkillState();s.time+=dt;s.cooldown=Math.max(0,s.cooldown-dt);
+  const brake=!!(this.keys.ArrowDown||this.keys.KeyS||this.padConnected&&this.padBrake>.15),gas=!!(this.keys.ArrowUp||this.keys.KeyW||this.padConnected&&this.padGas>.15);
+  const driftHeld=!!(this.keys.ControlLeft||this.keys.ControlRight||this.padConnected&&this.padDrift);
+  s.brakeHeld=brake&&!gas?s.brakeHeld+dt:0;
+  if(this.courierAdvanced&&this.gameState==='PLAYING'&&this.celebrationTime<=0&&!this.isManualShift&&this.currentGear==='D'&&this.isGrounded&&this.carSpeed>=30/3.6&&s.brakeHeld>=.14&&s.cooldown===0){
+   s.stopTime=.48;s.stopPending=.75;s.cooldown=1;
+   this.courierSkillFeedback('急煞收單！','stop');if(this.courierDrill?.id==='stop')this.courierDrill.phase='braking';
+  }
+  if(s.stopTime>0){
+   if(!brake||gas||!this.isGrounded)s.stopTime=s.stopPending=0;
+   else {this.carSpeed=Math.max(0,this.carSpeed-40*dt);this.dashTime=0;this.reverseHold=0;s.stopTime=Math.max(0,s.stopTime-dt);}
+  }
+  if(this.courierAdvanced&&s.driftHeld&&!driftHeld&&this.isGrounded&&this.driftFactor>.3&&this.carSpeed>3){s.exitTime=.3;this.courierSkillFeedback('甩尾回正！','exit');if(this.courierDrill?.id==='exit')this.courierDrill.phase='exit';}
+  s.driftHeld=driftHeld;
+  // Exit assistance changes heading before the existing swept collision solver.
+  // It never writes a new position or bypasses a wall, ramp or B1 ceiling.
+  const heldLeft=this.keys.ControlLeft,heldRight=this.keys.ControlRight,pad=this.padDrift;
+  if(s.exitTime>0&&this.isGrounded){this.keys.ControlLeft=this.keys.ControlRight=false;this.padDrift=false;this.quickDriftTime=0;const diff=Math.atan2(Math.sin(this.carRotY-this.heading),Math.cos(this.carRotY-this.heading));this.heading+=diff*(1-Math.exp(-dt*12));}
+  const airborne=!this.isGrounded;
+  try{old.updateVehiclePhysics.call(this,dt);}finally{this.keys.ControlLeft=heldLeft;this.keys.ControlRight=heldRight;this.padDrift=pad;}
+  s.exitTime=Math.max(0,s.exitTime-dt);s.stopPending=Math.max(0,s.stopPending-dt);
+  const d=this.courierDrill;
+  if(d?.status==='running'){
+   if(d.id==='stop'&&d.phase==='braking'&&s.stopPending>0&&this.isGrounded&&Math.abs(this.carSpeed)<1.5&&d.clean)this.finishCourierDrill(true,'完成急煞收單');
+   if(d.id==='exit'&&d.phase==='exit'&&s.exitTime===0&&d.clean&&Math.abs(Math.atan2(Math.sin(this.carRotY-this.heading),Math.cos(this.carRotY-this.heading)))<.2)this.finishCourierDrill(true,'完成甩尾回正');
+   if(d.id==='hop'&&d.phase==='air'&&airborne&&this.isGrounded&&d.clean)this.finishCourierDrill(true,'完成跳躍穩落');
+  }
+  if(airborne&&this.isGrounded&&s.jumpPending){s.jumpPending=false;this.courierSkillFeedback('穩穩落地！','hop');}
+ };
+ P.hit=function(label){const contact=this.collisionCooldown<=0;const result=old.hit.call(this,label);if(contact||this.courierDrill?.status==='running'){this.resetCourierSkillInputs();if(this.courierDrill?.status==='running'){this.courierDrill.clean=false;this.finishCourierDrill(false,'碰撞中斷，重新練習');}}return result;};
+ P.step=function(dt){
+  const d=this.courierDrill,advance=this.gameState==='PLAYING'&&this.celebrationTime<=0;
+  const result=old.step.call(this,dt);
+  if(d?.status==='running'&&advance){d.remaining=Math.max(0,d.remaining-dt);d.elapsed+=dt;if(d.remaining===0)this.finishCourierDrill(false,'練習時間到');}
+  return result;
+ };
+ P.updateCustomers=function(dt){if(this.courierDrill)return;return old.updateCustomers.call(this,dt);};
+ P.showComboBanner=function(text,kind){const result=old.showComboBanner.call(this,text,kind);const s=this.courierSkillState();s.feedback=text;s.kind=kind?.includes('drift')?'exit':kind?.includes('dash')?'launch':'hop';s.feedbackUntil=s.time+1.4;return result;};
+ P.updateCamera=function(dt=.016){old.updateCamera.call(this,dt);if(this.isBelowGround(this.carPos)||this.rampAt(this.carPos)||this.reducedMotion)return;const s=this.courierSkillState();if(s.stopTime>0){this.camera.fov=Math.max(65,this.camera.fov-3);this.camera.updateProjectionMatrix();}};
+ P.updateHUD=function(){
+  old.updateHUD.call(this);const s=this.courierSkillState(),d=this.courierDrill,def=COURIER_SKILL_DRILLS.find(x=>x.id===d?.id);
+  el('skill-feedback').textContent=s.time<s.feedbackUntil?s.feedback:'甩尾 · 飛躍 · 擦身快送';el('skill-feedback').dataset.kind=s.time<s.feedbackUntil?s.kind:'ready';
+  el('skill-chain').textContent=this.comboCount>0?'×'+(1+Math.min(10,this.comboCount)*.1).toFixed(1)+' 技巧倍率':'技巧連段';
+  el('hud').classList.toggle('coach-active',!!d);el('skill-coach-hud').style.display=d?'block':'none';
+  if(d){el('drill-title').textContent=def.name+' · '+(d.status==='running'?Math.ceil(d.remaining)+' 秒':d.status==='passed'?'完成':'再試一次');el('drill-hint').textContent=d.status==='running'?def.hint:(d.reason||'完成！')+' · 練習不計收入與排名';}
+ };
+ P.pollGamepad=function(){if(el('skill-coach-modal').style.display==='flex')return;return old.pollGamepad.call(this);};
+ P.handleKeyDown=function(e){
+  if(el('skill-coach-modal').style.display==='flex'){e.preventDefault?.();if(e.code==='Escape'&&!e.repeat)this.closeCourierCoach();return;}
+  return old.handleKeyDown.call(this,e);
+ };
+})();
+</script></body></html>
+
