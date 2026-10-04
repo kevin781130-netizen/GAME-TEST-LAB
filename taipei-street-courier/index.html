@@ -1248,9 +1248,7 @@ class TaipeiCityGame {
     else if(this.totalFare>=1000)rank='CLASS D';
     document.getElementById('license-photo-letter').innerText=this.currentDriver.letter;
     document.getElementById('license-photo-driver').innerText=this.currentDriver.name;
-    document.getElementById('lic-fare').innerText='</script></body></html>
-
-+Math.round(this.totalFare);
+    document.getElementById('lic-fare').innerText='$'+Math.round(this.totalFare);
     document.getElementById('lic-customers').innerText=this.deliveredCount;
     document.getElementById('lic-speedy').innerText=this.speedyCount+' Speedy';
     document.getElementById('lic-combo').innerText=this.maxCombo;
@@ -1271,9 +1269,7 @@ class TaipeiCityGame {
     if(this.comboCount>this.maxCombo)this.maxCombo=this.comboCount;
     const pop=document.createElement('div');
     pop.className='tip-floating-popup';
-    pop.innerText='+</script></body></html>
-
-+amount;
+    pop.innerText='+$'+amount;
     pop.style.left='55%';pop.style.top='45%';
     document.getElementById('hud').appendChild(pop);
     setTimeout(()=>pop.remove(),800);
@@ -1295,12 +1291,8 @@ class TaipeiCityGame {
     tEl.innerText=Math.ceil(this.gameTime);
     if(this.gameTime<=10)tEl.classList.add('urgent');
     else tEl.classList.remove('urgent');
-    document.getElementById('hud-total-fare').innerText='</script></body></html>
-
-+Math.round(this.totalFare);
-    document.getElementById('hud-current-fare').innerText='小費: </script></body></html>
-
-+this.currentTip+' ('+this.comboCount+' COMBO)';
+    document.getElementById('hud-total-fare').innerText='$'+Math.round(this.totalFare);
+    document.getElementById('hud-current-fare').innerText='小費: $'+this.currentTip+' ('+this.comboCount+' COMBO)';
     document.getElementById('hud-speed').innerText=Math.abs(Math.round(this.carSpeed));
     if(this.activeCustomer)
       document.getElementById('hud-customer-timer').innerText=Math.ceil(this.activeCustomerTimer);
