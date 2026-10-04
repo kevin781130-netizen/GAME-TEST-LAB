@@ -1938,6 +1938,9 @@ class FrenzyCourier extends ArcadeCourier {
     // Raster union: each road cell exists once, including intersecting roads. World UVs avoid seams.
     const cell=2.8,cells=new Map();this.rawCitySegments=[];
     this.roadGraph.forEach((nodes,ri)=>{for(let i=1;i<nodes.length;i++){const a=nodes[i-1],b=nodes[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),w=TAIPEI_ROADS[ri].width/1.7;this.rawCitySegments.push({a,b,ri,w,len});
+      // GIS streets use exact ribbons in v6-geo-runtime. Raster cells can be
+      // wider than an entire alley and protrude through the adjacent buildings.
+      if(TAIPEI_ROADS[ri].openData)continue;
       for(let ix=Math.floor((Math.min(a.x,b.x)-w/2)/cell);ix<=Math.ceil((Math.max(a.x,b.x)+w/2)/cell);ix++)for(let iz=Math.floor((Math.min(a.z,b.z)-w/2)/cell);iz<=Math.ceil((Math.max(a.z,b.z)+w/2)/cell);iz++){const x=(ix+.5)*cell,z=(iz+.5)*cell,t=Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/(len*len)));if(Math.hypot(x-a.x-t*dx,z-a.z-t*dz)<w/2+.4)cells.set(ix+','+iz,[ix,iz]);}}
     });
     const v=[],uv=[];const add=(x,z)=>{v.push(x,this.getTerrainHeight(x,z)+.14,z);uv.push(x/14,z/14);};
@@ -3685,7 +3688,7 @@ class TaipeiStreetCourier extends TaipeiStreetCourierBase {
     for(const fn of tests){if(!inside.length)break;const outside=clip(inside,fn,false);if(outside.length>=3)out.push(outside);inside=clip(inside,fn,true);}return out;
   }
   cutEntranceHoles(){
-    for(const mesh of [this.groundMesh,this.roadMesh]){
+    for(const mesh of [this.groundMesh,this.roadMesh,this.openGeoNarrowRoadMesh,this.openGeoSidewalkMesh].filter(Boolean)){
       const geo=mesh.geometry,attrs=geo.attributes,idx=geo.index,vertices=[],uv=[],colors=[];
       const count=idx?idx.count:attrs.position.count;
       for(let i=0;i<count;i+=3){let polys=[[]];for(let j=0;j<3;j++){const n=idx?idx.getX(i+j):i+j,p=attrs.position;polys[0].push({x:p.getX(n),y:p.getY(n),z:p.getZ(n),u:attrs.uv?.getX(n)||0,v:attrs.uv?.getY(n)||0,r:attrs.color?.getX(n)||0,g:attrs.color?.getY(n)||0,b:attrs.color?.getZ(n)||0});}
@@ -4423,35 +4426,42 @@ const TAIPEI_ART_DISTRICTS=[
  P.buildUnifiedRoadSurface=function(){
   const out=oldBuildUnifiedRoadSurface.call(this);
   if(!TAIPEI_OSM_META?.populated)return out;
-  const positions=[],uv=[],maxRasterSafeWidth=2.45;
-  const add=(x,z,u,v)=>{positions.push(x,this.getTerrainHeight(x,z)+.155,z);uv.push(u,v);};
-  let segments=0,triangles=0;
+  const positions=[],uv=[];
+  const add=(x,z)=>{positions.push(x,this.getTerrainHeight(x,z)+.14,z);uv.push(x/14,z/14);};
+  let segments=0,triangles=0;const joints=new Map();
   this.roadGraph.forEach((nodes,ri)=>{
    const road=TAIPEI_ROADS[ri]||{},width=(road.width||0)/1.7;
-   if(!road.openData||width>=maxRasterSafeWidth||width<=0)return;
+   if(!road.openData||width<=0)return;
+   for(const p of nodes){const key=p.x.toFixed(4)+','+p.z.toFixed(4),old=joints.get(key);if(!old||old.radius<width/2)joints.set(key,{x:p.x,z:p.z,radius:width/2});}
    for(let i=1;i<nodes.length;i++){
     const a=nodes[i-1],b=nodes[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);if(len<.2)continue;
-    const rx=dz/len*width/2,rz=-dx/len*width/2,steps=Math.max(1,Math.ceil(len/4));
+    const rx=dz/len*width/2,rz=-dx/len*width/2,steps=Math.max(1,Math.ceil(len/2.8));
     for(let j=0;j<steps;j++){
      const t0=j/steps,t1=(j+1)/steps,x0=a.x+dx*t0,z0=a.z+dz*t0,x1=a.x+dx*t1,z1=a.z+dz*t1;
-     add(x0-rx,z0-rz,0,t0);add(x1-rx,z1-rz,0,t1);add(x0+rx,z0+rz,1,t0);
-     add(x0+rx,z0+rz,1,t0);add(x1-rx,z1-rz,0,t1);add(x1+rx,z1+rz,1,t1);
+     add(x0-rx,z0-rz);add(x1-rx,z1-rz);add(x0+rx,z0+rz);
+     add(x0+rx,z0+rz);add(x1-rx,z1-rz);add(x1+rx,z1+rz);
      triangles+=2;
     }
     segments++;
    }
   });
+  // Round polyline joints close the outside wedge at bends and T junctions.
+  // The same endpoint distance/half-width is already used by collision clearance.
+  for(const p of joints.values())for(let i=0;i<12;i++){
+   const a=i*Math.PI/6,b=(i+1)*Math.PI/6;
+   add(p.x,p.z);add(p.x+Math.cos(b)*p.radius,p.z+Math.sin(b)*p.radius);add(p.x+Math.cos(a)*p.radius,p.z+Math.sin(a)*p.radius);triangles++;
+  }
   if(positions.length){
    const geo=new THREE.BufferGeometry();
    geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
    geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
    geo.computeVertexNormals();geo.computeBoundingBox();geo.computeBoundingSphere();
    const mesh=new THREE.Mesh(geo,this.roadMesh.material);
-   mesh.name='V6 narrow OSM road strips';mesh.receiveShadow=true;
+   mesh.name='V6 exact OSM road surface';mesh.receiveShadow=true;
    mesh.userData.isRoad=true;mesh.userData.dryTexture=this.roadTexture;mesh.userData.openDataNarrowRoads=true;
    this.scene.add(mesh);this.openGeoNarrowRoadMesh=mesh;
   }
-  this.openGeoNarrowRoadStats={segments,triangles,vertices:positions.length/3,threshold:maxRasterSafeWidth};
+  this.openGeoNarrowRoadStats={segments,joints:joints.size,triangles,vertices:positions.length/3,exactWidth:true,worldUV:true};
   return out;
  };
 
@@ -4503,19 +4513,39 @@ const TAIPEI_ART_DISTRICTS=[
  };
  P.buildOpenGeoSidewalks=function(){
   if(this.openGeoSidewalkBuilt||!TAIPEI_OSM_META?.populated)return 0;
-  const mat=this.mat('open-geo-sidewalk',0xd6bd91,'tile'),key='open-geo-sidewalks';let count=0;
+  const mat=this.mat('open-geo-sidewalk',0xd6bd91,'tile'),vertices=[],uv=[];let count=0;
   for(const s of this.segments||[]){
    const road=TAIPEI_ROADS[s.ri]||{};if(!road.openData||road.geoStitch||!road.highway)continue;
    const mx=(s.a.x+s.b.x)/2,mz=(s.a.z+s.b.z)/2;if(!this.openGeoBuildingCoverage({x:mx,z:mz},8))continue;
    const dx=s.b.x-s.a.x,dz=s.b.z-s.a.z,len=Math.hypot(dx,dz);if(len<3)continue;
-   const angle=Math.atan2(dx,dz),rx=dz/len,rz=-dx/len,rw=(road.width||10)/1.7;
+   const rx=dz/len,rz=-dx/len,rw=road.width/1.7;
    const sw=(road.highway==='service'||road.highway==='living_street') ? .72 : (road.highway==='residential'||road.highway==='unclassified') ? 1.05 : 1.45;
-   const usable=Math.max(1.5,len-1.6);
    for(const side of [-1,1]){
-    const x=mx+rx*side*(rw/2+sw/2),z=mz+rz*side*(rw/2+sw/2),y=this.getTerrainHeight(x,z);
-    this.instance(key,mat,x,y+.18,z,sw,.18,usable,angle);count++;
+    const at=(t,offset)=>({x:s.a.x+dx*t+rx*side*offset,z:s.a.z+dz*t+rz*side*offset});
+    let polys=[[at(0,rw/2+.04),at(1,rw/2+.04),at(1,rw/2+sw),at(0,rw/2+sw)]];
+    // Subtract the actual road widths, including crossing alleys. Long rigid
+    // sidewalk boxes used to run straight across the carriageway at junctions.
+    const minX=Math.min(s.a.x,s.b.x)-rw/2-sw,maxX=Math.max(s.a.x,s.b.x)+rw/2+sw,minZ=Math.min(s.a.z,s.b.z)-rw/2-sw,maxZ=Math.max(s.a.z,s.b.z)+rw/2+sw;
+    const candidates=new Set(),index=this.openGeoSegmentGrid;
+    if(index){for(let x=Math.floor(minX/index.cell);x<=Math.floor(maxX/index.cell);x++)for(let z=Math.floor(minZ/index.cell);z<=Math.floor(maxZ/index.cell);z++)for(const id of index.grid.get(x+','+z)||[])candidates.add(id);}
+    else for(let i=0;i<this.segments.length;i++)candidates.add(i);
+    for(const id of candidates){
+     const other=this.segments[id];if(other===s)continue;
+     const w=TAIPEI_ROADS[other.ri].width/1.7+.08,odx=other.b.x-other.a.x,odz=other.b.z-other.a.z,ol=Math.hypot(odx,odz);
+     if(ol<.01||Math.max(other.a.x,other.b.x)+w/2<minX||Math.min(other.a.x,other.b.x)-w/2>maxX||Math.max(other.a.z,other.b.z)+w/2<minZ||Math.min(other.a.z,other.b.z)-w/2>maxZ)continue;
+     const cut={x:(other.a.x+other.b.x)/2,z:(other.a.z+other.b.z)/2,w,d:ol+.08,angle:Math.atan2(odx,odz)};
+     polys=polys.flatMap(poly=>this.subtractPortal(poly,cut));
+    }
+    for(const poly of polys)for(let j=1;j<poly.length-1;j++){
+     const points=[poly[0],poly[j],poly[j+1]];
+     const [a,b,c]=points,ny=(b.z-a.z)*(c.x-a.x)-(b.x-a.x)*(c.z-a.z);if(Math.abs(ny)<1e-8)continue;if(ny<0)points.reverse();
+     for(const p of points){vertices.push(p.x,this.getTerrainHeight(p.x,p.z)+.27,p.z);uv.push(p.x/4,p.z/4);}
+    }
+    if(polys.length)count++;
    }
   }
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geo.computeVertexNormals();
+  const mesh=new THREE.Mesh(geo,mat);mesh.name='V6 clipped sidewalks';mesh.receiveShadow=true;this.scene.add(mesh);this.openGeoSidewalkMesh=mesh;
   this.openGeoSidewalkBuilt=true;this.openGeoSidewalkCount=count;return count;
  };
  P.buildOpenGeoBuildings=function(){
@@ -4546,11 +4576,16 @@ const TAIPEI_ART_DISTRICTS=[
    const y=this.getTerrainHeight(b.x,b.z),h=Math.max(3,Math.min(44,(b.h||8)*.44)),top=y+h,roofBase=batch.roofPos.length/3;
    for(const p of b.poly)batch.roofPos.push(p[0],top,p[1]);
    for(const face of faces){batch.roofIdx.push(roofBase+face[0],roofBase+face[2],roofBase+face[1]);triangles++;}
+   const ccw=openGeoPolyArea(b.poly)>0;
    for(let i=0;i<b.poly.length;i++){
     const a=b.poly[i],d=b.poly[(i+1)%b.poly.length],edge=Math.hypot(d[0]-a[0],d[1]-a[1]),u=Math.max(.55,edge/3.6),v=Math.max(.85,h/3.4),base=batch.wallPos.length/3;
     batch.wallPos.push(a[0],y,a[1],d[0],y,d[1],a[0],top,a[1],d[0],top,d[1]);
     batch.wallUv.push(0,0,u,0,0,v,u,v);
-    batch.wallIdx.push(base,base+1,base+2,base+2,base+1,base+3);triangles+=2;
+    // Source rings contain both windings. In X/Z, a CCW ring needs these
+    // reversed triangles for outward-facing walls with FrontSide materials.
+    if(ccw)batch.wallIdx.push(base,base+2,base+1,base+2,base+3,base+1);
+    else batch.wallIdx.push(base,base+1,base+2,base+2,base+1,base+3);
+    triangles+=2;
    }
    const solid={x:b.x,z:b.z,w:Math.max(.8,b.w),d:Math.max(.8,b.d),height:h,y,angle:b.a||0,kind:'open-building',openData:true,poly:b.poly,polygonCollision:true};
    this.streetSolids.push(solid);this.addSpatialSolid(solid);accepted.push(solid);
@@ -4559,7 +4594,7 @@ const TAIPEI_ART_DISTRICTS=[
    if(!b.clipped&&near&&Number.isFinite(near.distance)&&near.distance<12){
     const a=b.poly[near.edge],d=b.poly[(near.edge+1)%b.poly.length],edge=Math.hypot(d[0]-a[0],d[1]-a[1]),vx=road.x-near.x,vz=road.z-near.z,vd=Math.hypot(vx,vz);
     if(edge>2&&vd>.05){
-     const nx=vx/vd,nz=vz/vd,angle=Math.atan2(d[0]-a[0],d[1]-a[1]),x=near.x+nx*.28,z=near.z+nz*.28;
+     const nx=vx/vd,nz=vz/vd,angle=Math.atan2(a[1]-d[1],d[0]-a[0]),x=near.x+nx*.28,z=near.z+nz*.28;
      if(seed%profile.awning===0&&h>4.5){
       this.instance('open-building-awnings',this.mat('open-building-awning',0xc65d4e),x,y+2.35,z,Math.min(3.6,Math.max(1.6,edge*.68)),.22,.72,angle);details.awnings++;
      }
@@ -4628,33 +4663,33 @@ const TAIPEI_ART_DISTRICTS=[
  };
  P.buildIntersection=function(n,seed){
   if(!TAIPEI_OSM_META?.populated)return oldBuildIntersection.call(this,n,seed);
-  const y=this.getTerrainHeight(n.x,n.z),pole=this.mat('signal-pole',0x3e5154),housing=this.mat('signal-housing',0x1d292d),curb=this.mat('crosswalk',0xe6e2d5),bulbGeo=this.v6SignalBulbGeo||(this.v6SignalBulbGeo=new THREE.SphereGeometry(.2,8,6));
-  const heads=[],bulbGroup=new THREE.Group();bulbGroup.position.set(0,0,0);
-  const world=(ox,oz,rot,lx,lz)=>({x:n.x+ox+lx*Math.cos(rot)+lz*Math.sin(rot),z:n.z+oz-lx*Math.sin(rot)+lz*Math.cos(rot)});
-  const makeHead=(ox,oz,rot,axis)=>{
-   const base=world(ox,oz,rot,0,0),arm=world(ox,oz,rot,-1.35,0),house=world(ox,oz,rot,-2.65,0);
-   this.instance('v6-signal-static',pole,base.x,y+3,base.z,.22,6,.22,rot);
-   this.instance('v6-signal-static',pole,arm.x,y+5.45,arm.z,3.05,.22,.22,rot);
-   this.instance('v6-signal-housing',housing,house.x,y+5.15,house.z,.72,2.35,.52,rot);
-   const bulbs=[];
-   for(let i=0;i<3;i++){
-    const p=world(ox,oz,rot,-2.65,.29),mat=new THREE.MeshBasicMaterial({color:[0x561b18,0x594718,0x174d36][i],toneMapped:false});
-    const bulb=this.mesh(bulbGroup,bulbGeo,mat,p.x,y+5.78-i*.62,p.z);bulbs.push(bulb);
+  const approaches=[];
+  for(const e of [...n.edges].sort((a,b)=>TAIPEI_ROADS[b.ri].width-TAIPEI_ROADS[a.ri].width)){
+   const to=this.nodes[e.to],dx=to.x-n.x,dz=to.z-n.z,len=Math.hypot(dx,dz),w=TAIPEI_ROADS[e.ri].width/1.7;if(len<3||w<1.8)continue;
+   const tx=dx/len,tz=dz/len;if(approaches.some(a=>a.tx*tx+a.tz*tz>.94))continue;approaches.push({tx,tz,w,len});
+  }
+  if(approaches.length<3||!approaches.some(a=>a.w>=3.4))return;
+  if(this.trafficSignals.some(s=>Math.hypot(this.nodes[s.nodeId].x-n.x,this.nodes[s.nodeId].z-n.z)<8))return;
+  const pole=this.mat('signal-pole',0x3e5154),housing=this.mat('signal-housing',0x1d292d),curb=this.mat('crosswalk',0xe6e2d5),bulbGeo=this.v6SignalBulbGeo||(this.v6SignalBulbGeo=new THREE.SphereGeometry(.15,8,6));
+  const heads=[],bulbGroup=new THREE.Group();
+  for(const a of approaches.slice(0,4)){
+   const rx=a.tz,rz=-a.tx,angle=Math.atan2(a.tx,a.tz),cross=approaches.filter(b=>Math.abs(a.tx*b.tx+a.tz*b.tz)<.9),along=Math.min(a.len*.45,Math.max(1.2,...cross.map(b=>b.w/2+1.1))),offset=a.w/2+.4;
+   const x=n.x+a.tx*along+rx*offset,z=n.z+a.tz*along+rz*offset,y=this.getTerrainHeight(x,z),arm=Math.min(1.5,a.w*.45);
+   this.instance('v6-signal-static',pole,x,y+2.4,z,.16,4.8,.16,angle);
+   this.instance('v6-signal-static',pole,x-rx*arm/2,y+4.5,z-rz*arm/2,arm,.16,.16,angle);
+   const hx=x-rx*arm,hz=z-rz*arm;
+   this.instance('v6-signal-housing',housing,hx,y+4.1,hz,.5,1.5,.4,angle);
+   const bulbs=[];for(let i=0;i<3;i++){
+    const mat=new THREE.MeshBasicMaterial({color:[0x561b18,0x594718,0x174d36][i],toneMapped:false}),bulb=this.mesh(bulbGroup,bulbGeo,mat,hx+a.tx*.22,y+4.55-i*.44,hz+a.tz*.22);bulbs.push(bulb);
    }
-   heads.push({axis,bulbs});
-  };
-  makeHead(8.2,8.2,0,'ns');makeHead(-8.2,-8.2,Math.PI,'ns');makeHead(-8.2,8.2,Math.PI/2,'ew');makeHead(8.2,-8.2,-Math.PI/2,'ew');
-  for(let x=-6;x<=6;x+=2)this.instance('v6-crosswalk',curb,n.x+x,y+.21,n.z+9.5,1.15,.025,3.4,0);
-  for(let z=-6;z<=6;z+=2)this.instance('v6-crosswalk',curb,n.x+9.5,y+.21,n.z+z,3.4,.025,1.15,0);
-  if(seed%6===0){
-   this.instance('v6-bus-shelter',this.mat('bus-shelter',0x4c727b),n.x-10.5,y+1.4,n.z-10.5,3.7,2.8,1.5,0);
-   this.instance('v6-bus-roof',this.mat('busroof',0xefc14f),n.x-10.5,y+3,n.z-10.5,4.3,.22,2.2,0);
+   heads.push({axis:Math.abs(a.tx)>Math.abs(a.tz)?'ew':'ns',bulbs});
+   for(let d=-a.w/2+.3;d<a.w/2-.15;d+=.65){const px=n.x+a.tx*(along-.55)+rx*d,pz=n.z+a.tz*(along-.55)+rz*d;this.instance('v6-crosswalk',curb,px,this.getTerrainHeight(px,pz)+.21,pz,.38,.025,.75,angle);}
   }
   this.scene.add(bulbGroup);this.trafficSignals.push({nodeId:seed,group:bulbGroup,heads});this.signalNodeIds.add(seed);
  };
- P.openGeoTrafficEdges=function(nodeId,bus=false){
+ P.openGeoTrafficEdges=function(nodeId,bus=false,vehicleWidth=0){
   const n=this.nodes[nodeId];if(!n)return [];
-  return n.edges.filter(e=>e.trafficAllowed!==false&&(!bus||(this.nodes[e.to].z>-1300&&this.nodes[e.to].z<650)));
+  return n.edges.filter(e=>e.trafficAllowed!==false&&(TAIPEI_ROADS[e.ri].width/1.7>=vehicleWidth+.24)&&(!bus||(this.nodes[e.to].z>-1300&&this.nodes[e.to].z<650)));
  };
  P.prepareTrafficRoutes=function(){
   if(!TAIPEI_OSM_META?.populated)return oldPrepareTrafficRoutes.call(this);
@@ -4662,9 +4697,10 @@ const TAIPEI_ART_DISTRICTS=[
   if(!edges.length)return oldPrepareTrafficRoutes.call(this);
   let assigned=0;
   [...this.traffic,...this.scooters].forEach((t,i)=>{
-   const busEdges=t.type==='bus'?edges.filter(e=>this.nodes[e.from].z>-1300&&this.nodes[e.from].z<650&&this.nodes[e.to].z>-1300&&this.nodes[e.to].z<650):edges;
-   const list=busEdges.length?busEdges:edges,edge=list[(i*17+5)%list.length];
-   Object.assign(t,{nodeFrom:edge.from,nodeTo:edge.to,a:this.nodes[edge.from],b:this.nodes[edge.to],progress:(i*.113)%1,wasClose:false});
+   const vehicleWidth=t.group.userData.width||(t.type?2:.72),wideEdges=edges.filter(e=>TAIPEI_ROADS[e.ri].width/1.7>=vehicleWidth+.24);
+   const busEdges=t.type==='bus'?wideEdges.filter(e=>this.nodes[e.from].z>-1300&&this.nodes[e.from].z<650&&this.nodes[e.to].z>-1300&&this.nodes[e.to].z<650):wideEdges;
+   const list=busEdges.length?busEdges:wideEdges,edge=list[(i*17+5)%list.length];if(!edge)return;
+   Object.assign(t,{nodeFrom:edge.from,nodeTo:edge.to,roadIndex:edge.ri,a:this.nodes[edge.from],b:this.nodes[edge.to],progress:(i*.113)%1,wasClose:false});
    t.length=Math.hypot(t.b.x-t.a.x,t.b.z-t.a.z);this.placeTraffic(t,t.type?2.35:4);assigned++;
   });
   this.openGeoTrafficStats={directedEdges:edges.length,assigned,onewayFragments:(TAIPEI_OSM_ROADS||[]).filter(r=>r.oneway).length};
@@ -4675,11 +4711,21 @@ const TAIPEI_ART_DISTRICTS=[
   const remaining=(1-t.progress)*t.length,state=signal?this.signalState(t.nodeTo,axis):'green',stop=signal&&state!=='green'&&remaining<9.5;
   const approach=signal&&remaining<18?Math.max(.35,remaining/18):1;t.progress+=stop?0:dt*t.speed*approach/t.length;
   if(t.progress>=1&&t.nodeTo!==undefined){
-   const n=this.nodes[t.nodeTo],allowed=this.openGeoTrafficEdges(t.nodeTo,t.type==='bus'),choices=allowed.filter(e=>e.to!==t.nodeFrom&&e.d>2),list=choices.length?choices:allowed;
-   if(list.length){const next=list[Math.floor(this.rand()*list.length)];t.nodeFrom=t.nodeTo;t.nodeTo=next.to;t.a=n;t.b=this.nodes[next.to];t.length=Math.hypot(t.b.x-t.a.x,t.b.z-t.a.z);t.progress=0;t.wasClose=false;}
+   const n=this.nodes[t.nodeTo],allowed=this.openGeoTrafficEdges(t.nodeTo,t.type==='bus',t.group.userData.width||(t.type?2:.72)),choices=allowed.filter(e=>e.to!==t.nodeFrom&&e.d>2),list=choices.length?choices:allowed;
+   if(list.length){const next=list[Math.floor(this.rand()*list.length)];t.nodeFrom=t.nodeTo;t.nodeTo=next.to;t.roadIndex=next.ri;t.a=n;t.b=this.nodes[next.to];t.length=Math.hypot(t.b.x-t.a.x,t.b.z-t.a.z);t.progress=0;t.wasClose=false;}
    else{t.progress=.999;t.speed=Math.max(1,t.speed*.85);}
   }else if(t.progress>=1)t.progress%=1;
   this.placeTraffic(t,lane);
+ };
+
+ const oldPlaceTraffic=P.placeTraffic;
+ P.placeTraffic=function(t,lane){
+  if(TAIPEI_OSM_META?.populated){
+   const ri=this.nodes?.[t.nodeFrom]?.edges.find(e=>e.to===t.nodeTo)?.ri??t.roadIndex;
+   const road=TAIPEI_ROADS[ri];
+   if(road){const half=road.width/1.7/2,vehicleHalf=(t.group.userData.width||(t.type?2:.72))/2;lane=Math.min(lane,Math.max(0,half-vehicleHalf-.12));}
+  }
+  return oldPlaceTraffic.call(this,t,lane);
  };
 
  P.openGeoIndexedSnap=function(p,mainOnly=false){
@@ -5067,25 +5113,23 @@ const COURIER_SKILL_DRILLS=[
     if(moved.some(o=>[...this.nearbyRectSolids(o,.5)].some(b=>!own.has(b)&&o.y<b.y+b.height&&o.y+o.height>b.y&&this.rectsOverlap(o,b,.35))))continue;
     chosen={dx,dz,dy,radius};break search;
    }
-   if(!chosen){
-    // Dense real GIS roads can legitimately run closer to a landmark model than
-    // the older hand-authored network. Preserve the geographic landmark visual
-    // and remove only ground-level collision pieces that intrude into a road,
-    // rather than dragging the landmark tens of metres away from its anchor.
-    if(typeof TAIPEI_OSM_META!=='undefined'&&TAIPEI_OSM_META?.populated){
-     const blocked=new Set(groundParts.filter(inLane));
-     if(blocked.size){
-      this.streetSolids=this.streetSolids.filter(o=>!blocked.has(o));
-      this.streetRepair.landmarksTrimmed.push({name:g.name,parts:blocked.size});
-      this.indexStreetSolids();
-      continue;
-     }
-    }
-    this.streetRepair.landmarksUnresolved.push(g.name);continue;
+   if(!chosen&&typeof TAIPEI_OSM_META!=='undefined'&&TAIPEI_OSM_META?.populated){
+    // Fit the whole visible model into the denser GIS blocks. Deleting only
+    // colliders left visible station/gate walls that the player could ride through.
+    let bestCost=Infinity;
+    for(const scale of [.85,.7,.55,.4,.3]){searchFit:for(let radius=0;radius<=100&&radius+(1-scale)*40<bestCost;radius+=4)for(let i=0;i<(radius?32:1);i++){
+     const dx=Math.cos(i*Math.PI/16)*radius,dz=Math.sin(i*Math.PI/16)*radius,dy=this.getTerrainHeight(g.position.x+dx,g.position.z+dz)-g.position.y;
+     const moved=groundParts.map(o=>({...o,x:g.position.x+(o.x-g.position.x)*scale+dx,z:g.position.z+(o.z-g.position.z)*scale+dz,y:g.position.y+(o.y-g.position.y)*scale+dy,w:o.w*scale,d:o.d*scale,height:o.height*scale}));
+     if(moved.some(o=>inLane(o)||this.riverDistance(o.x,o.z)<52||this.ugEntries.some(r=>this.rectsOverlap(o,r,.6))))continue;
+     if(moved.some(o=>[...this.nearbyRectSolids(o,.5)].some(b=>!own.has(b)&&o.y<b.y+b.height&&o.y+o.height>b.y&&this.rectsOverlap(o,b,.35))))continue;
+     chosen={dx,dz,dy,radius,scale};bestCost=radius+(1-scale)*40;break searchFit;
+    }}
    }
-   const {dx,dz,dy}=chosen;g.position.add(new THREE.Vector3(dx,dy,dz));g.updateMatrixWorld(true);for(const o of parts){o.x+=dx;o.z+=dz;o.y+=dy;}
-   const anchor=this.landmarks.find(l=>l.name===g.name);if(anchor?.pos)anchor.pos.add(new THREE.Vector3(dx,dy,dz));
-   this.streetRepair.landmarksAligned.push({name:g.name,offsetMeters:chosen.radius});this.indexStreetSolids();
+   if(!chosen){this.streetRepair.landmarksUnresolved.push(g.name);continue;}
+   const {dx,dz,dy}=chosen,scale=chosen.scale||1,origin=g.position.clone();g.scale.multiplyScalar(scale);g.position.add(new THREE.Vector3(dx,dy,dz));g.updateMatrixWorld(true);
+   for(const o of parts){o.x=origin.x+(o.x-origin.x)*scale+dx;o.z=origin.z+(o.z-origin.z)*scale+dz;o.y=origin.y+(o.y-origin.y)*scale+dy;o.w*=scale;o.d*=scale;o.height*=scale;}
+   const anchor=this.landmarks.find(l=>l.name===g.name);if(anchor?.pos)anchor.pos.sub(origin).multiplyScalar(scale).add(origin).add(new THREE.Vector3(dx,dy,dz));
+   this.streetRepair.landmarksAligned.push({name:g.name,offsetMeters:chosen.radius,scale});this.indexStreetSolids();
   }
  };
  P.cutRiverGround=function(){
