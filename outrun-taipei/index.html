@@ -576,7 +576,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V51.0</strong><span>SIDEWAYS DRIFT · CLEAN-ROOM · TAIPEI</span>
+    <span>CURRENT TEST BUILD</span><strong>V51.1</strong><span>SIDEWAYS DRIFT · CLEAN-ROOM · TAIPEI</span>
   </div>
 </div>
 
@@ -776,9 +776,14 @@ const TRACK_NAMES = [
   'FM 91.7 • 大稻埕藍調爵士 (DADAOCHENG GROOVE)'
 ];
 
+function resumeAudio(){
+  if(document.hidden || !audioCtx) return;
+  if(audioCtx.state === 'suspended' || audioCtx.state === 'interrupted') audioCtx.resume().catch(()=>{});
+}
+
 function initAudio(){
   if(audioCtx){
-    if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    resumeAudio();
     return;
   }
   const AC = window.AudioContext || window.webkitAudioContext;
@@ -1029,7 +1034,7 @@ function startRadio(){
   else if(radioTrack === 4) bpmMs = 150; // Taipei sunset ballad
 
   musicTimer = setInterval(() => {
-    if(!audioCtx || radioTrack === 0 || paused) return;
+    if(!audioCtx || audioCtx.state !== 'running' || document.hidden || radioTrack === 0 || paused) return;
     musicStep++;
     const step16 = musicStep % 16;
 
@@ -1807,6 +1812,7 @@ function togglePause(){
   if(!gameStarted || gameOver || inRadioScreen) return;
   paused = !paused; clearInputs(); lastTime = performance.now();
   document.getElementById('pause-btn').textContent = paused ? '繼續 P' : '暫停 P';
+  if(!paused) resumeAudio();
   updateAudio();
   if(paused){
     document.getElementById('mode-picker').hidden=true; document.getElementById('menu-tools').hidden=true;document.getElementById('start-options').hidden=true;
@@ -2095,17 +2101,16 @@ function pollGamepads(){
 // Mobile Device Gyroscope Tilt Steering
 let gyroEnabled = false;
 // Commercial Audio Lifecycle: Auto-unlock on interaction & pause on tab switch
-window.addEventListener('visibilitychange', () => {
+document.addEventListener('visibilitychange', () => {
   if(!audioCtx) return;
   if(document.hidden){
     if(audioCtx.state === 'running') audioCtx.suspend().catch(()=>{});
   } else {
-    if(audioCtx.state === 'suspended' && gameStarted && !paused) audioCtx.resume().catch(()=>{});
+    if(inRadioScreen || (gameStarted && !paused && !gameOver)) resumeAudio();
   }
 });
-window.addEventListener('pointerdown', () => {
-  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
-}, { once: false });
+window.addEventListener('pointerdown', resumeAudio);
+window.addEventListener('keydown', resumeAudio);
 
 window.addEventListener('deviceorientation', e => {
   if(!gyroEnabled || !gameStarted || paused || gameOver) return;
