@@ -1670,7 +1670,7 @@ class SuperCourierTaipei extends TaipeiCityGame {
   updateHUD(){super.updateHUD();document.getElementById('hud-timer').textContent=isFinite(this.gameTime)?Math.ceil(this.gameTime):'∞';document.getElementById('hud-speed').textContent=Math.round(Math.abs(this.carSpeed)*3.6);document.getElementById('hud-current-fare').textContent=this.activeCustomer?'本單 NT$ '+this.activeCustomer.baseFare+' · 技巧 +'+this.currentTip:'完成 '+this.deliveredCount+' 單';document.getElementById('boost-fill').style.width=this.boost+'%';document.getElementById('cargo-value').textContent=this.activeCustomer?Math.round(this.integrity)+'%':'—';document.getElementById('cargo-fill').style.width=(this.activeCustomer?this.integrity:100)+'%';document.getElementById('boost-label').textContent=this.boost>=35?'E 極速起步':'能量恢復中';document.getElementById('hud-distance').textContent=Math.round(this.navDistance||0)+' m · 依道路導航';const c=this.activeCustomer||this.nearestMerchant();if(this.interact===0)document.getElementById('objective-line').textContent=this.activeCustomer?'送往 '+c.destination.name+' · 停穩交付':c?'前往 '+c.shop+' · 停穩取貨':'等待新訂單';document.getElementById('order-item').textContent=this.activeCustomer?c.shop+' / '+c.item:'青色取貨 · 金色送達';document.getElementById('gear-d').className='gear-item'+(this.currentGear==='D'?' active-d':'');document.getElementById('gear-r').className='gear-item'+(this.currentGear==='R'?' active-r':'');}
   updateCamera(dt=.016){if(!this.carGroup)return;const rot=this.carRotY;const dist=this.cameraMode===1?4.2:this.cameraMode===2?-.5:6.5+(this.reducedMotion?0:Math.abs(this.carSpeed)*.07),height=this.cameraMode===2?1.8:3.4;const desired=new THREE.Vector3(this.carPos.x-Math.sin(rot)*dist,this.carPos.y+height,this.carPos.z-Math.cos(rot)*dist);this.camera.position.lerp(desired,1-Math.exp(-dt*9));this.camera.lookAt(this.carPos.x+Math.sin(rot)*8,this.carPos.y+1,this.carPos.z+Math.cos(rot)*8);const fov=this.reducedMotion?65:65+Math.min(Math.abs(this.carSpeed)*.25,10);this.camera.fov=fov;this.camera.updateProjectionMatrix();}
 }
-window.addEventListener('load',()=>{const game=new TaipeiStreetCourier();window.__game=game;game.init().catch(e=>{document.getElementById('loading-screen').style.display='flex';document.getElementById('overlay-screen').style.display='none';document.getElementById('loading-text').textContent='無法啟動 3D 遊戲：請開啟瀏覽器硬體加速，或更換支援 WebGL 的瀏覽器。';document.getElementById('loading-error').textContent=e.message;console.error(e);});});
+window.addEventListener('load',()=>{const game=new TaipeiStreetCourier();window.__game=game;game.init().catch(e=>{const message=String(e?.message||e||'未知錯誤'),chunkFailure=/world-chunks|manifest|公開地圖資料|chunk/i.test(message);document.getElementById('loading-screen').style.display='flex';document.getElementById('overlay-screen').style.display='none';document.getElementById('loading-text').textContent=chunkFailure?'台北街道資料載入失敗，請重新整理；若仍失敗請稍後再試。':'無法啟動 3D 遊戲：請開啟瀏覽器硬體加速，或更換支援 WebGL 的瀏覽器。';document.getElementById('loading-error').textContent=message;console.error(e);});});
 
 /* 2.2 city content. WGS84 anchors, projected by the existing 1:5 arcade scale.
    Centerlines are hand-sampled approximations, not survey/navigation data.
@@ -5450,6 +5450,17 @@ const COURIER_SKILL_DRILLS=[
  const DETAIL_PROFILE={ximen:{awning:2,aircon:3,balcony:4},oldWest:{awning:3,aircon:3,balcony:5},station:{awning:5,aircon:5,balcony:7},zhongshan:{awning:4,aircon:4,balcony:5}};
  const UNLOAD_GRACE=1.35;
  const FETCH_CONCURRENCY=6;
+ const chunkFetchTimeoutMs=()=>Math.max(25,Number(globalThis.__TAIPEI_CHUNK_FETCH_TIMEOUT_MS__)||8000);
+ const fetchJson=async(url,label)=>{
+  const controller=typeof AbortController==='function'?new AbortController():null;
+  const ms=chunkFetchTimeoutMs();let timer=null;
+  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{try{controller?.abort();}catch{}reject(new Error(label+' timeout after '+ms+'ms'));},ms);});
+  try{
+   const response=await Promise.race([fetch(url,{cache:'force-cache',...(controller?{signal:controller.signal}:{})}),timeout]);
+   if(!response.ok)throw new Error(label+' '+response.status);
+   return await Promise.race([response.json(),timeout]);
+  }finally{if(timer!==null)clearTimeout(timer);}
+ };
  const area=poly=>{let a=0;for(let i=0;i<(poly?.length||0);i++){const p=poly[i],q=poly[(i+1)%poly.length];a+=p[0]*q[1]-q[0]*p[1];}return a*.5;};
  const styleIndex=v=>((Number(v)||0)%PALETTE.length+PALETTE.length)%PALETTE.length;
  const districtFor=(x,z)=>x<-660?(z>-20?'ximen':'oldWest'):x<-525?'station':'zhongshan';
@@ -5473,9 +5484,7 @@ const COURIER_SKILL_DRILLS=[
   async open(){
    if(!this.canFetch()){if(this.lean)this.noteFailure(new Error('lean web build requires http(s) to load world-chunks'));return false;}
    try{
-    const response=await fetch('world-chunks/manifest.json',{cache:'force-cache'});
-    if(!response.ok)throw new Error('manifest '+response.status);
-    const manifest=await response.json();
+    const manifest=await fetchJson('world-chunks/manifest.json','manifest');
     if(manifest?.schema!==1||!Array.isArray(manifest.chunks))throw new Error('invalid chunk manifest');
     if(Math.abs(Number(manifest.chunkSize)-this.grid.size)>.001)throw new Error('chunk size mismatch');
     this.manifest=manifest;this.rows=new Map(manifest.chunks.map(row=>[row.id,row]));this.mode='http-chunks';return true;
@@ -5511,9 +5520,7 @@ const COURIER_SKILL_DRILLS=[
    const rel=kind==='full'?row.file:row.lodFile;if(!rel)return[];
    const task=(async()=>{
     try{
-     this.requests++;const response=await fetch('world-chunks/'+rel.replace(/^chunks\//,'chunks/'),{cache:'force-cache'});
-     if(!response.ok)throw new Error(rel+' '+response.status);
-     const payload=await response.json();
+     this.requests++;const payload=await fetchJson('world-chunks/'+rel.replace(/^chunks\//,'chunks/'),rel);
      if(payload?.schema!==1||payload.id!==key||!Array.isArray(payload.buildings))throw new Error('invalid '+kind+' chunk '+key);
      cache.set(key,payload);return payload.buildings;
     }catch(err){this.noteFailure(err);this.noteFallback(key);return kind==='full'?this.fallbackFull(key):this.fallbackLod(key);}
@@ -5549,8 +5556,11 @@ const COURIER_SKILL_DRILLS=[
   if(source.lean&&source.mode!=='http-chunks')throw new Error('公開地圖資料載入失敗：'+(source.lastError||'world-chunks 不可用'));
   const pos=this.getPlayerStartPos(),tiers=grid.tiersAt(pos.x,pos.z);
   if(source.mode==='http-chunks'){
-   await Promise.all([source.preload(tiers.near,'full'),source.preload([...tiers.mid,...tiers.far],'lod')]);
-   source.preload(tiers.mid,'full').then(()=>{for(const key of tiers.mid)this.refreshWorldChunkKey?.(key);});
+   // Do not hold the splash screen on chunk payloads. The manifest is required,
+   // but NEAR/MID/FAR payloads stream in after init and refresh their chunk when ready.
+   source.preload(tiers.near,'full').then(()=>{for(const key of tiers.near)this.refreshWorldChunkKey?.(key);});
+   source.preload([...tiers.mid,...tiers.far],'lod').then(()=>{for(const key of [...tiers.mid,...tiers.far])this.refreshWorldChunkKey?.(key);});
+   source.preload(tiers.mid,'full').then(()=>{for(const key of tiers.mid)if(this.worldChunkDesired?.get(key)==='near')this.refreshWorldChunkKey?.(key);});
   }
  };
 
