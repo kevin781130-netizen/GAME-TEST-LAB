@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V51</title>
+<title>台北極速傳說｜Taipei Sunset Drive V52</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -72,7 +72,7 @@
   .fork-card.selected strong{color:#ffd200}
 
   /* STAGE CARD */
-  #stage-card{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%) scale(.95);z-index:10;text-align:center;opacity:0;pointer-events:none;transition:.22s;text-shadow:0 4px 12px rgba(0,0,0,.9)}
+  #stage-card{position:absolute;left:50%;top:21%;transform:translate(-50%,-50%) scale(.95);z-index:10;text-align:center;opacity:0;pointer-events:none;transition:.22s;text-shadow:0 4px 12px rgba(0,0,0,.9)}
   #stage-card.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
   #stage-kicker{font-size:11px;letter-spacing:.32em;font-weight:900;color:var(--arcade-yellow)}
   #stage-name{font-family:var(--hud-font);font-size:clamp(30px,5.5vw,52px);font-weight:900;font-style:italic;color:#fff;letter-spacing:-.02em}
@@ -83,6 +83,12 @@
   #celebration-card.show{display:flex}
   #celebration-card h2{font-family:var(--hud-font);font-size:clamp(30px,6vw,56px);color:#ffd200;text-shadow:0 4px 0 #000,0 0 20px rgba(255,210,0,.5);margin-bottom:6px}
   #celebration-card p{font-size:15px;color:#fff;font-weight:900;letter-spacing:.12em}
+  #celeb-stats{display:grid;grid-template-columns:repeat(4,minmax(0,auto));gap:10px 22px;margin-top:18px;padding:12px 20px;border-top:1px solid rgba(255,210,0,.45);border-bottom:1px solid rgba(255,210,0,.45)}
+  #celeb-stats:empty{display:none}
+  #celeb-stats div{display:flex;flex-direction:column;gap:3px;min-width:70px}
+  #celeb-stats small{font-size:9px;letter-spacing:.2em;color:#8fd6e4}
+  #celeb-stats b{font-family:var(--hud-font);font-size:clamp(16px,3.2vw,26px);color:#fff}
+  @media (max-width:640px){#celeb-stats{grid-template-columns:repeat(2,minmax(0,auto))}}
 
   /* NAME ENTRY / HIGH SCORE OVERLAY */
   #name-entry-modal{position:absolute;inset:0;z-index:22;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(10,24,48,.96),rgba(2,4,10,.98) 70%);padding:20px;text-align:center}
@@ -158,7 +164,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V51 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V52 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">85.0</span></div>
@@ -188,7 +194,7 @@
       </div>
     </div>
 
-    <div id="draft-hud">⚡ SLIPSTREAM · 280 KM/H CAP</div>
+    <div id="draft-hud">⚡ SLIPSTREAM · <span data-rule="topSpeed"></span> KM/H CAP</div>
     <div id="radio-hud"><div id="radio-dot"></div><span id="radio-name">FM 80.0 • SUNSET LOOP</span></div>
 
     <div id="style-pop"><div id="style-main">DRIFT x2</div><div id="style-sub">+450 STYLE</div></div>
@@ -215,6 +221,7 @@
     <div id="celebration-card">
       <h2 id="celeb-title">CONGRATULATIONS!</h2>
       <p id="celeb-desc">ALL STAGES CLEARED</p>
+      <div id="celeb-stats" aria-label="結算"></div>
     </div>
 
     <!-- HIGH SCORE / NAME ENTRY MODAL -->
@@ -265,7 +272,7 @@
   <label>TIRES / 胎紋造型<select id="tune-tires"><option value="0">街道胎紋</option><option value="1">競技胎紋</option><option value="2">甩尾胎紋</option></select></label>
   <label>STANCE / 車身姿態<select id="tune-suspension"><option value="0">標準姿態</option><option value="1">運動低趴</option><option value="2">競技低趴</option></select></label>
 </div>
-<div class="fairness-card"><b>競技統一規格</b><span>一般極速 280 · 氮氣極速 300 KM/H</span><span>氮氣滿槽 4.00 秒 · 改裝速度增益 +0 · 耐久增益 +0</span><small>車款、尾翼、輪胎、懸吊與排氣造型只改外觀／聲浪。勝負由煞車、路線與氮氣時機決定。</small></div>
+<div class="fairness-card"><b>競技統一規格</b><span>LOW 極速 <span data-rule="lowSpeed"></span> · 一般極速 <span data-rule="topSpeed"></span> · 氮氣極速 <span data-rule="boostSpeed"></span> KM/H</span><span>氮氣 <span data-rule="nitroDuration"></span> 秒 × <span data-rule="nitroCapacity"></span> 枚 · 改裝速度增益 +0 · 耐久增益 +0</span><small>車款、尾翼、輪胎、懸吊與排氣造型只改外觀／聲浪。勝負由煞車、路線與氮氣時機決定。</small></div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;font-size:12px">
 <div style="grid-column:1 / -1;padding:10px;border:1px solid #314a5f;border-radius:8px"><label for="tune-power-slider" style="display:flex;justify-content:space-between;font-size:11px"><span>ENGINE SOUND / 聲浪音色</span><span id="tuning-hp-disp">只改聲音，不改性能</span></label><input type="range" id="tune-power-slider" min="0" max="10" step="1" value="5" style="width:100%;accent-color:#ffd200"></div>
@@ -470,7 +477,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 #corner-hud{right:16px;bottom:18px;max-width:225px;border-left-color:#77e0ce;padding:9px 12px;background:#071621dc;}#corner-hud b{font-size:16px;color:#ffe1a4;}
 #dash-box{bottom:19px;left:17px;}#speed-number{font-size:53px;}#radio-hud{font-size:8px;padding:4px 10px;opacity:.80;max-width:38%;white-space:nowrap;overflow:hidden;}
 #style-pop{top:115px;}#style-main{font-size:24px;}#style-sub{font-size:10px;}
-#stage-card{top:43%;width:72%;background:linear-gradient(90deg,transparent,#0a2030ba,transparent);padding:12px 0;}
+#stage-card{top:21%;width:72%;background:linear-gradient(90deg,transparent,#0a2030ba,transparent);padding:12px 0;}
 #stage-name{font-family:system-ui,sans-serif;font-size:25px;letter-spacing:0;font-style:normal;}#stage-detail{font-size:9px;letter-spacing:.08em;}
 #pedal-feedback{display:flex;gap:8px;font-size:9px;color:#acc7d7;padding-top:6px;}
 .pedal-meter{display:inline-flex;align-items:center;gap:4px;}.pedal-meter i{width:42px;height:4px;background:#466171;border-radius:3px;overflow:hidden;}.pedal-meter em{display:block;height:100%;width:0;background:#ff805f;transition:width .08s;}#gas-fill{background:#79ddac;}
@@ -487,6 +494,9 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 #garage-stats{font:11px/1.7 system-ui,sans-serif;color:#fbd59a;}
 #utility-bar .btn{font-size:10px;background:#0b2435;border-color:#345566;padding:7px 10px;}.touch-keys .btn{min-height:41px;}
 #bottom-bar{background:#0c1d2b;border-radius:8px;}.btn.brake{background:#71311e;border-color:#e68158;}.btn.accel{background:#22513f;border-color:#69b191;}
+/* V52: result and start cards stay inside small screens (portrait and short landscape). */
+@media(max-width:760px){#stage-card{top:38%;width:96%;padding:6px 0;}#stage-name{font-size:17px;}#celebration-card h2{font-size:clamp(20px,6.4vw,30px);padding:0 10px;}#celebration-card p{font-size:12px;padding:0 12px;}#celeb-stats{margin-top:10px;padding:8px 12px;gap:6px 18px;}#celeb-stats b{font-size:17px;}}
+@media(max-height:460px) and (orientation:landscape){#celebration-card h2{font-size:22px;margin-bottom:2px;}#celebration-card p{font-size:11px;}#celeb-stats{margin-top:6px;padding:5px 12px;gap:4px 16px;grid-template-columns:repeat(4,minmax(0,auto));}#celeb-stats b{font-size:15px;}#celeb-stats small{font-size:8px;}#stage-card{top:30%;}}
 @media(max-width:760px){
  #game-shell{width:100vw;gap:4px;}#game-container{aspect-ratio:16/10.2;min-height:290px;border-radius:0;}
  #top-hud{inset:5px 6px auto;gap:5px;grid-template-columns:.8fr 1.9fr .8fr;}.hud-card{padding:4px;}.hud-label{font-size:6px;}.hud-value{font-size:20px;}#hud-stage{font-size:12px;}
@@ -508,8 +518,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V51 · CLEAN ROOM 3D FEEL</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V51</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V52 · CLEAN ROOM 3D FEEL</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V52</span></h1>
       <div class="subtitle">90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -521,8 +531,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 
       <div class="spec-grid">
         <div class="spec-box"><small>BRAKE ENTRY</small><strong>點煞 → 切彎 → 補油</strong></div>
-        <div class="spec-box"><small>COMMON SPEED CAPS</small><strong>280 / 300 KM/H</strong></div>
-        <div class="spec-box"><small>NITRO DURATION</small><strong>滿槽氮氣 4.00 s</strong></div>
+        <div class="spec-box"><small>COMMON SPEED CAPS</small><strong><span data-rule="topSpeed"></span> / <span data-rule="boostSpeed"></span> KM/H</strong></div>
+        <div class="spec-box"><small>NITRO DURATION</small><strong>每枚氮氣 <span data-rule="nitroDuration"></span> s · 最多 <span data-rule="nitroCapacity"></span> 枚</strong></div>
       </div>
 
       <div class="controls">
@@ -544,7 +554,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     <button class="btn" id="garage-btn">🔧 改車 G</button>
     <button class="btn" id="atlas-btn">路線 T</button>
     <button class="btn" id="service-btn">⚙️ 設定</button>
-    <span id="route-status">Shift 滑行集氣 · Z → A 氮氣 · 統一極速 280 KM/H</span>
+    <span id="route-status">Shift 滑行集氣 · Z → A 氮氣 · 統一極速 <span data-rule="topSpeed"></span> KM/H</span>
     <button class="btn" id="gyro-btn">📱 體感</button>
     <button class="btn" id="fullscreen-btn">⛶ 全螢幕</button>
     <button class="btn" id="radio-btn">電台 M</button>
@@ -576,7 +586,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V51.1</strong><span>SIDEWAYS DRIFT · CLEAN-ROOM · TAIPEI</span>
+    <span>CURRENT TEST BUILD</span><strong>V52.0</strong><span>ARCADE FLOW · CLEAN-ROOM · TAIPEI</span>
   </div>
 </div>
 
@@ -764,6 +774,7 @@ let engineCarrier = null, engineMod = null, engineModGain = null, engineGain = n
 let radioTrack = 1, musicTimer = null, musicStep = 0;
 let screechGain = null, screechFilter = null, screechSource = null;
 let draftGain = null, draftSource = null;
+let windGain = null, windFilter = null, windSource = null;
 
 const TRACK_NAMES = [
   'RADIO OFF',
@@ -838,12 +849,26 @@ function initAudio(){
   draftSource.connect(draftFilt); draftFilt.connect(draftGain); draftGain.connect(masterGain);
   draftSource.start();
 
+  // V52 road-wind rush: gain and brightness follow speed so 160 and 280 km/h sound clearly different (engine pitch alone saturates).
+  const wBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+  const wData = wBuf.getChannelData(0);
+  for(let i=0; i<bufLen; i++) wData[i] = (Math.random() * 2 - 1) * 0.3;
+  windSource = audioCtx.createBufferSource();
+  windSource.buffer = wBuf; windSource.loop = true;
+  windFilter = audioCtx.createBiquadFilter();
+  windFilter.type = 'bandpass'; windFilter.frequency.value = 400; windFilter.Q.value = 0.7;
+  windGain = audioCtx.createGain(); windGain.gain.value = 0.0001;
+  windSource.connect(windFilter); windFilter.connect(windGain); windGain.connect(masterGain);
+  windSource.start();
+
   startRadio();
 }
 
-function fmNote(carrierFreq, modRatio=2.0, modIndex=150, dur=0.18, gain=0.04, wave='sine'){
-  if(!audioCtx || radioTrack === 0) return;
-  const now = audioCtx.currentTime;
+// Core FM voice. GAMEPLAY SFX call sfxTone directly (never gated by the radio); music goes through fmNote.
+// delay schedules on the audio clock so multi-note cues need no timers.
+function sfxTone(carrierFreq, modRatio=2.0, modIndex=150, dur=0.18, gain=0.04, wave='sine', pan=0, delay=0){
+  if(!audioCtx) return;
+  const now = audioCtx.currentTime + delay;
   const c = audioCtx.createOscillator(), m = audioCtx.createOscillator();
   const mg = audioCtx.createGain(), cg = audioCtx.createGain();
 
@@ -857,11 +882,19 @@ function fmNote(carrierFreq, modRatio=2.0, modIndex=150, dur=0.18, gain=0.04, wa
   cg.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
   m.connect(mg); mg.connect(c.frequency);
-  c.connect(cg); cg.connect(masterGain);
+  c.connect(cg);
+  let tail = cg;
+  if(pan && audioCtx.createStereoPanner){const pn = audioCtx.createStereoPanner(); pn.pan.setValueAtTime(clamp(pan, -1, 1), now); cg.connect(pn); tail = pn;}
+  tail.connect(masterGain);
 
-  c.onended = () => { c.disconnect(); m.disconnect(); mg.disconnect(); cg.disconnect(); };
+  c.onended = () => { c.disconnect(); m.disconnect(); mg.disconnect(); cg.disconnect(); if(tail !== cg) tail.disconnect(); };
   m.start(now); c.start(now);
   m.stop(now + dur + 0.02); c.stop(now + dur + 0.02);
+}
+// Music only: the radio switch silences this, never gameplay SFX.
+function fmNote(carrierFreq, modRatio=2.0, modIndex=150, dur=0.18, gain=0.04, wave='sine'){
+  if(radioTrack === 0) return;
+  sfxTone(carrierFreq, modRatio, modIndex, dur, gain, wave);
 }
 
 function drumHit(type='kick', dur=0.12, gain=0.05){
@@ -946,9 +979,9 @@ function initOceanSurf(){
 }
 
 // Formant Voice Synthesizer (Vocal Tract Emulation: "CHECKPOINT!", "GO!")
-function voiceFormant(word='checkpoint'){
+function voiceFormant(word='checkpoint', delay=0){
   if(!audioCtx) return;
-  const now = audioCtx.currentTime;
+  const now = audioCtx.currentTime + delay;
   const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
   osc.type = 'sawtooth';
 
@@ -997,17 +1030,28 @@ function playGearShiftSound(){
 
 function playCheckpointChime(){
   if(!audioCtx) return;
-  const notes = [523.25, 659.25, 783.99, 1046.50];
-  notes.forEach((f, i) => {
-    setTimeout(() => { fmNote(f, 2.0, 80, 0.28, 0.035, 'triangle'); }, i * 75);
-  });
-  setTimeout(() => { voiceFormant('checkpoint'); }, 200);
+  [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => sfxTone(f, 2.0, 80, 0.28, 0.035, 'triangle', 0, i * 0.075));
+  voiceFormant('checkpoint', 0.2);
 }
 
 function playCountdownBeep(high=false){
   if(!audioCtx) return;
-  fmNote(high ? 987.77 : 493.88, 2.0, 60, 0.22, 0.045, 'triangle');
-  if(high) setTimeout(() => { voiceFormant('go'); }, 80);
+  sfxTone(high ? 987.77 : 493.88, 2.0, 60, 0.22, 0.045, 'triangle');
+  if(high) voiceFormant('go', 0.08);
+}
+
+// V52 radio-independent SFX: soft pass-by whoosh (original synthesis, no samples).
+function playClosePassWhoosh(pan=0,tight=false){
+  if(!audioCtx)return;
+  const now=audioCtx.currentTime,len=Math.floor(audioCtx.sampleRate*.22),buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);
+  const src=audioCtx.createBufferSource(),f=audioCtx.createBiquadFilter(),g=audioCtx.createGain();
+  src.buffer=buf;f.type='bandpass';f.Q.value=1.1;f.frequency.setValueAtTime(tight?2400:1500,now);f.frequency.exponentialRampToValueAtTime(tight?520:420,now+.2);
+  g.gain.setValueAtTime(tight?.05:.032,now);g.gain.exponentialRampToValueAtTime(.0001,now+.21);
+  src.connect(f);f.connect(g);let tail=g;
+  if(audioCtx.createStereoPanner){const pn=audioCtx.createStereoPanner();pn.pan.setValueAtTime(clamp(pan,-1,1),now);g.connect(pn);tail=pn;}
+  tail.connect(masterGain);src.onended=()=>{src.disconnect();f.disconnect();g.disconnect();if(tail!==g)tail.disconnect();};
+  src.start(now);
 }
 
 function customRadioPhrase(track,lead=false){
@@ -1083,6 +1127,12 @@ function startRadio(){
   }, bpmMs);
 }
 
+// Pure mapping so the speed->wind curve can be regression-tested without an audio device.
+function v52WindProfile(speedNow){
+  const t = clamp(speedNow / 325, 0, 1.05);
+  const onset = clamp((speedNow - 30) / 60, 0, 1), fade = onset * onset * (3 - 2 * onset); // silent below 30 km/h, full by 90
+  return { gain: 0.0001 + fade * (0.003 + Math.pow(t, 2.2) * 0.034), freq: 380 + Math.pow(t, 1.2) * 1800 };
+}
 function updateAudio(){
   if(!audioCtx || !engineCarrier) return;
   const ratio = clamp(rpm / 8500, 0, 1.15);
@@ -1104,6 +1154,11 @@ function updateAudio(){
   }
   if(draftGain){
     draftGain.gain.setTargetAtTime(active && isDrafting ? 0.035 : 0.0001, audioCtx.currentTime, 0.08);
+  }
+  if(windGain){
+    const w = v52WindProfile(speed);
+    windGain.gain.setTargetAtTime(active ? w.gain : 0.0001, audioCtx.currentTime, 0.12);
+    windFilter.frequency.setTargetAtTime(w.freq, audioCtx.currentTime, 0.12);
   }
 }
 
@@ -1514,7 +1569,7 @@ function chargeDriftNitro(dt){
   nitro=clamp(nitro,0,100);
 }
 
-let screenShake = 0, flash = 0, bestScore = 0;
+let screenShake = 0, flash = 0, bestScore = 0, flashTint = '255,255,255';
 let stageLevel = 0, stageColumn = 0, currentNode = STAGES[0][0], routeHistory = [], stageChoices = [];
 let pendingChoice = 'left', choiceLocked = false, lastForkChoice = '';
 let stageEntryChoice = null, stageTransition = null;
@@ -1652,6 +1707,7 @@ function setStage(level, column, announce=true, detail='STAGE REACHED', entryCho
 function resetGame(){
   gameStarted=false;clearTimeout(resultTimer);resultTimer=null;
   raceBoardKey=arcadeBoardKey();
+  closePassChain=0;closePassTimer=0;closePassFx=[];closePassTotal=0;
   crashSequence = null; crashCount = 0; document.getElementById('pause-btn').textContent = '暫停 P';
   clearInputs(); distanceOffset = 0; simulationTime = 0; hudClock = 0; isDrifting = false; isDrafting = false;
   bubbleTimer = 0; styleTimer = 0; stageCardTimer = 0; celebrationTimer = 0;
@@ -1690,10 +1746,23 @@ function confirmRadioAndStart(){
   inRadioScreen = false;
   resetGame(); gameStarted = true; carSelect.disabled = true;
   countdownEl.textContent = '3'; countdownEl.classList.add('show');
+  showStageCard('READY · 準備出發'); stageCardTimer = 3.6;
   playCountdownBeep(false);
   say('GET READY! WATCH THE FLAG! 🏁');
 }
 
+// V52 result hierarchy: one glanceable row of the numbers that decided the run.
+function fillResultStats(cleared){
+  const box=document.getElementById('celeb-stats');if(!box)return;
+  const items=[
+    ['TIME LEFT 剩餘',cleared?`${timeLeft.toFixed(1)} s`:'0.0 s'],
+    ['SCORE 分數',pad(score)],
+    ['ROUTE 路線',routeHistory.map(r=>r.id).join('→')],
+    ['CLOSE PASS 擦身',`${closePassTotal} · 碰撞 ${crashCount}`]
+  ];
+  // values are numbers and route ids only, so no user text is interpolated
+  box.innerHTML=items.map(([label,value])=>`<div><small>${label}</small><b>${value}</b></div>`).join('');
+}
 function finishGame(cleared){
   boosting=false; bankStyle(); recordReward(cleared);
   if(v34Mode!=='arcade'){ finishSolo(cleared); return; }
@@ -1708,10 +1777,18 @@ function finishGame(cleared){
     celebrationCard.classList.add('show');
     celebTitle.textContent = `${goalNode.goal} • ${goalNode.ceremony}`;
     celebDesc.textContent = goalNode.desc;
+    fillResultStats(true);
     say(`GOAL ${goalNode.goal} CLEARED! 🏆🎉`);
     for(let i=0; i<50; i++){
       addParticle(W/2 + rand(-240, 240), H * 0.45 + rand(-80, 80), rand(-120, 120), rand(-140, -40), rand(1.2, 2.5), rand(4, 9), 'confetti');
     }
+  }
+
+  else{
+    celebrationCard.classList.add('show');
+    celebTitle.textContent = 'TIME UP · 時間到';
+    celebDesc.textContent = `停在 ${currentNode.id} · ${currentNode.name}`;
+    fillResultStats(false);
   }
 
   // Switch to the original Taipei finish ballad
@@ -1721,7 +1798,7 @@ function finishGame(cleared){
     if(!gameOver)return;
     celebrationCard.classList.remove('show');
     showLeaderboardAndEntry(cleared);
-  }, cleared ? 4000 : 800);
+  }, cleared ? 4000 : 1800);
 }
 
 function showLeaderboardAndEntry(cleared){
@@ -1789,8 +1866,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V51',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V51</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V52',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V52</span>',
   subtitle: '90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -2238,14 +2315,60 @@ function bankStyle(){
   styleMessage(`STYLE x${styleCombo.toFixed(1)}`, `+${gained} BANKED`);
   styleBank = 0; styleCombo = 1; driftTime = 0;
 }
-function nearMiss(car){
-  car.near = true; styleCombo = clamp(styleCombo + 0.4, 1, 8);
-  const pts = Math.floor(200 * styleCombo);
-  score += pts;
-  styleMessage(`NEAR MISS x${styleCombo.toFixed(1)}`, `+${pts} PTS`);
-  const pan = car.screenBox ? (car.screenBox.cx - W / 2) / (W / 2) : (car.x > 0 ? 0.7 : -0.7);
-  playRivalHorn(car.type === 'blue_truck' || car.type === 'bus', pan);
-  say('WHOA! CLOSE PASS! 💨'); screenShake = Math.max(screenShake, 3.5);
+// V52 TAIPEI CLOSE PASS: a visible, genuinely close, genuinely fast, collision-free pass earns a small score. No shake, no combo coupling.
+const V52_CLOSEPASS=Object.freeze({candidateLife:4,minSpeed:150,minClosing:45,gapMin:.012,gapMax:.09,tightGap:.045,points:Object.freeze([120,240]),chainWindow:3,chainStep:.25,chainCap:3,fxLife:.8,shake:0,chargeReward:0});
+let closePassChain=0,closePassTimer=0,closePassFx=[],closePassTotal=0;
+function v52ClosePassEligible(car,gap,dz){
+  return !!car.screenBox&&!car.near&&car.hitTimer<=0&&!crashSequence&&collisionCooldown<=0&&driveGear==='D'&&motionDirection===1
+    &&speed>=V52_CLOSEPASS.minSpeed&&speed-car.speed>=V52_CLOSEPASS.minClosing
+    &&Math.abs(dz)<trafficContactDepth(car)*1.5&&gap>=V52_CLOSEPASS.gapMin&&gap<V52_CLOSEPASS.gapMax;
+}
+// Longitudinal half-length of the traffic contact box (same value trafficContact uses).
+function trafficContactDepth(car){return 210+car.spec.h*2;}
+// Arm (or refresh) a candidate. No score yet: the pass only counts once the car is safely behind the player.
+function armClosePass(car,gap){
+  const box=car.screenBox,side=box&&box.cx<W/2?-1:1;
+  const c=car.cp||(car.cp={age:0,gap,tight:false,side,x:W/2,y:H*.6,pan:car.x>0?.7:-.7});
+  c.gap=Math.min(c.gap,gap);c.tight=c.gap<V52_CLOSEPASS.tightGap;c.side=side;
+  if(box){c.x=box.cx;c.y=box.t;c.pan=(box.cx-W/2)/(W/2);}
+  return c;
+}
+function clearClosePassCandidates(){for(const car of traffic)car.cp=null;}
+// Award once, when the passed car has fully cleared the player's contact depth.
+function awardClosePass(car,c){
+  car.near=true;
+  closePassTotal++;
+  closePassChain=closePassTimer>0?Math.min(V52_CLOSEPASS.chainCap,closePassChain+1):0;closePassTimer=V52_CLOSEPASS.chainWindow;
+  const pts=Math.round(V52_CLOSEPASS.points[c.tight?1:0]*(1+closePassChain*V52_CLOSEPASS.chainStep));
+  score+=pts;
+  closePassFx.push({t:0,x:c.x,y:c.y,side:c.side,pts,tight:c.tight,chain:closePassChain});
+  if(closePassFx.length>3)closePassFx.shift();
+  playClosePassWhoosh(c.pan,c.tight);
+  return pts;
+}
+function stepClosePassCandidate(car,dt){
+  const c=car.cp;if(!c)return;
+  c.age+=dt;
+  if(crashSequence||driveGear!=='D'||motionDirection!==1||c.age>V52_CLOSEPASS.candidateLife){car.cp=null;return;}
+  if(car.z-playerZ-PLAYER_DEPTH<-trafficContactDepth(car)){
+    car.cp=null;
+    if(speed>=V52_CLOSEPASS.minSpeed&&collisionCooldown<=0)awardClosePass(car,c);
+  }
+}
+function updateClosePass(dt){
+  closePassTimer=Math.max(0,closePassTimer-dt);if(closePassTimer===0)closePassChain=0;
+  for(const fx of closePassFx)fx.t+=dt;
+  closePassFx=closePassFx.filter(fx=>fx.t<V52_CLOSEPASS.fxLife);
+}
+function drawClosePassFx(){
+  for(const fx of closePassFx){
+    const u=fx.t/V52_CLOSEPASS.fxLife,a=1-u*u;
+    ctx.save();ctx.globalAlpha=a;
+    ctx.font='900 15px TaipeiText, sans-serif';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='rgba(8,18,32,.85)';ctx.fillStyle=fx.tight?'#ffe9a0':'#e9f6ff';
+    const label=`${fx.tight?'極限擦身':'擦身而過'} +${fx.pts}${fx.chain>0?' ×'+(1+fx.chain*V52_CLOSEPASS.chainStep).toFixed(2):''}`;
+    const ty=clamp(fx.y-10-u*16,70,H-150);ctx.strokeText(label,clamp(fx.x,90,W-90),ty);ctx.fillText(label,clamp(fx.x,90,W-90),ty);
+    ctx.restore();
+  }
 }
 
 function playerHitBox(){
@@ -2279,7 +2402,8 @@ function triggerCrash(car, hit, isObstacle=false){
   for(let i=0; i<25; i++){
     addParticle(hx + rand(-20, 20), hy + rand(-10, 10), rand(-150, 150), rand(-180, -30), rand(0.25, 0.65), rand(3, 7), 'spark');
   }
-  crashSequence={t:0,duration:4.1,impactSpeed:speed,side:pushDir};
+  closePassChain=0;closePassTimer=0;closePassFx=[];clearClosePassCandidates();
+  crashSequence={t:0,anim:0,duration:V52_FLOW.crashDuration,impactSpeed:speed,side:pushDir};
   resetDrivingState();
   exitBoost=0;cleanDriftTime=0;lateralVelocity=0;boosting=false;boostRemaining=0;nitroLatch=false;reverseWindow=0;
   crashCount++; isDrifting = false; isDrafting = false; driftAngle = 0; steer = 0;
@@ -2288,7 +2412,7 @@ function triggerCrash(car, hit, isObstacle=false){
 
 function updateCrash(dt){
   const c = crashSequence;
-  c.t += dt; raceElapsed+=dt;
+  c.t += dt; c.anim=c.t*V52_FLOW.crashAnimScale; raceElapsed+=dt;
   isDrifting = false; isDrafting = false; driftAngle = 0; steer = 0;
   speed = Math.max(0, c.impactSpeed * (1 - c.t / 0.75));
   playerZ += speed * WORLD_SPEED * dt;
@@ -2300,10 +2424,10 @@ function updateCrash(dt){
   if(v34Mode!=='cruise') timeLeft=Math.max(0,timeLeft-dt);
   if(timeLeft <= 0){ finishGame(false); return; }
 
-  if(!c.chaseAnnounced&&c.t>=1.65){c.chaseAnnounced=true;say('等等！車子自己跑了！');}
+  if(!c.chaseAnnounced&&c.anim>=1.65){c.chaseAnnounced=true;say('等等！車子自己跑了！');}
 
   if(c.t >= c.duration){
-    crashSequence=null;resetDrivingState();playerX=clamp(playerX,-drivableHalf()*.76,drivableHalf()*.76);speed=75;currentGear='LOW';driveGear='D';motionDirection=1;reverseWindow=0;nitroLatch=false; collisionCooldown = 2.0;
+    crashSequence=null;resetDrivingState();playerX=clamp(playerX,-drivableHalf()*.76,drivableHalf()*.76);speed=V52_FLOW.recoverySpeed;currentGear='LOW';driveGear='D';motionDirection=1;reverseWindow=0;nitroLatch=false; collisionCooldown = V52_FLOW.recoveryGrace;
     say('GET BACK IN! STEP ON IT! 🏁');
   }
   updateHUD();
@@ -2315,8 +2439,8 @@ function awardCheckpoint(){
   checkpointBonus = stageTimeBudget(stageLevel + 1, stageColumn);
   timeLeft += checkpointBonus;
   score += 3500 + (stageLevel + 1) * 900;
-  playCheckpointChime();
-  styleMessage('CHECK POINT', `TIME +${checkpointBonus}s`);
+  playCheckpointChime();flash=Math.max(flash,V52_FLOW.checkpointFlash);flashTint='255,214,110';
+  styleMessage('檢查站通過 CHECK POINT', `TIME +${checkpointBonus}s`);
   say('TIME EXTENSION! FORK AHEAD! 🌴');
 }
 
@@ -2415,7 +2539,7 @@ function update(dt){
   bubbleTimer = Math.max(0, bubbleTimer - dt); if(bubbleTimer === 0) bubble.classList.remove('show');
   styleTimer = Math.max(0, styleTimer - dt); if(styleTimer === 0) stylePop.classList.remove('show');
   stageCardTimer = Math.max(0, stageCardTimer - dt); if(stageCardTimer === 0) stageCard.classList.remove('show');
-  flash = Math.max(0, flash - dt); screenShake *= Math.pow(0.001, dt);
+  flash = Math.max(0, flash - dt); if(flash<=0)flashTint='255,255,255'; screenShake *= Math.pow(0.001, dt);
   collisionCooldown = Math.max(0, collisionCooldown - dt); updateAudio();
   if(!gameStarted || gameOver || paused) return;
 
@@ -2435,6 +2559,7 @@ function update(dt){
         if(car.targetSpeed) car.speed = car.targetSpeed * 0.4;
       }
     }
+    rpm = lerp(rpm, 2400 + (countdownTimer % 1) * 4200, 1 - Math.exp(-dt * 14));
     updateHUD(); return;
   }
   if(countdownTimer < 3.5){ countdownTimer += dt; if(countdownTimer >= 3.5) countdownEl.classList.remove('show'); }
@@ -2535,6 +2660,7 @@ function update(dt){
   playerZ=Math.max(0,playerZ+speed*WORLD_SPEED*dt*motionDirection);
   if(v34Mode!=='cruise') timeLeft=Math.max(0,timeLeft-dt);
 
+  v52ApproachTick();
   if(v34Mode==='arcade' && stageLevel < 4 && playerZ >= (FORK_START - 52) * SEGMENT_LENGTH) awardCheckpoint();
   if(timeLeft <= 0){ finishGame(false); return; }
 
@@ -2574,7 +2700,7 @@ function update(dt){
     if(dz < -1800 && playerZ + 24000 < trafficLimit){
       car.z=Math.min(playerZ+seededRange(22000,56000),trafficLimit);
       car.x=seededRange(-.65,.65)*roadFactor();car.laneTarget=seededRange(-.60,.60)*roadFactor();
-      car.previousX=car.x;car.previousZ=car.z;car.near = false; car.screenBox = null;
+      car.previousX=car.x;car.previousZ=car.z;car.near = false; car.screenBox = null; car.cp = null;
     }
     if(dz > 2600) car.near = false;
   }
@@ -2589,10 +2715,12 @@ function update(dt){
     }else if(car.screenBox&&!car.near&&car.hitTimer<=0){
       const dz=car.z-playerZ-PLAYER_DEPTH,half=trafficHalfWidth(car)+PLAYER_HALF_WIDTH;
       const gap=Math.abs(playerX-car.x)-half;
-      if(Math.abs(dz)<480&&gap>.01&&gap<.09)nearMiss(car);
+      if(v52ClosePassEligible(car,gap,dz))armClosePass(car,gap);
     }
+    if(car.cp)stepClosePassCandidate(car,dt);
   }
 
+  updateClosePass(dt);
   chargeDriftNitro(dt);
   score += speed * dt * 0.75;
   updateForkUI(); hudClock += dt;
@@ -2611,7 +2739,7 @@ function updateHUD(){
   routeStatus.textContent = gameOver ? '按 START 再挑戰一次' : stageTransition ? `前往 ${stageTransition.next.name}` : stageLevel === 4 ? `衝刺進入終點 ${currentNode.goal}！` : playerZ / SEGMENT_LENGTH >= FORK_WARN ? `${choiceLocked ? '路線已鎖定' : '請選擇路徑'} ${pendingChoice === 'left' ? '◀ 左' : '右 ▶'} · ${nextNodes()[pendingChoice].name}` : checkpointPassed ? '通過檢查點 · 補時成功' : isDrafting ? '尾流加速 · 統一極速 280 KM/H' : currentGear === 'LOW' ? 'D 前進 · AT 自動升檔 · Z → A 氮氣' : 'D 前進 · Shift 甩尾集氣 · Z → A 氮氣';
   
   if(v34Mode!=='arcade'){ document.getElementById('hud-route-label').textContent=v34Mode==='cruise'?'自由巡航 · T 切換路段':`單段計時 · ${raceElapsed.toFixed(2)} s`; routeStatus.textContent=v34Mode==='cruise'?'無倒數 · 自由試車 · 按 T 選路段':`個人紀錄 ${getBestTime()} · 無分岔，通過終點完成計時`; }
-  else if(isDrafting) routeStatus.textContent=`尾流加速 · 上限 280 KM/H（氮氣 300）`;
+  else if(isDrafting) routeStatus.textContent=`尾流加速 · 上限 ${COMPETITION.topSpeed} KM/H（氮氣 ${COMPETITION.boostSpeed}）`;
   else if(playerZ/SEGMENT_LENGTH<FORK_WARN&&!stageTransition) routeStatus.textContent=`${autoGear?'AT 自排':'MT 手排'} · ${driveGear} / ${currentGear} · Shift 滑行集氣 · Z → A 氮氣`;
   updateV39HUD();drawTachometer();
 }
@@ -3175,6 +3303,57 @@ function drawCheckpointGate(p, label='CHECK POINT'){
   ctx.restore();
 }
 
+// V52: every player-visible rule number is filled from the gameplay constants (no second hard-coded copy in HTML).
+function ruleValues(){
+  return {topSpeed:COMPETITION.topSpeed,boostSpeed:COMPETITION.boostSpeed,lowSpeed:GEAR_RULES.LOW.max,highSpeed:GEAR_RULES.HIGH.max,
+    nitroDuration:NITRO_RULES.duration.toFixed(1),nitroCapacity:NITRO_RULES.capacity,nitroMinSpeed:NITRO_RULES.minSpeed};
+}
+function applyRuleLabels(){
+  const v=ruleValues();
+  for(const el of document.querySelectorAll('[data-rule]')){const key=el.dataset.rule;if(key in v)el.textContent=String(v[key]);}
+}
+// V52: Taiwan-highway style green distance boards count down to the checkpoint / goal (pacing + readability, no physics).
+function v52ApproachTarget(){
+  if(v34Mode==='arcade'){
+    if(stageLevel<4)return checkpointPassed?null:{index:FORK_START-52,zh:'檢查站',en:'CHECK POINT'};
+    return {index:FINISH_LINE,zh:'終點',en:'GOAL'};
+  }
+  return {index:soloFinishIndex(),zh:'終點',en:v34Mode==='sprint'?'FINISH':'LOOP'};
+}
+function v52ApproachSigns(){
+  const t=v52ApproachTarget();if(!t)return [];
+  return V52_FLOW.approachMeters.map(m=>({meters:m,index:t.index-Math.round(m/SEGMENT_METERS),zh:t.zh,en:t.en})).filter(x=>x.index>20);
+}
+function drawApproachSign(p,sign){
+  if(!p||!p.scale||p.w<14||p.w>360)return 0;
+  const env=roadEnvelope(sign.index),x=p.x+p.w*(env+V52_FLOW.signSideGap);
+  const bw=p.w*.62,bh=p.w*.36,ph=p.w*.64,top=p.y-ph,left=x-bw/2;
+  if(top+bh<0||x<-bw||x>W+bw)return 0;
+  ctx.save();
+  ctx.fillStyle='#5d696d';ctx.fillRect(x-p.w*.018,top+bh*.9,p.w*.036,ph-bh*.9);
+  const g=ctx.createLinearGradient(0,top,0,top+bh);g.addColorStop(0,'#0f7a49');g.addColorStop(1,'#07502e');
+  ctx.fillStyle=g;ctx.fillRect(left,top,bw,bh);
+  ctx.strokeStyle='#f3f6ee';ctx.lineWidth=Math.max(1,p.w*.012);ctx.strokeRect(left+1,top+1,bw-2,bh-2);
+  if(bw>34){
+    v40FitSignText(`${sign.zh} ${sign.en}`,left+bw*.06,top+bh*.07,bw*.88,bh*.30,bh*.24,'#ffe570');
+    v40FitSignText(`${sign.meters} M`,left+bw*.06,top+bh*.40,bw*.88,bh*.50,bh*.46,'#ffffff');
+  }
+  ctx.restore();
+  return 1;
+}
+let v52LastSeg=-1;
+function v52ApproachTick(){
+  const cur=Math.floor(playerZ/SEGMENT_LENGTH),last=v52LastSeg;v52LastSeg=cur;
+  if(last<0||cur<last||cur-last>40)return false;
+  for(const sign of v52ApproachSigns()){
+    if(sign.index>last&&sign.index<=cur){
+      sfxTone(sign.meters<=100?740:587.33,2.0,40,.09,.03,'triangle');
+      return true;
+    }
+  }
+  return false;
+}
+
 function drawRouteGantry(p, n, index){
   if(!p || !p.scale || p.w < 24) return;
   const fp = clamp((index - FORK_START) / (STAGE_END - FORK_START), 0, 1), fg = forkGeometry(fp);
@@ -3202,6 +3381,7 @@ function drawRouteGantry(p, n, index){
 function drawForkObjects(start){
   const objects = [];
   const add = (index, draw) => { if(index > start && index < start + DRAW_DISTANCE) objects.push({ index, draw }); };
+  for(const sign of v52ApproachSigns())add(sign.index,p=>drawApproachSign(p,sign));
   if(v34Mode!=='arcade'){
     add(soloFinishIndex(),p=>drawCheckpointGate(p,v34Mode==='sprint'?'TIME ATTACK FINISH':'CRUISE LOOP'));
   }else if(stageLevel < 4){
@@ -3504,7 +3684,7 @@ function drawPlayer(){
  const pose=v51DriftVisualPose();
  let cx=W/2+pose.offsetX,cy=H-65+brakeVisual*2-wanganTuning.suspension*2+chassisPitch*.75,scale=1,yaw=pose.yaw,roll=chassisRoll;
  if(Math.abs(playerX)>drivableHalf()&&!crashSequence)cy+=Math.sin(simulationTime*24)*1.2;
- if(crashSequence){const p=crashPose(crashSequence.t,crashSequence.side);cx=p.x;cy=p.y;scale=p.scale;roll=p.roll;yaw=0;}
+ if(crashSequence){const p=crashPose(crashSequence.anim,crashSequence.side);cx=p.x;cy=p.y;scale=p.scale;roll=p.roll;yaw=0;}
  ctx.save();ctx.translate(cx,cy);ctx.scale(scale*pose.scaleX,scale);if(roll)ctx.rotate(roll*Math.PI/180);
  if(!crashSequence){ctx.fillStyle='#08142088';ctx.beginPath();ctx.ellipse(pose.shadowX-chassisRoll*1.2,21,currentCar.isBike?32:108*(1+pose.intensity*.18),12,0,0,Math.PI*2);ctx.fill();
   if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(pose.shadowX*.6,25,currentCar.isBike?26:92*(1+pose.intensity*.14),5,0,0,Math.PI*2);ctx.fill();}}
@@ -3732,6 +3912,7 @@ function render(dt){
   drawV50ComfortRush();
   drawParticles(dt);
   drawSlideTrails();
+  drawClosePassFx();
   drawPlayer();
   drawArcadeGags();
   if(crashSequence)drawCrashEjection(crashSequence);
@@ -3741,7 +3922,7 @@ function render(dt){
   drawStageProgress();
   drawVignette();
   if(flash > 0){
-    ctx.fillStyle = `rgba(255,255,255,${clamp(flash * 2.5, 0, 0.35)})`;
+    ctx.fillStyle = `rgba(${flashTint},${clamp(flash * 2.5, 0, 0.35)})`;
     ctx.fillRect(0, 0, W, H);
   }
   ctx.restore();
@@ -4064,7 +4245,14 @@ function drawMiramarWheel(x,y,s){
 }
 
 // V40 competition rules: V39 simulation core + V40 drift calibration; art never changes physics.
-const COMPETITION=Object.freeze({version:'51.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:72,turn:1.05,brake:125,nitroCharge:50,hitHalfWidth:62});
+const COMPETITION=Object.freeze({version:'52.0',dashWindow:.45,topSpeed:285,boostSpeed:325,lowSpeed:185,accel:72,turn:1.05,brake:125,nitroCharge:50,hitHalfWidth:62});
+// V52 arcade-flow rules (independent): shorter crash interruption, stronger re-entry, Taiwan-style approach signage.
+const V52_FLOW=Object.freeze({
+  crashDuration:2.9,crashAnimScale:4.1/2.9,recoverySpeed:96,recoveryGrace:1.6,
+  approachMeters:Object.freeze([500,300,100]),signSideGap:.34,checkpointFlash:.16,
+  exactSourceCopy:false,autoRailAssist:false
+});
+const SEGMENT_METERS=SEGMENT_LENGTH/WORLD_SPEED/3.6;
 const GEAR_RULES=Object.freeze({
  LOW:{max:185,lowTorque:1.30,highTorque:.60},
  HIGH:{max:285,lowTorque:.96,highTorque:.50}
@@ -4155,6 +4343,14 @@ function v51DriftVisualPose(curve=v51CurrentCurve()){
     intensity,
     curveCap:v51VisualCurveCap(curve)
   };
+}
+// V52 corner rules: one shared "safe speed" for physics and HUD, plus an over-speed understeer push (grip only).
+const V52_CORNER=Object.freeze({safeBase:278,safePerCurve:24,safeMin:120,pushSpan:90,pushGain:.13,pushCurveRef:2.4,pushExp:1.3,scrubGrip:.45});
+function v52SafeCornerSpeed(curve){return clamp(V52_CORNER.safeBase-Math.abs(curve)*V52_CORNER.safePerCurve,V52_CORNER.safeMin,V52_CORNER.safeBase);}
+function v52OverspeedPush(speedNow,curve){
+  const excess=Math.max(0,speedNow-v52SafeCornerSpeed(curve));if(excess<=0||!curve)return 0;
+  const t=Math.pow(clamp(excess/V52_CORNER.pushSpan,0,1),V52_CORNER.pushExp);
+  return Math.sign(curve)*t*clamp(Math.abs(curve)/V52_CORNER.pushCurveRef,.25,1.35)*V52_CORNER.pushGain;
 }
 function v51SteeringProfile(speedNow,drifting=false){
   const t=clamp(speedNow/COMPETITION.topSpeed,0,1);
@@ -4259,7 +4455,7 @@ function stepBrakeDrift(dt,brakeHeld,accelHeld,steerTarget,curve){
  if(isDrifting&&Math.abs(slipAngle)>2.5&&speed>70){const points=(currentCar.isBike?[1]:currentCar.isTruck?[-75,75]:[-81,81]).map(x=>vehicleProject([x,0,-66],v51DriftVisualYaw()));slideTrails.push({life:.62,y:H-65,points,dir:driftDirection});if(slideTrails.length>32)slideTrails.shift();}
 }
 function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
- const ratio=clamp(speed/COMPETITION.topSpeed,0,1.1),safe=clamp(278-Math.abs(curve)*24,120,278),excess=Math.max(0,speed-safe);
+ const ratio=clamp(speed/COMPETITION.topSpeed,0,1.1),safe=v52SafeCornerSpeed(curve),excess=Math.max(0,speed-safe);
  const profile=v51SteeringProfile(speed,isDrifting);
  const liftGrip=!isDrifting&&!accelHeld&&!brakeHeld?profile.liftGrip:1;
  const frontGrip=clamp((1-excess/210)*liftGrip,.68,1.24);
@@ -4272,7 +4468,7 @@ function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
  const matchingCurve=Math.sign(steer)===Math.sign(curve)?Math.min(Math.abs(curve),2.4):0;
  const turnInBite=!isDrifting?steer*matchingCurve*V51_HANDLING.turnInBite*(.35+.65*ratio):0;
  const turn=Math.min(1,speed/30)*(yawTurn+steer*baseAuthority+brakeRotation+turnInBite)*(isDrifting?1:frontGrip);
- const outward=curve*.032*ratio*ratio;
+ const outward=curve*.032*ratio*ratio+(isDrifting?0:v52OverspeedPush(speed,curve));
  lateralVelocity=lerp(lateralVelocity,turn-outward,1-Math.exp(-dt*(isDrifting?DRIFT51.driftLateralResponse:17.6)));
  const idx=clamp(Math.floor(playerZ/SEGMENT_LENGTH),0,Math.max(0,segments.length-1)),corridors=roadCorridors(idx);
  const lane=corridors.reduce((best,q)=>Math.abs(playerX-q.center)<Math.abs(playerX-best.center)?q:best,corridors[0]||{center:0,half:roadFactor()});
@@ -4289,7 +4485,7 @@ function stepArcadeMotion(dt,curve,accelHeld=true,brakeHeld=false){
  chassisRoll=lerp(chassisRoll,targetRoll,1-Math.exp(-dt*11));
  chassisPitch=lerp(chassisPitch,targetPitch,1-Math.exp(-dt*13));
  if(isDrifting&&driftState!=='recover')speed=Math.max(0,speed-(.32+Math.abs(slipAngle)*.011)*dt);
- if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.012:.27)*dt);
+ if(excess>0&&Math.abs(curve)>.8)speed=Math.max(0,speed-excess*(isDrifting?.012:V52_CORNER.scrubGrip)*dt);
 }
 function playerVisualTransform(){const p=v51DriftVisualPose();return {yaw:p.yaw,travelYaw:driftAngle-slipAngle,mode:'rigid-3d-sideways',scaleX:p.scaleX,shearX:0,offsetX:p.offsetX,intensity:p.intensity};}
 function drawSlideTrails(){
@@ -4308,7 +4504,7 @@ const SCENES={
  '2A':{label:'中山北路・圓山林蔭',type:'park',lanes:3,width:1,ground:['#425b39','#314833'],sunset:['#426e86','#bcbb95','#ffd2a0'],night:['#102a34','#39525b','#7b756e'],accent:'#e8b645',props:'park',hills:70},
  '2B':{label:'市民大道・高架橋面',type:'expressway',lanes:3,width:1,ground:['#49566b','#3d475c'],sunset:['#198fd0','#94d9e6','#ffd19b'],night:['#071329','#172944','#723f73'],accent:'#67e2ea',props:'highway',hills:24},
  '3A':{label:'北投・關渡溫泉水岸',type:'spring',lanes:3,width:1,ground:['#587663','#456456'],sunset:['#397e94','#a6bfa3','#f2d9ad'],night:['#133337','#316265','#9a8a75'],accent:'#d7e8ba',props:'spring',hills:50},
- '3B':{label:'大直・美麗華故宮',type:'park',lanes:3,width:1,ground:['#485b58','#394b47'],sunset:['#465b80','#9292b7','#e8b8b0'],night:['#091e35','#28436b','#846688'],accent:'#84f5ad',props:'park',hills:70},
+ '3B':{label:'大直・美麗華故宮',type:'park',lanes:3,width:1,ground:['#485b58','#394b47'],sunset:['#465b80','#9292b7','#e8b8b0'],night:['#091e35','#28436b','#846688'],accent:'#84f5ad',props:'dazhi',hills:70},
  '3C':{label:'松山・大巨蛋文創',type:'dome',lanes:3,width:1,ground:['#857d78','#6c6969'],sunset:['#5683a3','#bdb5b1','#ffd5aa'],night:['#17243c','#364c65','#9b728c'],accent:'#bce6ed',props:'dome',hills:22},
  '4A':{label:'淡水・紅毛城金色水岸',type:'water',lanes:3,width:1,ground:['#9d967b','#8f886c'],sunset:['#5e83b6','#e7a1a2','#ffdf8a'],night:['#193654','#54688a','#c6888d'],accent:'#efc883',props:'water',hills:55},
  '4B':{label:'陽明山・小油坑山道',type:'volcano',lanes:2,width:.8,ground:['#67845d','#526f4c'],sunset:['#688eae','#bbc6c1','#e8dbb7'],night:['#1b344b','#4e696c','#88989a'],accent:'#e2eebd',props:'volcano',hills:150},
@@ -4317,7 +4513,7 @@ const SCENES={
  '5A':{label:'漁人碼頭・白橋海風',type:'marina',lanes:3,width:1,ground:['#9f9c8b','#838776'],sunset:['#507ea6','#d6939a','#ffd89a'],night:['#1d3f63','#546da0','#d795ad'],accent:'#f8ecda',props:'marina',hills:48},
  '5B':{label:'富貴角・北海岸雙線道',type:'cape',lanes:2,width:.7,ground:['#676e67','#515b58'],sunset:['#6193b1','#b5c4bd','#ffe4b6'],night:['#102e44','#456674','#adbec5'],accent:'#fff5d7',props:'cape',hills:85},
  '5C':{label:'九份・紅燈籠山城窄道',type:'lantern',lanes:2,width:.66,ground:['#654a3c','#513b32'],sunset:['#445372','#9c7583','#e5ab88'],night:['#0d1730','#302d50','#9b564e'],accent:'#ff765b',props:'lantern',hills:140},
- '5D':{label:'信義・101 決勝街',type:'skyline',lanes:2,width:.74,ground:['#434558','#353747'],sunset:['#274b77','#9c76a1','#f0b5ad'],night:['#040b1c','#1f1d44','#733970'],accent:'#b0f1ef',props:'xinyi',hills:22},
+ '5D':{label:'信義・101 決勝街',type:'skyline',lanes:2,width:.74,ground:['#434558','#353747'],sunset:['#274b77','#9c76a1','#f0b5ad'],night:['#040b1c','#1f1d44','#733970'],accent:'#b0f1ef',props:'skyline',hills:22},
  '5E':{label:'貓空・茶園纜車髮夾彎',type:'tea',lanes:2,width:.66,ground:['#446b46','#345637'],sunset:['#2f6784','#9aaa9b','#dbbba0'],night:['#0c223b','#26455e','#617e78'],accent:'#ade4ae',props:'tea',hills:135}
 };
 function scene(){return SCENES[currentNode.id];}
@@ -4396,7 +4592,7 @@ function trafficContact(previous,car){
   // Relative swept AABB catches overtakes and reversing at any render rate.
   const from=[previous.x-(car.previousX??car.x),previous.z+PLAYER_DEPTH-(car.previousZ??car.z)];
   const to=[playerX-car.x,playerZ+PLAYER_DEPTH-car.z];
-  const limits=[PLAYER_HALF_WIDTH+trafficHalfWidth(car),210+car.spec.h*2];
+  const limits=[PLAYER_HALF_WIDTH+trafficHalfWidth(car),trafficContactDepth(car)];
   let enter=0,exit=1;
   for(let axis=0;axis<2;axis++){
     const delta=to[axis]-from[axis],half=limits[axis];
@@ -4717,8 +4913,36 @@ function drawV46ScalerVista(base,sc=scene()){
   }
   ctx.globalAlpha=1;ctx.restore();return drawn;
 }
+// V52 route-specific road furniture (Taiwan roadside vocabulary). One distinct silhouette per route; same stride, same placement, same clipping as before.
+const V52_EDGE_STYLE=Object.freeze({
+  '1A':'civicLamp','2A':'whiteTrunk','2B':'expressLamp','3A':'steamRail','3B':'riverLamp','3C':'parkGlobe','4A':'floodWall','4B':'chevron',
+  '4C':'amberDouble','4D':'amberTall','5A':'whiteMast','5B':'hazardBollard','5C':'lanternPost','5D':'ledColumn','5E':'teaMarker'
+});
+function drawV52EdgeProp(kind,side,idx,curve){
+  const night=skyMood!=='sunset';
+  switch(kind){
+    case 'civicLamp':ctx.fillStyle='#4a555b';ctx.fillRect(-2,-44,4,44);ctx.fillRect(side*-1,-46,side*13,3);ctx.fillStyle=night?'#9defff':'#ffe7a2';ctx.beginPath();ctx.arc(side*13,-42,4,0,6.283);ctx.fill();ctx.fillStyle='#59734d';ctx.beginPath();ctx.arc(-side*9,-12,8,0,6.283);ctx.fill();break;
+    case 'whiteTrunk':ctx.fillStyle='#5e4a36';ctx.fillRect(-3,-34,6,34);ctx.fillStyle='#efeadb';ctx.fillRect(-3.5,-9,7,9);ctx.fillStyle='#2f5a3a';ctx.beginPath();ctx.arc(0,-42,13,0,6.283);ctx.arc(side*7,-34,9,0,6.283);ctx.fill();break;
+    case 'expressLamp':ctx.fillStyle='#dce3df';ctx.fillRect(-2,-50,4,50);ctx.fillRect(side*-1,-52,side*15,3);ctx.fillStyle=idx%2?'#ffd24f':'#7dd9ff';ctx.fillRect(side*13-4,-50,9,4);break;
+    case 'steamRail':ctx.fillStyle='#e9efe6';ctx.fillRect(-14,-14,28,3);ctx.fillRect(-13,-14,3,14);ctx.fillRect(10,-14,3,14);ctx.fillStyle='rgba(235,245,240,.55)';ctx.beginPath();ctx.arc(side*2,-26,7,0,6.283);ctx.arc(side*8,-33,5,0,6.283);ctx.fill();break;
+    case 'riverLamp':ctx.fillStyle='#51606a';ctx.fillRect(-2,-40,4,40);ctx.fillRect(-9,-42,18,3);ctx.fillStyle=night?'#aee9ff':'#fff0c0';ctx.fillRect(-11,-39,6,3);ctx.fillRect(5,-39,6,3);break;
+    case 'parkGlobe':ctx.fillStyle='#6a6f72';ctx.fillRect(-2,-16,4,16);ctx.fillStyle='#fff2c4';ctx.beginPath();ctx.arc(0,-20,6,0,6.283);ctx.fill();ctx.fillStyle='#7a8d6b';ctx.fillRect(side*8,-6,12,6);break;
+    case 'floodWall':ctx.fillStyle='#b9b4a4';ctx.fillRect(-16,-12,32,12);ctx.fillStyle='#8f8a7a';ctx.fillRect(-16,-12,32,3);ctx.fillStyle='#e8c775';ctx.fillRect(-1.5,-36,3,24);ctx.beginPath();ctx.arc(0,-37,4,0,6.283);ctx.fill();break;
+    case 'chevron':{const dir=curve>=0?1:-1;ctx.fillStyle='#ecebdc';ctx.fillRect(-2,-22,4,22);ctx.fillStyle='#16191d';ctx.fillRect(-12,-48,24,26);ctx.fillStyle='#ffd23f';ctx.beginPath();ctx.moveTo(-dir*7,-44);ctx.lineTo(dir*6,-35);ctx.lineTo(-dir*7,-26);ctx.lineTo(-dir*7,-31);ctx.lineTo(dir*1,-35);ctx.lineTo(-dir*7,-39);ctx.closePath();ctx.fill();break;}
+    case 'amberDouble':ctx.fillStyle='#59616a';ctx.fillRect(-2,-52,4,52);ctx.fillRect(-16,-54,32,3);ctx.fillStyle='#ffb347';ctx.fillRect(-18,-52,8,4);ctx.fillRect(10,-52,8,4);break;
+    case 'amberTall':ctx.fillStyle='#4d555c';ctx.fillRect(-2,-60,4,60);ctx.fillRect(side*-1,-60,side*11,3);ctx.fillStyle='#ffc66b';ctx.fillRect(side*9-3,-58,8,4);ctx.fillStyle='#2a6fb0';ctx.fillRect(-side*12-6,-34,12,12);ctx.fillStyle='#fff';ctx.fillRect(-side*12-3,-31,6,2);break;
+    case 'whiteMast':ctx.fillStyle='#f4f1e8';ctx.fillRect(-1.5,-54,3,54);ctx.fillStyle='#f06a5a';ctx.beginPath();ctx.moveTo(1.5,-52);ctx.lineTo(side*16,-47);ctx.lineTo(1.5,-42);ctx.fill();ctx.fillStyle='#2b5f7a';ctx.fillRect(-5,-8,10,8);break;
+    case 'hazardBollard':ctx.fillStyle='#f5f2e6';ctx.fillRect(-4,-24,8,24);ctx.fillStyle='#1b1d20';ctx.fillRect(-4,-20,8,4);ctx.fillRect(-4,-12,8,4);ctx.fillStyle='#807b6d';ctx.fillRect(side*9,-8,18,8);break;
+    case 'lanternPost':ctx.fillStyle='#5b3a2c';ctx.fillRect(-2,-40,4,40);ctx.fillRect(side*-1,-40,side*12,3);ctx.fillStyle='#e7432f';ctx.shadowColor='#ff5a3c';ctx.shadowBlur=night?6:0;ctx.beginPath();ctx.ellipse(side*11,-33,4.5,6,0,0,6.283);ctx.fill();ctx.shadowBlur=0;break;
+    case 'ledColumn':ctx.fillStyle='#30384a';ctx.fillRect(-3,-58,6,58);ctx.fillStyle=idx%2?'#9ff7ee':'#c8b4ff';ctx.fillRect(-2,-56,4,34);ctx.fillStyle='rgba(255,255,255,.4)';ctx.fillRect(-1,-54,1,30);break;
+    case 'teaMarker':ctx.fillStyle='#7d6b4e';ctx.fillRect(-2,-28,4,28);ctx.fillStyle='#2f7a45';ctx.fillRect(-9,-38,18,11);ctx.fillStyle='#f4f1dc';ctx.fillRect(-6,-35,12,2);ctx.fillStyle='#4f8a48';ctx.beginPath();ctx.ellipse(side*14,-4,10,5,0,0,6.283);ctx.fill();break;
+    default:return false;
+  }
+  return true;
+}
 function drawV46RoadsideProp(x,y,s,side,family,idx){
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  if(drawV52EdgeProp(V52_EDGE_STYLE[currentNode.id],side,idx,segments[idx]?.curve||0)){ctx.restore();return;}
   if(family==='expressway'){
     ctx.fillStyle='#dce3df';ctx.fillRect(-2,-34,4,34);ctx.fillStyle=idx%2?'#ffd24f':'#7dd9ff';ctx.fillRect(-5,-34,10,5);
     ctx.strokeStyle='#56636a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-8,-17);ctx.lineTo(8,-17);ctx.stroke();
@@ -5090,7 +5314,10 @@ function drawDistrictProp(x,y,s,idx,side){
  if(kind==='volcano'){if(idx%32===0)drawMountainRockWall(x,y,s,side);else drawTaiwanMountainPine(x,y,s);return;}
  if(kind==='tea'){drawTaiwanMountainPine(x,y,s*.85);if(idx%48===0)drawV40StreetLamp(x,y,s*.75,idx);return;}
  if(kind==='park'){drawTaiwanMountainPine(x,y,s);if(idx%48===16)drawV40StreetLamp(x,y,s*.7,idx);return;}
- if(kind==='marina'||kind==='water'){(useV34?drawV40V34TaipeiShophouse(x,y,s,idx+10):drawTaipeiShophouse(x,y,s,idx+10));return;}
+ if(kind==='dazhi'){if(side>0)drawTaiwanMountainPine(x,y,s*.9);else (useV34?drawV40V34TaipeiShophouse(x,y,s*.82,idx):drawTaipeiSkyscrapers(x,y,s*.78,idx));return;}
+ if(kind==='skyline'){drawTaipeiSkyscrapers(x,y,s*1.12,idx);if(idx%32===12)drawV40StreetLamp(x+side*20*s,y,s*.8,idx);return;}
+ if(kind==='marina'){if((idx>>4)&1)drawV40StreetLamp(x,y,s*.9,idx);else (useV34?drawV40V34TaipeiShophouse(x,y,s*.8,idx+10):drawTaipeiShophouse(x,y,s*.8,idx+10));return;}
+ if(kind==='water'){(useV34?drawV40V34TaipeiShophouse(x,y,s,idx+10):drawTaipeiShophouse(x,y,s,idx+10));return;}
  if(kind==='spring'){if(idx%32===0)drawTaiwanMountainPine(x,y,s*.9);else drawV40V34TaipeiShophouse(x,y,s*.85,idx);return;}
  if(kind==='dome'){if(side<0)drawTaiwanMountainPine(x,y,s*.85);else (useV34?drawV40V34TaipeiShophouse(x,y,s*.86,idx):drawTaipeiSkyscrapers(x,y,s*.8,idx));return;}
  if(kind==='xinyi'){if(useV34)drawV40V34TaipeiShophouse(x,y,s*.86,idx);else drawTaipeiSkyscrapers(x,y,s*1.1,idx);return;}
@@ -5159,13 +5386,14 @@ function drawArcadeRunner(p,t,passenger,side){
  ctx.restore();
 }
 function drawChaseScene(c){
+ const tt=c.anim??c.t;
  for(const passenger of [false,true]){
-  const pose=runnerPose(c.t,c.side,passenger);
-  if(pose.phase==='run')for(const k of [2,1]){ctx.save();ctx.globalAlpha=k===2?.12:.24;drawArcadeRunner({...pose,x:pose.x-c.side*k*23,y:pose.y+2},c.t-k*.045,passenger,c.side);ctx.restore();}
-  drawArcadeRunner(pose,c.t,passenger,c.side);
+  const pose=runnerPose(tt,c.side,passenger);
+  if(pose.phase==='run')for(const k of [2,1]){ctx.save();ctx.globalAlpha=k===2?.12:.24;drawArcadeRunner({...pose,x:pose.x-c.side*k*23,y:pose.y+2},tt-k*.045,passenger,c.side);ctx.restore();}
+  drawArcadeRunner(pose,tt,passenger,c.side);
  }
  ctx.save();ctx.font='italic 900 24px sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff4bd';ctx.strokeStyle='#402f27';ctx.lineWidth=5;
- const text=c.t<.8?'哇！人比車還快！！':c.t<1.65?'車車：我先走囉！':c.t<3.6?'等等！珍奶還在車上！':'上車！假裝沒發生！';
+ const text=tt<.8?'哇！人比車還快！！':tt<1.65?'車車：我先走囉！':tt<3.6?'等等！珍奶還在車上！':'上車！假裝沒發生！';
  ctx.strokeText(text,W/2,H*.60);ctx.fillText(text,W/2,H*.60);ctx.restore();
 }
 
@@ -5223,7 +5451,7 @@ function updateGaragePreview(){
   const t=readGarageInputs(),p=tunedProfile(t);
   tuningHpDisp.textContent=`音色 ${t.powerBalance}/10 · 性能 +0`; 
   wanganCardInfo.textContent=`${p.name} · 獨立改裝存檔 · 已完成 ${driverStats.runs} 場`;
-  document.getElementById('garage-stats').textContent='全車統一：285 KM/H ｜ 氮氣 325 KM/H・2.80 s ｜ 100+ 自然加速漸緩';
+  document.getElementById('garage-stats').textContent=`全車統一：${COMPETITION.topSpeed} KM/H ｜ 氮氣 ${COMPETITION.boostSpeed} KM/H・${NITRO_RULES.duration.toFixed(2)} s ｜ ${V51_SPEED_FEEL.softWallStart}+ 自然加速漸緩`;
   const cv=document.getElementById('garage-preview'),c=cv.getContext('2d');c.clearRect(0,0,640,150);
   c.fillStyle='#071222';c.fillRect(0,0,640,150);
   c.strokeStyle='#1d4054';c.lineWidth=1;for(let y=85;y<150;y+=15){c.beginPath();c.moveTo(0,y);c.lineTo(640,y);c.stroke();}
@@ -5270,7 +5498,7 @@ function renderAtlas(){
   const list=document.getElementById('atlas-routes');list.innerHTML='';
   for(let l=0;l<5;l++)for(let c=0;c<=l;c++){const n=STAGES[l][c],button=document.createElement('button');button.className='route-pick'+(l===selectedRoute.level&&c===selectedRoute.column?' selected':'');button.dataset.route=n.id;button.innerHTML=`<strong>${n.id} · ${n.name.replace(/GOAL [A-E] • /,'')}</strong><small>${{urban:'市區',mountain:'山道',coastal:'水岸',expressway:'高架'}[n.archetype]} · ${ROUTE_REALITY[n.id].grade==='real-anchor'?'實景核心':'實景錨點／街機壓縮'} · 難度 ${n.difficulty.toFixed(1)} · ${(soloLength(l,c)/1000).toFixed(1)} 遊戲 km</small><small>${ROUTE_REALITY[n.id].note}</small>`;button.addEventListener('click',()=>selectAtlasRoute(n.id));list.appendChild(button);}
   atlasSVG.querySelectorAll('[data-route]').forEach(g=>{g.addEventListener('click',()=>selectAtlasRoute(g.dataset.route));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectAtlasRoute(g.dataset.route);}});});
-  document.getElementById('atlas-note').textContent='V51 地理稽核：15 段皆以真實台北／新北地標定位；跨區連接、道路長度與分岔為街機壓縮，不作導航。彩虹橋／貓空纜車等非汽車設施只作視覺地標。';
+  document.getElementById('atlas-note').textContent='地理稽核（V51 起）：15 段皆以真實台北／新北地標定位；跨區連接、道路長度與分岔為街機壓縮，不作導航。彩虹橋／貓空纜車等非汽車設施只作視覺地標。';
   document.getElementById('atlas-drive').disabled=gameStarted&&!gameOver&&v34Mode!=='cruise';
   document.getElementById('atlas-drive').textContent=gameStarted&&!gameOver&&v34Mode!=='cruise'?'比賽中，結束後可換路段':v34Mode==='sprint'?'選此路段 → 單段計時':'選此路段 → 自由巡航';
 }
@@ -5308,7 +5536,7 @@ function updateDrivingHUD(){
   let strongest=0;
   const idx=Math.floor(playerZ/SEGMENT_LENGTH),lookahead=clamp(Math.round(speed*WORLD_SPEED*1.5/SEGMENT_LENGTH),12,40);
   for(let i=idx+5;i<Math.min(segments.length,idx+lookahead);i++)if(Math.abs(segments[i].curve)>Math.abs(strongest))strongest=segments[i].curve;
-  const magnitude=Math.abs(strongest),entry=Math.round(clamp(270-magnitude*26,115,270));
+  const magnitude=Math.abs(strongest),entry=Math.round(v52SafeCornerSpeed(strongest));
   document.getElementById('corner-name').textContent=magnitude<.55?'↑ 前方直線':`${strongest>0?'↗ 右':'↖ 左'}${magnitude>3?'急彎':magnitude>1.5?'中彎':'緩彎'}`;
   document.getElementById('corner-speed').textContent=magnitude<.55?'保持油門 · 注意車流':`建議入彎 ${entry} KM/H · ${speed>entry+15?'先減速':'保持路線'}`;
   document.getElementById('drive-state').textContent=isDrifting?`DRIFT · ${driftTime.toFixed(1)} s · x${styleCombo.toFixed(1)}`:boosting?'NITRO · 氮氣推進':exitBoost>0?'MOMENT BOOST · 小噴':momentBoostWindow>0?'MOMENT READY · 放油再補油':roadGrip<.8?'OFF ROAD · 回到路面':'GRIP · 循跡中';
@@ -5643,7 +5871,7 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 
-resetGame(); updateHUD(); drawRouteMap(); render(0);
+applyRuleLabels(); resetGame(); updateHUD(); drawRouteMap(); render(0);
 requestAnimationFrame(loop);
 
 })();
