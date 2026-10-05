@@ -586,7 +586,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V53.0</strong><span>ART DIRECTION · SPEED CURVE · TAIPEI</span>
+    <span>CURRENT TEST BUILD</span><strong>V53.1</strong><span>GROUNDED ROADSIDE · TAIPEI LANDMARKS</span>
   </div>
 </div>
 
@@ -617,61 +617,61 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 // ============================================================
 const STAGE_LANDMARKS = {
   '1A': [
-    { seg: 40, side: 1, name: '台北府城景福門', draw: (x, y, s) => drawJingfuGate(x, y, s * 1.5), scale: 2600 },
-    { seg: 110, side: -1, name: '中華民國總統府', draw: (x, y, s) => drawPresidentialOffice(x, y, s * 1.8), scale: 3000 },
-    { seg: 180, side: 1, name: '中正紀念堂自由廣場', draw: (x, y, s) => drawLibertySquareArch(x, y, s * 1.6), scale: 2800 }
+    { seg: 40, side: 1, name: '台北府城景福門', height:4200, draw: (x, y, s) => drawJingfuGate(x, y, s * 1.5), scale: 2600 },
+    { seg: 110, side: -1, name: '中華民國總統府', height:6400, draw: (x, y, s) => drawPresidentialOffice(x, y, s * 1.8), scale: 3000 },
+    { seg: 180, side: 1, name: '中正紀念堂自由廣場', height:4600, draw: (x, y, s) => drawLibertySquareArch(x, y, s * 1.6), scale: 2800 }
   ],
   '2A': [
-    { seg: 90, side: -1, name: '台北圓山大飯店', draw: (x, y, s) => drawGrandHotelPalace(x, y, s * 1.9), scale: 3400 },
-    { seg: 170, side: 1, name: '劍潭山林古道', draw: (x, y, s) => drawTaiwanMountainPine(x, y, s * 1.5), scale: 2200 }
+    { seg: 90, side: -1, name: '台北圓山大飯店', height:7600, draw: (x, y, s) => drawGrandHotelPalace(x, y, s * 1.9), scale: 3400 },
+    { seg: 170, side: 1, name: '劍潭山林古道', height: 3600, draw: (x, y, s) => drawJiantanTrail(x, y, s * 1.7), scale: 2200 }
   ],
   '2B': [
-    {side:1,name:'光華商場與三創生活園區',draw:(x,y,s)=>drawGuanghuaDigital(x,y,s*1.7),scale:2800},
+    {side:1,name:'光華商場與三創生活園區', height:6200,draw:(x,y,s)=>drawGuanghuaDigital(x,y,s*1.7),scale:2800},
   ],
   '3A': [
-    { seg: 80, side: -1, name: '關渡大橋三連鋼拱', draw: (x, y, s) => drawGuanduRedBridge(x, y, s * 1.8), scale: 3000 },
-    { seg: 150, side: 1, name: '北投地熱谷溫泉浴場', draw: (x, y, s) => drawBeitouHotSpringBath(x, y, s * 1.7), scale: 2800 }
+    { seg: 80, side: -1, name: '關渡大橋三連鋼拱', height:4800, draw: (x, y, s) => drawGuanduRedBridge(x, y, s * 1.8), scale: 3000 },
+    { seg: 150, side: 1, name: '北投地熱谷溫泉浴場', height:4200, draw: (x, y, s) => drawBeitouHotSpringBath(x, y, s * 1.7), scale: 2800 }
   ],
   '3B': [
-    { seg: 80, side: 1, name: '大直美麗華摩天輪', draw: (x, y, s) => drawMiramarWheel(x, y, s * 1.8), scale: 3200 },
-    { seg: 160, side: -1, name: '國立故宮博物院', draw: (x, y, s) => drawPalaceMuseum(x, y, s * 1.8), scale: 3000 }
+    { seg: 80, side: 1, name: '大直美麗華摩天輪', height:7000, draw: (x, y, s) => drawMiramarWheel(x, y, s * 1.8), scale: 3200 },
+    { seg: 160, side: -1, name: '國立故宮博物院', height:4800, draw: (x, y, s) => drawPalaceMuseum(x, y, s * 1.8), scale: 3000 }
   ],
   '3C': [
-    { seg: 80, side: 1, name: '臺北大巨蛋科技穹頂', draw: (x, y, s) => drawTaipeiDome(x, y, s * 2.0), scale: 3500 },
-    { seg: 160, side: -1, name: '松山文創園區古煙囪', draw: (x, y, s) => drawSongshanChimney(x, y, s * 1.6), scale: 2600 }
+    { seg: 80, side: 1, name: '臺北大巨蛋科技穹頂', height:4400, draw: (x, y, s) => drawTaipeiDome(x, y, s * 2.0), scale: 3500 },
+    { seg: 160, side: -1, name: '松山文創園區古煙囪', height:5400, draw: (x, y, s) => drawSongshanChimney(x, y, s * 1.6), scale: 2600 }
   ],
   '4A': [
-    { seg: 80, side: -1, name: '淡水紅毛城古堡', draw: (x, y, s) => drawFortSanDomingo(x, y, s * 1.7), scale: 2800 },
-    { seg: 160, side: 1, name: '淡水金色水岸渡船頭', draw: (x, y, s) => drawTamsuiPromenade(x, y, s * 1.6), scale: 2600 }
+    { seg: 80, side: -1, name: '淡水紅毛城古堡', height:3800, draw: (x, y, s) => drawFortSanDomingo(x, y, s * 1.7), scale: 2800 },
+    { seg: 160, side: 1, name: '淡水金色水岸渡船頭', height:2600, draw: (x, y, s) => drawTamsuiPromenade(x, y, s * 1.6), scale: 2600 }
   ],
   '4B': [
-    { seg: 80, side: -1, name: '陽明山小油坑火山噴氣孔', draw: (x, y, s) => drawXiaoyoukengFumarole(x, y, s * 1.9), scale: 3200 },
-    { seg: 160, side: 1, name: '擎天崗大草原木造石亭', draw: (x, y, s) => drawQingtiangangPavilion(x, y, s * 1.5), scale: 2500 }
+    { seg: 80, side: -1, name: '陽明山小油坑火山噴氣孔', height:5600, draw: (x, y, s) => drawXiaoyoukengFumarole(x, y, s * 1.9), scale: 3200 },
+    { seg: 160, side: 1, name: '擎天崗大草原木造石亭', height:3000, draw: (x, y, s) => drawQingtiangangPavilion(x, y, s * 1.5), scale: 2500 }
   ],
   '4C': [
-    {side:1,name:'饒河街觀光夜市金色牌樓',draw:(x,y,s)=>drawRaoheNightMarketArch(x,y,s*1.8),scale:3000},
-    {side:-1,name:'內湖科技園區企業總部',draw:(x,y,s)=>drawNeihuTechHeadquarters(x,y,s*1.8),scale:3200},
-    {side:1,name:'麥帥一橋與彩虹橋水岸',draw:(x,y,s)=>drawRainbowBridge(x,y,s*1.6),scale:2800}
+    {side:1,name:'饒河街觀光夜市金色牌樓', height:4200,draw:(x,y,s)=>drawRaoheNightMarketArch(x,y,s*1.8),scale:3000},
+    {side:-1,name:'內湖科技園區企業總部', height:6000,draw:(x,y,s)=>drawNeihuTechHeadquarters(x,y,s*1.4),scale:3200},
+    {side:1,name:'麥帥一橋與彩虹橋水岸', height:4200,draw:(x,y,s)=>drawRainbowBridge(x,y,s*1.5),scale:2800}
   ],
   '4D': [
-    { seg: 90, side: 1, name: '信義四四南村眷村屋舍', draw: (x, y, s) => drawSisiVillage(x, y, s * 1.8), scale: 3800 },
-    { seg: 170, side: -1, name: '信義百貨街玻璃建築群', draw: (x, y, s) => drawTaipeiSkyscrapers(x, y, s * 1.7, 0), scale: 3000 }
+    { seg: 90, side: 1, name: '信義四四南村眷村屋舍', height:3400, draw: (x, y, s) => drawSisiVillage(x, y, s * 1.8), scale: 3800 },
+    { seg: 170, side: -1, name: '信義百貨街玻璃建築群', height:7800, draw: (x, y, s) => drawTaipeiSkyscrapers(x, y, s * 1.7, 0), scale: 3000 }
   ],
   '5A': [
-    { seg: 80, side: 1, name: '淡水漁人碼頭情人橋', draw: (x, y, s) => drawLoversBridgeMarina(x, y, s * 2.0), scale: 3500 }
+    { seg: 80, side: 1, name: '淡水漁人碼頭情人橋', height:6000, draw: (x, y, s) => drawLoversBridgeMarina(x, y, s * 2.0), scale: 3500 }
   ],
   '5B': [
-    { seg: 80, side: 1, name: '富貴角燈塔（台灣最北端）', draw: (x, y, s) => drawFuguiLighthouse(x, y, s * 2.0), scale: 3500 }
+    { seg: 80, side: 1, name: '富貴角燈塔（台灣最北端）', height:7200, draw: (x, y, s) => drawFuguiLighthouse(x, y, s * 2.0), scale: 3500 }
   ],
   '5C': [
-    { seg: 80, side: 1, name: '九份阿妹茶樓千盞紅燈籠', draw: (x, y, s) => drawJiufenAmeiTeaHouse(x, y, s * 2.0), scale: 3500 }
+    { seg: 80, side: 1, name: '九份阿妹茶樓千盞紅燈籠', height:5600, draw: (x, y, s) => drawJiufenAmeiTeaHouse(x, y, s * 2.0), scale: 3500 }
   ],
   '5D': [
-    { seg: 80, side: 1, name: '台北101天際之巔（跨年煙火）', draw: (x, y, s) => drawTaipei101StreetLevel(x, y, s * 2.2), scale: 4000 }
+    { seg: 80, side: 1, name: '台北101天際之巔（跨年煙火）', height:19000, draw: (x, y, s) => drawTaipei101StreetLevel(x, y, s * 2.2), scale: 4000 }
   ],
   '5E': [
-    { seg: 60, side: 0, name: '貓空高空纜車', draw: (x, y, s) => drawMaokongGondola(x, y, s * 1.6, 0), scale: 2800 },
-    { seg: 130, side: 1, name: '貓空木柵茶園景觀木棧平台', draw: (x, y, s) => drawMaokongTeaPavilion(x, y, s * 2.0), scale: 3500 }
+    { seg: 60, side: 0, name: '貓空高空纜車', height:5200, draw: (x, y, s) => drawMaokongGondola(x, y, s * 1.6, 0), scale: 2800 },
+    { seg: 130, side: 1, name: '貓空木柵茶園景觀木棧平台', height:3200, draw: (x, y, s) => drawMaokongTeaPavilion(x, y, s * 2.0), scale: 3500 }
   ]
 };
 
@@ -2825,6 +2825,7 @@ function projectRoad(){
 function drawRoad(){
   const t = theme();
   projectRoad();
+  roadsideAnchorLog.length=0;
   prepareLandmarkFrame();
   prepareTrafficSprites();
   drawSky(t);
@@ -2911,13 +2912,18 @@ function drawRoad(){
   drawStartingScene(Math.floor(playerZ / SEGMENT_LENGTH));
   drawForkObjects(Math.floor(playerZ / SEGMENT_LENGTH));
   if(currentNode.archetype==='expressway')drawCivicRoadGantry();
-
+  drawRoadsideDebug();
 }
 
 function drawStartingScene(start){
  if(stageLevel!==0||playerZ>3600)return;
- ctx.save();const y=H*.32;ctx.fillStyle='#183547';ctx.strokeStyle='#d9e4df';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(W*.35,y,W*.30,32,4);ctx.fill();ctx.stroke();
- ctx.fillStyle='#f9e5a0';ctx.font='900 13px sans-serif';ctx.textAlign='center';ctx.fillText('START / 凱達格蘭大道',W/2,y+21);ctx.restore();
+ // V53.1: a real overhead start gantry standing on the road shoulders (was a screen-space board floating over the road).
+ const idx=V53_1_ROADSIDE.startGantryIndex,seg=segments[idx];if(!seg||seg.p1.camera.z<=CAMERA_DEPTH||!Number.isFinite(seg.clipY))return;
+ const L=roadsideAnchor(idx,-1,{kind:'start-gantry',inner:.02,foot:.015,gapN:V53_1_ROADSIDE.gateGapN,mode:'auto'}),R=roadsideAnchor(idx,1,{kind:'start-gantry',inner:.02,foot:.015,gapN:V53_1_ROADSIDE.gateGapN,mode:'auto'});
+ if(!L.ok||!R.ok)return;
+ ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,seg.clipY));ctx.clip();
+ drawOverheadGantry(L,R,[{text:'START',y:.08,h:.26,size:.22,color:'#ffe570'},{text:'凱達格蘭大道',y:.40,h:.46,size:.40,color:'#ffffff'}]);
+ ctx.restore();
 }
 
 function updateLandmarkBanner(text){
@@ -3034,31 +3040,102 @@ function drawYehliuQueenHead(x, y, s){
 
 // 貓空纜車車廂 (Maokong Gondola Cabin 橫越山林)
 
+// ===== V53.1 landmark drawing helpers (local units, ground at y=0, up is negative). Sprites are cached, so cost is one-off. =====
+function lmNight(){return skyMood!=='sunset';}
+function lmTree(x,r,trunk=14){ctx.fillStyle='#4b3b2c';ctx.fillRect(x-1.6,-trunk,3.2,trunk);ctx.fillStyle=lmNight()?'#27432f':'#3f6d47';ctx.beginPath();ctx.arc(x,-trunk-r*.55,r,0,Math.PI*2);ctx.fill();ctx.fillStyle=lmNight()?'#335a3d':'#5a8a58';ctx.beginPath();ctx.arc(x-r*.28,-trunk-r*.8,r*.55,0,Math.PI*2);ctx.fill();}
+function lmLamp(x,h=34){ctx.fillStyle='#59646a';ctx.fillRect(x-1,-h,2,h);ctx.fillRect(x-1,-h,9,2);ctx.fillStyle=lmNight()?'#ffe9b0':'#f2ead2';ctx.fillRect(x+5,-h+1,6,3);}
+// Wide, soft base: contact shadow, paving edge and planting instead of a table-top slab.
+function lmGround(w,paving='#aaa493'){
+  ctx.fillStyle='rgba(16,26,30,.30)';ctx.beginPath();ctx.ellipse(0,3,w*1.08,6,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=paving;ctx.beginPath();ctx.moveTo(-w-8,1);ctx.lineTo(w+8,1);ctx.lineTo(w+3,5);ctx.lineTo(-w-3,5);ctx.closePath();ctx.fill();
+  ctx.fillStyle=lmNight()?'#27402f':'#58784d';for(let k=-1;k<=1;k+=2){ctx.beginPath();ctx.ellipse(k*(w+2),0,10,6,0,0,Math.PI*2);ctx.fill();}
+}
+// Office block with a lit/shaded face, ribbon or grid windows, optional setback and rooftop plant.
+function lmOffice(x0,w,h,o){
+  const night=lmNight(),side=o.side??12,floors=o.floors,fh=h/floors;
+  const front=o.glass?null:(o.color||'#cfc6b2'),shade=o.shade||'#8b8f8e';
+  // side plane (shade)
+  ctx.fillStyle=shade;ctx.beginPath();ctx.moveTo(x0+w,-h);ctx.lineTo(x0+w+side,-h+7);ctx.lineTo(x0+w+side,7);ctx.lineTo(x0+w,0);ctx.closePath();ctx.fill();
+  if(o.glass){const g=ctx.createLinearGradient(x0,-h,x0+w,0);g.addColorStop(0,night?'#3d5a6e':'#a9c6cf');g.addColorStop(.55,night?'#2a4254':'#7ea2ae');g.addColorStop(1,night?'#1f3342':'#5f8591');ctx.fillStyle=g;}
+  else ctx.fillStyle=front;
+  ctx.fillRect(x0,-h,w,h);
+  ctx.fillStyle='#d9ddd8';ctx.fillRect(x0-1,-h-3,w+2,4); // roof slab
+  // floor rhythm
+  for(let f=0;f<floors;f++){
+    const y=-h+f*fh;
+    if(o.ribbon){ctx.fillStyle=night?'#2c4658':'#5b7c88';ctx.fillRect(x0+3,y+fh*.28,w-6,fh*.46);if(night){ctx.fillStyle='rgba(255,224,150,.55)';for(let k=0;k<5;k++){if(((f*7+k*3+(o.seed||0))%5)<2)ctx.fillRect(x0+5+k*((w-10)/5),y+fh*.3,(w-10)/5-3,fh*.4);}}}
+    else{for(let cx=x0+5;cx<x0+w-6;cx+=9){const lit=night&&((f*5+Math.floor(cx)*3+(o.seed||0))%7<3);ctx.fillStyle=lit?'#f2cc84':(o.glass?(night?'#223a4a':'#4f7684'):(night?'#34495a':'#6d8a96'));ctx.fillRect(cx,y+fh*.22,6,fh*.52);}}
+    ctx.fillStyle=o.glass?'rgba(240,250,250,.22)':'rgba(70,70,60,.28)';ctx.fillRect(x0,y+fh-1.2,w,1.2);
+  }
+  if(o.glass){ctx.strokeStyle='rgba(235,245,245,.30)';ctx.lineWidth=.6;for(let cx=x0+8;cx<x0+w;cx+=8){ctx.beginPath();ctx.moveTo(cx,-h);ctx.lineTo(cx,0);ctx.stroke();}}
+  // rooftop plant
+  ctx.fillStyle='#8a9193';ctx.fillRect(x0+w*.15,-h-11,w*.32,8);ctx.fillRect(x0+w*.62,-h-7,w*.14,5);
+  // lobby canopy and entrance
+  if(o.lobby){ctx.fillStyle='#e9e6dc';ctx.fillRect(x0+w*.28,-fh*1.18,w*.44,3.5);ctx.fillStyle=night?'rgba(255,214,140,.75)':'#4d6a74';ctx.fillRect(x0+w*.32,-fh*1.12,w*.36,fh*1.12);ctx.fillStyle='#3d474b';ctx.fillRect(x0+w*.31,-fh*1.18,1.6,fh*1.18);ctx.fillRect(x0+w*.69,-fh*1.18,1.6,fh*1.18);}
+}
+function drawJiantanTrail(x, y, s){
+  // Jiantan mountain trail head: stone steps climbing between camphor and pine trees with a handrail and a lantern.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  ctx.fillStyle='rgba(16,26,30,.28)';ctx.beginPath();ctx.ellipse(0,3,100,6,0,0,Math.PI*2);ctx.fill();
+  // slope behind
+  ctx.fillStyle=night?'#1f3a2a':'#4a7a4d';ctx.beginPath();ctx.moveTo(-110,0);ctx.quadraticCurveTo(-60,-78,0,-92);ctx.quadraticCurveTo(60,-78,110,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle=night?'#183123':'#3c6a40';ctx.beginPath();ctx.moveTo(-84,0);ctx.quadraticCurveTo(-40,-56,0,-70);ctx.quadraticCurveTo(40,-56,84,0);ctx.closePath();ctx.fill();
+  // stone steps narrowing upward
+  for(let k=0;k<12;k++){const y0=-k*6.5,w=30-k*1.6;ctx.fillStyle=k%2?(night?'#6d6f6a':'#b4ae9f'):(night?'#7a7c76':'#c6c0b0');ctx.fillRect(-w,y0-6,w*2,6.5);ctx.fillStyle='rgba(40,40,36,.25)';ctx.fillRect(-w,y0-1,w*2,1);}
+  // handrail
+  ctx.strokeStyle='#6a5a48';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(-34,-6);ctx.lineTo(-14,-74);ctx.moveTo(34,-6);ctx.lineTo(14,-74);ctx.stroke();
+  // stone lantern and bench
+  ctx.fillStyle='#8d8a80';ctx.fillRect(46,-16,8,16);ctx.fillRect(44,-24,12,8);ctx.fillStyle=night?'#ffd58a':'#6f6c63';ctx.fillRect(47,-21,6,4);ctx.fillStyle='#8d8a80';ctx.fillRect(-58,-8,22,4);
+  lmTree(-78,20,22);lmTree(-48,15,18);lmTree(70,21,24);lmTree(96,14,16);
+  ctx.restore();
+}
 function drawSongshanChimney(x, y, s){
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  // 錐形高聳紅磚古老煙囪
-  ctx.fillStyle = '#8d2929'; ctx.beginPath();
-  ctx.moveTo(-12, 0); ctx.lineTo(-6, -125); ctx.lineTo(6, -125); ctx.lineTo(12, 0); ctx.closePath(); ctx.fill();
-  // 頂部鐵環口
-  ctx.fillStyle = '#37474f'; ctx.fillRect(-8, -128, 16, 5);
-  // 文創紅磚廠房
-  ctx.fillStyle = '#5d1b1b'; ctx.fillRect(-45, -35, 90, 35);
-  ctx.fillStyle = '#ffd54f'; ctx.font = '900 5px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('松山文創園區', 0, -18);
+  // Songshan Cultural and Creative Park: a long modernist factory block with ribbon windows, plaza and the brick chimney.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  lmGround(150,night?'#6c6f70':'#b8b3a5');
+  // factory
+  ctx.fillStyle='#8f938f';ctx.beginPath();ctx.moveTo(92,-52);ctx.lineTo(104,-46);ctx.lineTo(104,6);ctx.lineTo(92,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle=night?'#8a8a82':'#d9d3c3';ctx.fillRect(-120,-52,212,52);
+  ctx.fillStyle='#e9e6dc';ctx.fillRect(-122,-55,216,4);
+  for(let f=0;f<2;f++){ctx.fillStyle=night?'#2f4658':'#5f7f8a';ctx.fillRect(-114,-44+f*22,198,11);for(let k=0;k<22;k++){if(night&&((k*3+f)%4<2)){ctx.fillStyle='rgba(255,224,150,.6)';ctx.fillRect(-114+k*9,-44+f*22,7,11);}ctx.fillStyle='rgba(235,240,240,.4)';ctx.fillRect(-114+k*9+8,-44+f*22,1,11);}}
+  ctx.fillStyle='#b7ae98';ctx.fillRect(-30,-16,60,16);ctx.fillStyle=night?'rgba(255,214,140,.7)':'#4c6772';ctx.fillRect(-22,-14,44,14);
+  // steps / plaza stairs
+  ctx.fillStyle='#c9c3b2';for(let k=0;k<3;k++)ctx.fillRect(-40-k*6,k*1.5,80+k*12,1.6);
+  // brick chimney with pale bands near the top
+  ctx.fillStyle='#8f3a30';ctx.beginPath();ctx.moveTo(122,0);ctx.lineTo(126,-130);ctx.lineTo(142,-130);ctx.lineTo(146,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#6f2b25';ctx.beginPath();ctx.moveTo(136,0);ctx.lineTo(138,-130);ctx.lineTo(142,-130);ctx.lineTo(146,0);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#d8cdb5';ctx.fillRect(125,-126,19,3);ctx.fillRect(125,-118,19,2);ctx.fillStyle='#3b3f40';ctx.fillRect(124,-134,22,5);
+  ctx.fillStyle='#7a2f28';ctx.fillRect(118,-9,32,9);
+  for(const tx of [-146,-100,-62,64,100])lmTree(tx,12,14);
   ctx.restore();
 }
 
 // 4A: 淡水金色水岸渡船頭石棧道 (Tamsui Waterfront Promenade)
 function drawTamsuiPromenade(x, y, s){
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  // 花崗岩岸防波石棧道
-  ctx.fillStyle = '#616161'; ctx.fillRect(-65, -16, 130, 16);
-  // 繫纜柱
-  ctx.fillStyle = '#212121'; ctx.fillRect(-50, -26, 8, 12); ctx.fillRect(42, -26, 8, 12);
-  // 淡水渡輪 (Tamsui Ferry)
-  ctx.fillStyle = '#ffffff'; ctx.beginPath();
-  ctx.roundRect(-40, -38, 80, 22, 3); ctx.fill();
-  ctx.fillStyle = '#1565c0'; ctx.fillRect(-40, -22, 80, 6); // 藍色船舷
-  ctx.fillStyle = '#0d47a1'; ctx.font = '900 5px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('河岸渡輪', 0, -28);
+  // Tamsui ferry quay: timber pier on piles, a waiting shed, a docked passenger ferry and the river promenade behind.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  const wg=ctx.createLinearGradient(0,-4,0,14);wg.addColorStop(0,night?'#2c4d60':'#6aa0ab');wg.addColorStop(1,night?'#1a3243':'#3c6c80');ctx.fillStyle=wg;ctx.fillRect(-150,-4,300,18);
+  ctx.strokeStyle=night?'rgba(200,225,240,.2)':'rgba(255,240,205,.35)';ctx.lineWidth=1;for(let k=0;k<6;k++){ctx.beginPath();ctx.moveTo(-135+k*50,5+(k%2)*4);ctx.lineTo(-108+k*50,5+(k%2)*4);ctx.stroke();}
+  // promenade and seawall
+  ctx.fillStyle=night?'#4f5254':'#a8a496';ctx.fillRect(-150,-16,300,14);ctx.fillStyle=night?'#3b3e40':'#8f8b7d';ctx.fillRect(-150,-5,300,3);
+  ctx.fillStyle=night?'#1d3b28':'#59794c';ctx.fillRect(-150,-19,300,4);
+  // pier deck on piles
+  ctx.fillStyle='#6b4f3a';ctx.fillRect(-70,-14,150,6);ctx.fillStyle='#4e382a';for(let k=-66;k<=76;k+=14)ctx.fillRect(k,-8,3,14);
+  // waiting shed
+  ctx.fillStyle='#e8e5da';ctx.fillRect(-60,-48,70,4);ctx.fillStyle='#bfc5c6';ctx.fillRect(-60,-44,70,2);ctx.fillStyle='#707a7e';for(const cx of [-56,-22,6])ctx.fillRect(cx,-44,3,30);
+  ctx.fillStyle=night?'rgba(255,214,140,.65)':'#4e6b76';ctx.fillRect(-52,-40,50,4);
+  // passenger ferry
+  ctx.fillStyle='#f1f3f1';ctx.beginPath();ctx.moveTo(14,-26);ctx.lineTo(112,-26);ctx.lineTo(104,-9);ctx.lineTo(22,-9);ctx.closePath();ctx.fill();
+  ctx.fillStyle=night?'#2d4f7a':'#2f6aa6';ctx.fillRect(18,-16,90,5);
+  ctx.fillStyle='#e4e8e6';ctx.fillRect(34,-42,56,16);ctx.fillStyle=night?'rgba(255,224,160,.75)':'#35505c';for(let k=0;k<6;k++)ctx.fillRect(38+k*8.6,-39,6,7);
+  ctx.fillStyle='#cfd5d3';ctx.fillRect(58,-50,12,8);ctx.fillStyle='#b8453a';ctx.fillRect(60,-52,8,3);
+  // bollards, lamps, small tree line
+  ctx.fillStyle='#2e3436';for(const bx of [-66,70])ctx.fillRect(bx,-20,4,7);
+  for(const lx of [-130,-40,60,130])lmLamp(lx,34);
+  for(const tx of [-142,-108,-92,116,138])lmTree(tx,10,10);
   ctx.restore();
 }
 
@@ -3066,42 +3143,50 @@ function drawTamsuiPromenade(x, y, s){
 
 
 function drawNeihuTechHeadquarters(x, y, s){
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  // 深藍高透科技玻璃大樓本體
-  ctx.fillStyle = '#0a192f'; ctx.fillRect(-55, -135, 110, 135);
-  // 科技藍綠色橫向建築遮陽格柵與透光高樓
-  ctx.fillStyle = '#00e5ff'; ctx.globalAlpha = 0.55;
-  for(let yb = -125; yb <= -20; yb += 14){
-    ctx.fillRect(-48, yb, 96, 6);
-  }
-  ctx.globalAlpha = 1.0;
-  // 頂部科技天線
-  ctx.fillStyle = '#64ffda'; ctx.fillRect(-2, -155, 4, 20);
-  ctx.beginPath(); ctx.arc(0, -155, 4, 0, Math.PI * 2); ctx.fill();
-  // 內湖科技園區發光科技招牌 (Glowing Tech Park Sign)
-  ctx.fillStyle = '#0f2744'; ctx.fillRect(-46, -75, 92, 28);
-  ctx.strokeStyle = '#64ffda'; ctx.lineWidth = 1.5; ctx.strokeRect(-46, -75, 92, 28);
-  ctx.fillStyle = '#64ffda'; ctx.font = '900 6px sans-serif'; ctx.textAlign = 'center';
-  ctx.shadowColor = '#64ffda'; ctx.shadowBlur = 8;
-  ctx.fillText('內湖科技園區', 0, -62);
-  ctx.fillStyle = '#ffd200'; ctx.font = '900 5px monospace';
-  ctx.fillText('NEIHU TECH PARK', 0, -50);
-  ctx.shadowBlur = 0;
+  // Neihu corporate district: several 7-12 storey office blocks along a wide tree-lined street. Identity comes from massing, not text.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  lmGround(205,night?'#6c6f70':'#b4afa2');
+  lmOffice(-200,100,112,{floors:8,color:'#cdc4b0',shade:'#8d8f8a',ribbon:true,seed:2,lobby:true});
+  lmOffice(-70,92,176,{floors:12,glass:true,seed:5,lobby:true,side:14});
+  // upper setback of the tower
+  lmOffice(-58,64,26,{floors:2,glass:true,seed:9,side:10});
+  // glazed link / atrium between the tower and the east block
+  ctx.fillStyle=night?'rgba(255,214,140,.55)':'rgba(150,190,198,.85)';ctx.fillRect(28,-34,30,34);ctx.fillStyle='#d9ddd8';ctx.fillRect(26,-36,34,3);
+  lmOffice(58,112,96,{floors:7,color:'#b9c1c4',shade:'#7d8588',ribbon:true,seed:11,lobby:true,side:12});
+  // aluminium sun-shade louvres on the east block
+  ctx.fillStyle='rgba(235,240,242,.55)';for(let f=0;f<7;f++)ctx.fillRect(60,-96+f*13.7+10,108,2);
+  // street: planting strip with hedge, trees and lamps
+  ctx.fillStyle=night?'#223a2a':'#4f7449';ctx.fillRect(-205,-3,410,5);
+  for(const tx of [-188,-120,-44,38,118,184])lmTree(tx,11);
+  for(const lx of [-150,-82,10,90,150])lmLamp(lx,36);
+  // small low wayfinding sign (not the identity of the place)
+  ctx.fillStyle='#e4e1d6';ctx.fillRect(-176,-14,34,12);ctx.fillStyle='#2f5a47';ctx.fillRect(-175,-13,32,3);ctx.fillStyle='#3a3f40';ctx.font='700 5px sans-serif';ctx.textAlign='center';ctx.fillText('內湖科技園區',-159,-4);
   ctx.restore();
 }
 
 // 4C: 麥帥一橋與彩虹橋水岸鋼索 (Rainbow & MacArthur Bridge)
 function drawRainbowBridge(x, y, s){
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  // S型紅色鮮豔單拱
-  ctx.strokeStyle = '#d50000'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.arc(0, 0, 50, Math.PI, 0); ctx.stroke();
-  // 白色鋼吊索
-  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1;
-  for(let k = -35; k <= 35; k += 10){
-    const rh = Math.sqrt(Math.max(0, 50 * 50 - k * k));
-    ctx.beginPath(); ctx.moveTo(k, 0); ctx.lineTo(k, -rh); ctx.stroke();
-  }
+  // Keelung River crossing: low concrete approach spans with piers, a red steel tied arch, river and embankments.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  // river
+  const wg=ctx.createLinearGradient(0,-8,0,10);wg.addColorStop(0,night?'#2b4d62':'#5f9aa8');wg.addColorStop(1,night?'#1b3345':'#3f7185');ctx.fillStyle=wg;ctx.fillRect(-170,-6,340,14);
+  ctx.strokeStyle=night?'rgba(200,225,240,.18)':'rgba(255,240,205,.28)';ctx.lineWidth=1;for(let k=0;k<7;k++){ctx.beginPath();ctx.moveTo(-150+k*48,2+(k%3)*2);ctx.lineTo(-120+k*48,2+(k%3)*2);ctx.stroke();}
+  // embankments with steps and trees
+  ctx.fillStyle=night?'#4a4d4f':'#a9a699';ctx.fillRect(-180,-14,38,14);ctx.fillRect(142,-14,38,14);
+  ctx.fillStyle='rgba(60,60,55,.35)';for(let k=0;k<4;k++){ctx.fillRect(-180,-14+k*3.5,38-k*3,1);ctx.fillRect(142+k*3,-14+k*3.5,38-k*3,1);}
+  lmTree(-166,12,10);lmTree(166,12,10);lmTree(-150,9,8);lmTree(152,9,8);
+  // deck and girders
+  ctx.fillStyle='#9ea3a4';ctx.fillRect(-176,-26,352,6);ctx.fillStyle='#7d8587';ctx.fillRect(-176,-20,352,3);
+  ctx.fillStyle='#868e90';for(const px of [-110,-40,40,110]){ctx.fillRect(px-4,-20,8,20);}
+  // red tied arch over the main span
+  ctx.strokeStyle=night?'#a03a36':'#c4352f';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-96,-26);ctx.quadraticCurveTo(0,-118,96,-26);ctx.stroke();
+  ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-96,-26);ctx.quadraticCurveTo(0,-104,96,-26);ctx.stroke();
+  ctx.strokeStyle='rgba(235,235,230,.8)';ctx.lineWidth=.9;for(let k=-84;k<=84;k+=12){const t=(k+96)/192,ay=-26-4*Math.sin(Math.PI*t)*0-(1-Math.pow((k)/96,2))*62*1.0;ctx.beginPath();ctx.moveTo(k,-26);ctx.lineTo(k,Math.min(-28,ay-6));ctx.stroke();}
+  // railings on the approach spans
+  ctx.strokeStyle='#d7d9d3';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-176,-33);ctx.lineTo(-96,-33);ctx.moveTo(96,-33);ctx.lineTo(176,-33);ctx.stroke();
+  for(let k=-176;k<=-96;k+=10){ctx.beginPath();ctx.moveTo(k,-33);ctx.lineTo(k,-26);ctx.stroke();}for(let k=96;k<=176;k+=10){ctx.beginPath();ctx.moveTo(k,-33);ctx.lineTo(k,-26);ctx.stroke();}
   ctx.restore();
 }
 
@@ -3110,17 +3195,24 @@ function legacyV40_drawTaipei101StreetLevel(x,y,s){drawCloudTower(x,y,s);}
 
 // 5A (GOAL A): 淡水漁人碼頭白色情人橋 (Lover's Bridge & Marina)
 function drawMaokongTeaPavilion(x, y, s){
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  // 木造高架景觀台
-  ctx.fillStyle = '#4e342e'; ctx.fillRect(-55, -25, 110, 25);
-  ctx.fillStyle = '#6d4c41'; ctx.fillRect(-58, -30, 116, 6); // 木甲板
-  // 戶外遮陽大洋傘與茶座
-  ctx.fillStyle = '#ffb300'; ctx.beginPath(); // 黃色大陽傘
-  ctx.arc(0, -60, 28, Math.PI, 0); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(0, -30); ctx.stroke();
-  // 貓空鐵觀音茗茶招牌
-  ctx.fillStyle = '#2e7d32'; ctx.fillRect(-35, -22, 70, 14);
-  ctx.fillStyle = '#fff'; ctx.font = '900 6px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('貓空 鐵觀音茶坊', 0, -12);
+  // Maokong tea hillside: terraced plantation rows, a timber deck and a hip-roofed tea house.
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const night=lmNight();
+  // terraces climbing the slope behind
+  for(let k=0;k<7;k++){const yy=-12-k*11,w=130-k*6;ctx.fillStyle=night?(k%2?'#244a33':'#1f4130'):(k%2?'#5f9355':'#52854b');ctx.beginPath();ctx.moveTo(-w,yy);ctx.quadraticCurveTo(0,yy-8-k*.7,w,yy);ctx.lineTo(w,yy+11);ctx.quadraticCurveTo(0,yy+3,-w,yy+11);ctx.closePath();ctx.fill();
+    ctx.strokeStyle=night?'rgba(15,35,25,.6)':'rgba(40,80,40,.5)';ctx.lineWidth=1;for(let t=-w+10;t<w-6;t+=9){ctx.beginPath();ctx.moveTo(t,yy+1);ctx.lineTo(t+2,yy+9);ctx.stroke();}}
+  // timber deck on posts
+  ctx.fillStyle='#5a4130';ctx.fillRect(-84,-8,128,5);ctx.fillStyle='#3f2d21';for(let k=-80;k<=40;k+=16)ctx.fillRect(k,-3,3,8);
+  ctx.fillStyle='#7a5a42';ctx.fillRect(-88,-12,136,5);
+  ctx.strokeStyle='#8a6a4c';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-86,-22);ctx.lineTo(46,-22);ctx.stroke();for(let k=-86;k<=46;k+=12){ctx.beginPath();ctx.moveTo(k,-22);ctx.lineTo(k,-12);ctx.stroke();}
+  // tea house
+  ctx.fillStyle='#d8c9a6';ctx.fillRect(-52,-46,76,34);ctx.fillStyle='#8f7352';for(const cx of [-52,-30,-8,14,22])ctx.fillRect(cx,-46,3,34);
+  ctx.fillStyle=night?'rgba(255,208,130,.7)':'#4f6a60';ctx.fillRect(-46,-40,64,18);
+  ctx.fillStyle='#46484a';ctx.beginPath();ctx.moveTo(-64,-46);ctx.lineTo(-38,-66);ctx.lineTo(10,-66);ctx.lineTo(36,-46);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#5b5e60';ctx.fillRect(-64,-48,100,3);
+  // small signboard on a post and a few tea bushes
+  ctx.fillStyle='#4a3a2c';ctx.fillRect(62,-24,3,24);ctx.fillStyle='#e8e2cf';ctx.fillRect(48,-34,32,12);ctx.fillStyle='#34523f';ctx.font='700 5px sans-serif';ctx.textAlign='center';ctx.fillText('貓空茶園',64,-25);
+  lmTree(96,11,12);lmTree(-100,13,14);
   ctx.restore();
 }
 
@@ -3293,9 +3385,9 @@ function drawTaipeiArcadeBillboard(x, y, s, text){
   ctx.restore();
 }
 
-function drawCheckpointGate(p, label='CHECK POINT'){
+function drawCheckpointGate(p, label='CHECK POINT', index){
   if(!p || !p.scale || p.w < 16) return;
-  const half=p.w*1.12,left=p.x-half,right=p.x+half,poleH=p.w*.72,barH=p.w*.20,top=p.y-poleH,width=right-left;
+  const half=p.w*(index===undefined?1.14:roadsideGatePostN(index)),left=p.x-half,right=p.x+half,poleH=p.w*.72,barH=p.w*.20,top=p.y-poleH,width=right-left;
   if(top+barH<0)return;
   ctx.save();
   ctx.fillStyle='#66757a';ctx.fillRect(left-6,top,6,poleH);ctx.fillRect(right,top,6,poleH);
@@ -3328,20 +3420,109 @@ function v52ApproachSigns(){
   const t=v52ApproachTarget();if(!t)return [];
   return V52_FLOW.approachMeters.map(m=>({meters:m,index:t.index-Math.round(m/SEGMENT_METERS),zh:t.zh,en:t.en})).filter(x=>x.index>20);
 }
-function drawApproachSign(p,sign){
-  if(!p||!p.scale||p.w<14||p.w>360)return 0;
-  const env=roadEnvelope(sign.index),x=p.x+p.w*(env+V52_FLOW.signSideGap);
-  const bw=p.w*.62,bh=p.w*.36,ph=p.w*.64,top=p.y-ph,left=x-bw/2;
-  if(top+bh<0||x<-bw||x>W+bw)return 0;
+// ===================== V53.1 ROADSIDE ANCHOR SYSTEM =====================
+// Single geometric source for every object that stands beside the road. Placement is derived from the real corridors
+// (fork, transition and elevated-deck aware) in normalised road units (1.0 = corridor half width at that depth, so
+// screen x = p.x + p.w * n):  DRIVABLE EDGE -> SHOULDER -> SAFETY GAP -> OBJECT BODY.  Drawing functions only draw.
+let DEBUG_ROADSIDE_ANCHORS=false;
+const V53_1_ROADSIDE=Object.freeze({shoulderN:.12,kerbN:.085,gapN:.05,poleGapN:.40,deckRailN:.045,deckLipN:.08,bankEndN:.28,gateGapN:.02,startGantryIndex:26});
+let roadsideAnchorLog=[];
+function roadsideCorridorsN(index){const f=roadFactor();return roadCorridors(index).map(q=>({lo:(q.center-q.half)/f,hi:(q.center+q.half)/f}));}
+function roadsideEdgeN(index,side){let e=-Infinity;for(const c of roadsideCorridorsN(index))e=Math.max(e,side>0?c.hi:-c.lo);return e;}
+function roadsideGatePostN(index){return Math.max(roadsideEdgeN(index,1),roadsideEdgeN(index,-1))+V53_1_ROADSIDE.shoulderN+V53_1_ROADSIDE.gateGapN;}
+// Pure lateral placement for an outer-side object. inner = half extent toward the road, foot = half width of the base that touches the surface.
+function roadsideOffsetN(index,side,o={}){
+  const R=V53_1_ROADSIDE,inner=o.inner??.05,foot=o.foot??Math.min(inner,.03),gap=o.gapN??R.gapN,surface=districtSurface(index,side),edge=roadsideEdgeN(index,side);
+  let mode=o.mode||'auto';
+  if(mode==='auto')mode=surface==='elevated'?'deck':surface==='water'?(o.bank?'bank':'none'):'ground';
+  if(mode==='deck'&&surface==='land')mode='ground';
+  const fail=reason=>({ok:false,reason,surface,mode,edgeN:edge});
+  if(mode==='none')return fail('water');
+  if(mode==='ground'&&surface==='water')return fail('water');
+  if(mode==='ground'&&surface==='elevated')return fail('elevated-void');
+  if(mode==='deck'&&surface!=='elevated')return fail('mode');
+  if(mode==='bank'&&surface!=='water')return fail('mode');
+  let off;
+  if(mode==='ground')off=edge+R.shoulderN+gap+inner;
+  else if(mode==='deck'){off=edge+R.deckRailN+foot;if(inner>R.deckRailN+foot+1e-9||off+foot>edge+R.deckLipN+1e-9)return fail('deck-too-wide');}
+  else{off=edge+R.shoulderN+Math.min(gap,.02)+inner;if(off+foot>edge+R.bankEndN+1e-9)return fail('bank-too-narrow');}
+  return {ok:true,mode,surface,edgeN:edge,offN:off,inner,foot,gapN:gap};
+}
+function roadsideBuild(index,n,side,r,o){
+  const seg=segments[index],p=seg&&seg.p1&&seg.p1.screen;
+  if(!seg||!p||!p.scale||!(p.w>0)||seg.p1.camera.z<=CAMERA_DEPTH)return {ok:false,reason:'offscreen',surface:r.surface};
+  const x=p.x+p.w*n,a={ok:true,kind:o.kind||'prop',index,side,mode:r.mode,surface:r.surface,x,y:p.y,groundY:p.y,w:p.w,scale:p.scale,n,offN:Math.abs(n),edgeN:r.edgeN,innerN:r.inner,footN:r.foot,
+    innerX:x-side*r.inner*p.w,outerX:x+side*r.inner*p.w,cx:p.x};
+  a.finite=[a.x,a.y,a.w,a.scale,a.innerX,a.outerX].every(Number.isFinite);
+  if(roadsideAnchorLog.length<120)roadsideAnchorLog.push(a);
+  return a;
+}
+function roadsideAnchor(index,side,o={}){const r=roadsideOffsetN(index,side,o);if(!r.ok)return r;return roadsideBuild(index,side*r.offN,side,r,o);}
+// Median anchor between two split corridors, only when the gap holds the shoulder on both sides plus the object.
+function roadsideMedianAnchor(index,o={}){
+  const cs=roadsideCorridorsN(index);if(cs.length!==2)return {ok:false,reason:'no-median'};
+  const R=V53_1_ROADSIDE,inner=o.inner??.05,gap=cs[1].lo-cs[0].hi;
+  if(gap<2*(R.shoulderN+(o.gapN??R.gapN)+inner))return {ok:false,reason:'median-too-narrow'};
+  const n=(cs[0].hi+cs[1].lo)/2;
+  return roadsideBuild(index,n,1,{ok:true,mode:'ground',surface:'land',edgeN:cs[0].hi,inner,foot:Math.min(inner,.03)},o);
+}
+// Screen-space corridor extents at an anchor's depth (kerb included) for tests and the debug overlay.
+function roadsideCorridorsX(index,kerb=V53_1_ROADSIDE.kerbN){const seg=segments[index],p=seg.p1.screen;return roadsideCorridorsN(index).map(c=>({left:p.x+p.w*(c.lo-kerb),right:p.x+p.w*(c.hi+kerb)}));}
+function roadsideAnchorValid(a){
+  if(!a||!a.ok)return true;if(!a.finite)return false;
+  const R=V53_1_ROADSIDE,seg=segments[a.index];if(!seg)return false;
+  const cs=roadsideCorridorsN(a.index),m=a.mode==='ground'?R.shoulderN:0;
+  const lo=a.n-(a.side===1?a.innerN:a.innerN),hi=a.n+a.innerN;
+  for(const c of cs){if(hi>c.lo-m&&lo<c.hi+m)return false;}
+  if(a.surface==='water'&&a.mode!=='bank')return false;
+  if(a.surface==='elevated'&&a.mode!=='deck')return false;
+  return Math.abs(a.groundY-seg.p1.screen.y)<1e-6;
+}
+function drawRoadsideDebug(){
+  if(!DEBUG_ROADSIDE_ANCHORS)return;
+  ctx.save();ctx.lineWidth=1;
+  for(const a of roadsideAnchorLog){
+    if(!a.ok)continue;const R=V53_1_ROADSIDE;
+    for(const c of roadsideCorridorsN(a.index)){ctx.strokeStyle='#3cff7a';ctx.beginPath();ctx.moveTo(a.cx+a.w*c.lo,a.y);ctx.lineTo(a.cx+a.w*c.hi,a.y);ctx.stroke();ctx.strokeStyle='#ffe14a';ctx.beginPath();ctx.moveTo(a.cx+a.w*(c.lo-R.shoulderN),a.y-4);ctx.lineTo(a.cx+a.w*(c.hi+R.shoulderN),a.y-4);ctx.stroke();}
+    ctx.strokeStyle='#ff3c3c';ctx.strokeRect(Math.min(a.innerX,a.outerX),a.y-a.w*.3,Math.abs(a.outerX-a.innerX),a.w*.3);ctx.beginPath();ctx.moveTo(a.x-6,a.y);ctx.lineTo(a.x+6,a.y);ctx.moveTo(a.x,a.y-6);ctx.lineTo(a.x,a.y+6);ctx.stroke();
+  }
+  ctx.restore();
+}
+// Overhead gantry between two anchors (deck rails on an elevated road, outer shoulders on the ground). Pure drawing.
+function drawOverheadGantry(L,R,lines){
+  const w=(L.w+R.w)/2;if(!(w>14)||w>420)return 0;
+  const xl=L.x,xr=R.x,y=L.y,postH=w*.80,top=y-postH,pw=Math.max(2,w*.028);
+  if(top+w*.4<0)return 0;
+  ctx.save();ctx.fillStyle='#64767e';ctx.fillRect(xl-pw/2,top,pw,postH);ctx.fillRect(xr-pw/2,top,pw,postH);ctx.fillRect(xl-pw/2,top,xr-xl+pw,w*.05);
+  const bw=(xr-xl)*.58,bh=w*.34,bx=(xl+xr)/2-bw/2,by=top+w*.05;
+  const g=ctx.createLinearGradient(0,by,0,by+bh);g.addColorStop(0,'#0f7a49');g.addColorStop(1,'#07502e');
+  ctx.fillStyle=g;ctx.fillRect(bx,by,bw,bh);ctx.strokeStyle='#f3f6ee';ctx.lineWidth=Math.max(1,w*.010);ctx.strokeRect(bx+1,by+1,bw-2,bh-2);
+  if(bw>40)for(const l of lines)v40FitSignText(l.text,bx+bw*.06,by+bh*l.y,bw*.88,bh*l.h,bh*l.size,l.color);
+  ctx.restore();return 1;
+}
+// V52 approach boards, V53.1 placement: ground board on the first free outer shoulder, overhead gantry on elevated decks.
+function placeApproachSign(sign){
+  const idx=sign.index;
+  if(districtSurface(idx,1)==='elevated'){
+    const L=roadsideAnchor(idx,-1,{kind:'approach-gantry',inner:.02,foot:.015,mode:'deck'}),R=roadsideAnchor(idx,1,{kind:'approach-gantry',inner:.02,foot:.015,mode:'deck'});
+    return L.ok&&R.ok?{kind:'gantry',L,R}:null;
+  }
+  for(const side of [1,-1]){const a=roadsideAnchor(idx,side,{kind:'approach-sign',inner:.31,foot:.02,mode:'ground'});if(a.ok)return {kind:'ground',a};}
+  return null;
+}
+function approachSignLines(sign){return [{text:`${sign.zh} ${sign.en}`,y:.07,h:.30,size:.24,color:'#ffe570'},{text:`${sign.meters} M`,y:.40,h:.50,size:.46,color:'#ffffff'}];}
+function drawApproachSign(place,sign){
+  if(!place)return 0;
+  if(place.kind==='gantry')return drawOverheadGantry(place.L,place.R,approachSignLines(sign));
+  const a=place.a;if(!a.ok||a.w<14||a.w>380)return 0;
+  const bw=a.w*.62,bh=a.w*.36,ph=a.w*.64,top=a.y-ph,left=a.x-bw/2;
+  if(top+bh<0||a.x<-bw||a.x>W+bw)return 0;
   ctx.save();
-  ctx.fillStyle='#5d696d';ctx.fillRect(x-p.w*.018,top+bh*.9,p.w*.036,ph-bh*.9);
+  ctx.fillStyle='#5d696d';ctx.fillRect(a.x-a.w*.018,top+bh*.9,a.w*.036,ph-bh*.9);
   const g=ctx.createLinearGradient(0,top,0,top+bh);g.addColorStop(0,'#0f7a49');g.addColorStop(1,'#07502e');
   ctx.fillStyle=g;ctx.fillRect(left,top,bw,bh);
-  ctx.strokeStyle='#f3f6ee';ctx.lineWidth=Math.max(1,p.w*.012);ctx.strokeRect(left+1,top+1,bw-2,bh-2);
-  if(bw>34){
-    v40FitSignText(`${sign.zh} ${sign.en}`,left+bw*.06,top+bh*.07,bw*.88,bh*.30,bh*.24,'#ffe570');
-    v40FitSignText(`${sign.meters} M`,left+bw*.06,top+bh*.40,bw*.88,bh*.50,bh*.46,'#ffffff');
-  }
+  ctx.strokeStyle='#f3f6ee';ctx.lineWidth=Math.max(1,a.w*.012);ctx.strokeRect(left+1,top+1,bw-2,bh-2);
+  if(bw>34)for(const l of approachSignLines(sign))v40FitSignText(l.text,left+bw*.06,top+bh*l.y,bw*.88,bh*l.h,bh*l.size,l.color);
   ctx.restore();
   return 1;
 }
@@ -3361,7 +3542,7 @@ function v52ApproachTick(){
 function drawRouteGantry(p, n, index){
   if(!p || !p.scale || p.w < 24) return;
   const fp = clamp((index - FORK_START) / (STAGE_END - FORK_START), 0, 1), fg = forkGeometry(fp);
-  const half = p.w * (fg.spread + fg.half), postH = half * 0.7, top = p.y - postH, plateH = half * 0.22, plateW = half * 0.98;
+  const half = p.w * roadsideGatePostN(index) / 1.12, postH = half * 0.7, top = p.y - postH, plateH = half * 0.22, plateW = half * 0.98;
   const left = p.x - half * 1.12, right = p.x + half * 1.12;
   if(top + plateH < 0) return;
 
@@ -3385,15 +3566,15 @@ function drawRouteGantry(p, n, index){
 function drawForkObjects(start){
   const objects = [];
   const add = (index, draw) => { if(index > start && index < start + DRAW_DISTANCE) objects.push({ index, draw }); };
-  for(const sign of v52ApproachSigns())add(sign.index,p=>drawApproachSign(p,sign));
+  for(const sign of v52ApproachSigns())add(sign.index,()=>drawApproachSign(placeApproachSign(sign),sign));
   if(v34Mode!=='arcade'){
-    add(soloFinishIndex(),p=>drawCheckpointGate(p,v34Mode==='sprint'?'TIME ATTACK FINISH':'CRUISE LOOP'));
+    add(soloFinishIndex(),p=>drawCheckpointGate(p,v34Mode==='sprint'?'TIME ATTACK FINISH':'CRUISE LOOP',soloFinishIndex()));
   }else if(stageLevel < 4){
     const n = nextNodes(), cpIndex = FORK_START - 52, gantryIndex = FORK_START + 64;
-    add(cpIndex, p => drawCheckpointGate(p, 'CHECK POINT'));
+    add(cpIndex, p => drawCheckpointGate(p, 'CHECK POINT', cpIndex));
     if(start > cpIndex + 10) add(gantryIndex, p => drawRouteGantry(p, n, gantryIndex));
   } else {
-    add(FINISH_LINE, p => drawCheckpointGate(p, `GOAL ${currentNode.goal} • FINISH`));
+    add(FINISH_LINE, p => drawCheckpointGate(p, `GOAL ${currentNode.goal} • FINISH`, FINISH_LINE));
   }
   objects.sort((a,b) => b.index - a.index);
   for(const o of objects){
@@ -3965,8 +4146,11 @@ function presentArcade(){
 
 // Original architecture details with a restrained arcade palette.
 function arcadeFooting(w){
- ctx.fillStyle='#52666b';ctx.beginPath();ctx.moveTo(-w,0);ctx.lineTo(w,0);ctx.lineTo(w+11,7);ctx.lineTo(-w-12,7);ctx.fill();ctx.fillStyle='#aeb5a1';ctx.fillRect(-w-8,-1,w*2+16,3);
- ctx.strokeStyle='#758a86';ctx.lineWidth=1;for(let xx=-w;xx<w;xx+=18){ctx.beginPath();ctx.moveTo(xx,3);ctx.lineTo(xx-3,7);ctx.stroke();}
+ // V53.1: contact shadow, thin paving edge and planting at the ends instead of a table-top slab.
+ const night=skyMood!=='sunset';
+ ctx.fillStyle='rgba(16,26,30,.30)';ctx.beginPath();ctx.ellipse(0,3,w*1.1,6,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle=night?'#6b6e6c':'#aaa493';ctx.beginPath();ctx.moveTo(-w-8,1);ctx.lineTo(w+8,1);ctx.lineTo(w+3,5);ctx.lineTo(-w-3,5);ctx.closePath();ctx.fill();
+ ctx.fillStyle=night?'#27402f':'#58784d';for(const k of [-1,1]){ctx.beginPath();ctx.ellipse(k*(w+3),0,9,6,0,0,Math.PI*2);ctx.fill();}
 }
 function glassPanel(x,y,w,h){
  ctx.fillStyle='#214f63';ctx.fillRect(x,y,w,h);ctx.fillStyle='#70aeb8';ctx.fillRect(x+1,y+1,w-2,Math.max(1,h*.36));ctx.fillStyle='#bfded1';ctx.fillRect(x+2,y+1,1,h-2);
@@ -4229,14 +4413,12 @@ function drawBelowDeckDistrict(){
 function drawCivicRoadGantry(){
  const start=Math.floor(playerZ/SEGMENT_LENGTH),index=Math.ceil((start+8)/160)*160,seg=segments[index];
  if(!seg||index-start>=DRAW_DISTANCE)return;const p=seg.p1.screen;
+ if(v52ApproachSigns().some(sg=>Math.abs(sg.index-index)<45))return; // never stack two gantries
  if(!p.scale||seg.p1.camera.z<1200)return;
- ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,seg.clipY));ctx.clip();drawCivicGantry(p.x,p.y,p.scale*9500);ctx.restore();
-}
-function drawCivicGantry(x,y,s){
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);
- ctx.fillStyle='#627d87';ctx.fillRect(-115,-128,5,128);ctx.fillRect(110,-128,5,128);ctx.fillRect(-115,-128,230,7);
- ctx.fillStyle='#007842';ctx.fillRect(-78,-125,156,34);ctx.strokeStyle='#fff4cc';ctx.lineWidth=2;ctx.strokeRect(-78,-125,156,34);
- ctx.fillStyle='#fffbe0';ctx.font='900 12px sans-serif';ctx.textAlign='center';ctx.fillText('市民高架  →  松山',0,-104);ctx.restore();
+ const L=roadsideAnchor(index,-1,{kind:'civic-gantry',inner:.02,foot:.015,gapN:V53_1_ROADSIDE.gateGapN,mode:'auto'}),R=roadsideAnchor(index,1,{kind:'civic-gantry',inner:.02,foot:.015,gapN:V53_1_ROADSIDE.gateGapN,mode:'auto'});
+ if(!L.ok||!R.ok)return;
+ ctx.save();ctx.beginPath();ctx.rect(0,0,W,Math.max(0,seg.clipY));ctx.clip();
+ drawOverheadGantry(L,R,[{text:'市民高架  →  松山',y:.16,h:.68,size:.52,color:'#fffbe0'}]);ctx.restore();
 }
 function drawArcadeGags(){
  if(!gameStarted||!raceActive||gameOver||crashSequence)return;
@@ -4267,7 +4449,7 @@ const COMPETITION=Object.freeze({version:'53.0',dashWindow:.45,topSpeed:270,boos
 // V52 arcade-flow rules (independent): shorter crash interruption, stronger re-entry, Taiwan-style approach signage.
 const V52_FLOW=Object.freeze({
   crashDuration:2.9,crashAnimScale:4.1/2.9,recoverySpeed:118,recoveryGrace:1.6,
-  approachMeters:Object.freeze([500,300,100]),signSideGap:.34,checkpointFlash:.16,
+  approachMeters:Object.freeze([500,300,100]),checkpointFlash:.16,
   exactSourceCopy:false,autoRailAssist:false
 });
 const SEGMENT_METERS=SEGMENT_LENGTH/WORLD_SPEED/3.6;
@@ -4703,7 +4885,7 @@ function planLandmarks(){
  const end=v34Mode==='arcade'?(stageLevel===4?FINISH_LINE:STAGE_END):soloFinishIndex();
  const fractions=items.length===1?[.40]:items.length===2?[.22,.70]:[.16,.45,.75];let last=40;
  return items.map((h,i)=>{
-  const sprite=getLandmarkSprite(h),height=V51_LANDMARK_AUDIT[currentNode.id]?.height||(h.name.includes('101')?19000:h.name.includes('纜車')?7200:h.name.includes('橋')?7000:7800);
+  const sprite=getLandmarkSprite(h),height=h.height||V51_LANDMARK_AUDIT[currentNode.id]?.height||(h.name.includes('101')?19000:h.name.includes('纜車')?7200:h.name.includes('橋')?7000:7800); // V53.1: per-landmark real-world proportion (was one height per route)
   const artUnits=height*H/2/sprite.height,halfWorld=sprite.width*artUnits/W;
   const minOffset=ROAD_WIDTH*roadFactor()*1.12+halfWorld+1000,preferred=h.side??(i%2?-1:1),target=Math.round(end*fractions[i]);
   let best=null;
@@ -4772,7 +4954,7 @@ function drawWorldLandmarks(start){
   if(x<-scale*300||x>W+scale*300)continue;
   ctx.save();ctx.beginPath();ctx.rect(0,0,W,currentNode.archetype==='expressway'?H:Math.max(0,seg.clipY));ctx.clip();
   clipNearRoad(object.seg);
-  if(object.hero)drawLandmarkInstance(object.hero,x,anchor.y,scale,'world');else drawDistrictProp(x,p.y,scale,object.seg,side);ctx.restore();
+  if(object.hero)drawLandmarkInstance(object.hero,x,anchor.y,scale,'world');else if(districtSurface(object.seg,side)!=='elevated')drawDistrictProp(x,p.y,scale,object.seg,side);ctx.restore();
  }
  const upcoming=timeline.find(h=>h.seg>=start);
  if(upcoming){const remaining=Math.max(0,(upcoming.seg*SEGMENT_LENGTH-playerZ)/WORLD_SPEED/3.6);updateLandmarkBanner(`${scene().label} · ${upcoming.name} · ${Math.round(remaining)} m`);}
@@ -5005,13 +5187,13 @@ const V53_WALL_ROUTES=Object.freeze(['2A','4B','5C','5E','3B']);
 function drawV53RoadsideInfra(road){
   const arch=currentNode.archetype;if(arch==='expressway')return 0;
   const sunset=skyMood==='sunset',seed=currentNode.seed;let drawn=0;
-  const poleSide=seed%2?1:-1;let px=0,py=0,pt=0,has=false;
+  const poleSide=arch==='coastal'?1:(seed%2?1:-1);let px=0,py=0,pt=0,has=false;
   ctx.save();ctx.lineCap='round';
   for(const seg of road){
     if((seg.index+seed)%10!==0)continue;
-    const b=stripBounds(seg);if(!b||b.near.w<20)continue;
-    if(arch==='coastal'&&districtSurface(seg.index,poleSide)==='water')continue;
-    const env=roadEnvelope(seg.index),x=b.near.x+poleSide*b.near.w*(env+.62),y=b.near.y,s=clamp(b.near.w/260,.08,1.05);
+    const a=roadsideAnchor(seg.index,poleSide,{kind:'utility-pole',inner:.02,foot:.02,gapN:V53_1_ROADSIDE.poleGapN,mode:'ground'});
+    if(!a.ok||a.w<20)continue;
+    const x=a.x,y=a.y,s=clamp(a.w/260,.08,1.05);
     if(x<-40||x>W+40||y<0||y>H+20)continue;
     const h=104*s;
     ctx.strokeStyle=sunset?'#4a4640':'#161c26';ctx.lineWidth=Math.max(1,3.2*s);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-h);ctx.stroke();
@@ -5029,8 +5211,10 @@ function drawV53RoadsideInfra(road){
       const seg=road[i],zone=Math.floor(seg.index/26)+seed*3;
       if(v41Hash(zone)<.45)continue;
       const side=v41Hash(zone+7)>.5?1:-1,b=stripBounds(seg);if(!b||b.near.w<30)continue;
-      const env1=roadEnvelope(seg.index),env2=roadEnvelope(seg.index+1),a=b.near,f=b.far;
-      const x1=a.x+side*a.w*(env1+.34),x2=f.x+side*f.w*(env2+.34),h1=a.w*.2,h2=f.w*.2;
+      const o1=roadsideOffsetN(seg.index,side,{inner:0,foot:0,gapN:.18,mode:'ground'}),o2=roadsideOffsetN(seg.index+1,side,{inner:0,foot:0,gapN:.18,mode:'ground'});
+      if(!o1.ok||!o2.ok)continue;
+      const a=b.near,f=b.far;
+      const x1=a.x+side*a.w*o1.offN,x2=f.x+side*f.w*o2.offN,h1=a.w*.2,h2=f.w*.2;
       if(Math.max(x1,x2)<-30||Math.min(x1,x2)>W+30)continue;
       const alt=seg.index%2;
       polygon(x1,a.y,x1+side*a.w*.0,a.y-h1,x2,f.y-h2,x2,f.y,sunset?(alt?'#9b9a92':'#a3a29a'):(alt?'#46525e':'#4d5966'));
@@ -5041,20 +5225,21 @@ function drawV53RoadsideInfra(road){
   }
   return drawn;
 }
+// V53.1: edge furniture is placed through the roadside anchor system (outer shoulders, bank strip on water sides, deck lip on elevated roads, median only when wide enough).
+const V53_1_EDGE_INNER=Object.freeze({civicLamp:.08,whiteTrunk:.065,expressLamp:.06,steamRail:.06,riverLamp:.05,parkGlobe:.09,floodWall:.065,chevron:.05,amberDouble:.07,amberTall:.075,whiteMast:.07,hazardBollard:.105,lanternPost:.06,ledColumn:.03,teaMarker:.105});
 function drawV46RoadEdgeRhythm(road=projectedRoad){
   const family=v46SceneFamily(),stride=family==='urban'?14:family==='expressway'?12:16;let drawn=0;
+  const kind=V52_EDGE_STYLE[currentNode.id],inner=V53_1_EDGE_INNER[kind]??.06,foot=Math.min(.03,inner);
+  const draw=(a,side,idx)=>{
+    if(!a||!a.ok)return;
+    const s=clamp(a.w/260,.13,1.28);
+    if(a.x<-90||a.x>W+90||a.y<0||a.y>H+30)return;
+    drawV46RoadsideProp(a.x,a.y,s,side,family,idx);drawn++;
+  };
   for(const seg of road){
     if(seg.index%stride!==((currentNode.seed*3)%stride))continue;
-    const b=stripBounds(seg);if(!b||b.near.w<18)continue;
-    const lanes=roadCorridors(seg.index);if(!lanes.length)continue;
-    for(const q of lanes){
-      for(const side of [-1,1]){
-        const x=b.near.x+b.near.w*(q.center+side*(q.half+(family==='expressway'?.085:.14)))/roadFactor();
-        const y=b.near.y,scale=clamp(b.near.w/260,.13,1.28);
-        if(x<-90||x>W+90||y<0||y>H+30)continue;
-        drawV46RoadsideProp(x,y,scale,side,family,seg.index);drawn++;
-      }
-    }
+    for(const side of [-1,1])draw(roadsideAnchor(seg.index,side,{kind:'edge:'+kind,inner,foot,gapN:.02,bank:true}),side,seg.index);
+    draw(roadsideMedianAnchor(seg.index,{kind:'edge-median:'+kind,inner,gapN:.02}),1,seg.index);
   }
   return drawn;
 }
@@ -5306,16 +5491,19 @@ function drawV50SafeRoadsideDepth(road=projectedRoad){
     const env=roadEnvelope(seg.index);
     for(const side of [-1,1]){
       const surface=districtSurface(seg.index,side);
-      const x=b.near.x+side*b.near.w*(env+V50_ART.roadClearance),y=b.near.y;
+      if(surface==='elevated')continue; // V53.1: nothing is planted in the void beside an elevated deck
+      let offN=env+V50_ART.roadClearance,requiredN=V50_ART.roadClearance;
+      if(surface==='water'){const ro=roadsideOffsetN(seg.index,side,{inner:.06,foot:.03,gapN:.03,bank:true});if(!ro.ok)continue;offN=ro.offN-(ro.edgeN-env);requiredN=ro.offN-ro.edgeN;} // bank strip, never open water
+      const x=b.near.x+side*b.near.w*offN,y=b.near.y;
       const scale=clamp(b.near.w/230,.28,V50_ART.maxNearScale);
       const roadEdge=b.near.x+side*b.near.w*env,clearance=Math.abs(x-roadEdge);
       if(x<-150||x>W+150)continue;
-      v51RoadsideRenderLog.push({index:seg.index,side,surface,family,x,y,scale,roadEdge,clearance,requiredClearance:b.near.w*V50_ART.roadClearance,building:family==='urban'&&surface==='land'});
+      v51RoadsideRenderLog.push({index:seg.index,side,surface,family,x,y,scale,roadEdge,clearance,requiredClearance:b.near.w*requiredN,building:family==='urban'&&surface==='land'});
       ctx.save();clipNearRoad(seg.index);ctx.translate(x,y);ctx.scale(scale,scale);
-      if(surface==='water'){
-        ctx.fillStyle='#486864';ctx.fillRect(-4,-54,8,54);
-        ctx.strokeStyle='#e1e6d7';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-side*58,-45);ctx.lineTo(side*58,-38);ctx.stroke();
-        ctx.fillStyle='#2e5b50';ctx.beginPath();ctx.arc(side*22,-18,18,0,Math.PI*2);ctx.fill();
+      if(surface==='water'){ // bank lamp with a short railing, standing on the shore strip
+        ctx.fillStyle='#486864';ctx.fillRect(-3,-72,6,72);ctx.fillRect(-side*1,-74,side*14,3);
+        ctx.fillStyle=skyMood==='sunset'?'#ffe7a2':'#bfe9ff';ctx.beginPath();ctx.arc(side*13,-70,4,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle='#e1e6d7';ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(-12,-24);ctx.lineTo(12,-24);ctx.moveTo(-10,-24);ctx.lineTo(-10,0);ctx.moveTo(10,-24);ctx.lineTo(10,0);ctx.stroke();
       }else if(family==='expressway'){
         ctx.fillStyle='#53676d';ctx.fillRect(-8,-126,16,126);
         ctx.fillStyle='#718388';ctx.fillRect(side<0?-70:0,-112,70,38);
