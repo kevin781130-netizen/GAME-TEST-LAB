@@ -727,6 +727,8 @@ const canvas = document.getElementById('gameCanvas');
 // the player-visible game view. Existing logic is retained for physics/HUD.
 const v56Full3D=!!document.head && window.__legacyRegression!==true;
 let v56Scene=null,v56Error=null;
+// Reused read-only snapshot source (never writes back to physics).
+const v56DrivingFrame={driftState:'grip',isDrifting:false,driftAngleDeg:0,slipAngleDeg:0,driftDirection:0,lateralVelocity:0,roadGrip:1,cleanDriftTime:0,exitBoost:0,momentBoostWindow:0,driftCharge:0,nitroActive:false,yawDeg:0};
 let v55Hybrid=null,v55HasFrame=false; // dormant legacy reference for older tools
 const v55RenderFrame={screenX:0,screenY:0,yawDeg:0,rollDeg:0,pitchDeg:0,steer:0,speedKmh:0,scaleX:1,direction:1,braking:false,boosting:false};
 let v56StatusElement=null;
@@ -4326,14 +4328,28 @@ function render(dt){
    x:car.x,
    color:car.color
   }));
+  v56DrivingFrame.driftState=driftState;
+  v56DrivingFrame.isDrifting=isDrifting;
+  v56DrivingFrame.driftAngleDeg=driftAngle;
+  v56DrivingFrame.slipAngleDeg=slipAngle;
+  v56DrivingFrame.driftDirection=driftDirection;
+  v56DrivingFrame.lateralVelocity=lateralVelocity;
+  v56DrivingFrame.roadGrip=roadGrip;
+  v56DrivingFrame.cleanDriftTime=cleanDriftTime;
+  v56DrivingFrame.exitBoost=exitBoost;
+  v56DrivingFrame.momentBoostWindow=momentBoostWindow;
+  v56DrivingFrame.driftCharge=nitro;
+  v56DrivingFrame.nitroActive=boosting;
+  v56DrivingFrame.yawDeg=v51DriftVisualYaw();
   try{
    const ok=v56Scene.render({
     curves,hills,corridors,
     segment:first,
     fraction:(playerZ%SEGMENT_LENGTH)/SEGMENT_LENGTH,
     playerX,traffic:traffic3D,carColor:currentCar.color,
+    driving:v56DrivingFrame,
     archetype:currentNode.archetype,seed:currentNode.seed,
-    yawDeg:v51DriftVisualYaw(),rollDeg:chassisRoll,pitchDeg:chassisPitch,
+    yawDeg:v56DrivingFrame.yawDeg,rollDeg:chassisRoll,pitchDeg:chassisPitch,
     steer,speedKmh:speed,direction:motionDirection,
     braking:inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0,
     boosting:boosting||exitBoost>0,

@@ -454,10 +454,62 @@ function createHybridOverlay(THREE, canvas, options = {}) {
 module.exports = {createHybridOverlay, projectPresentation};
 
   },
+  "./DrivingVisualSnapshot.cjs": function(require, module) {
+'use strict';
+// Reusable one-way physics -> renderer state. *Deg are degrees; +yaw points nose -X.
+// lateralVelocity uses playerX units/s, not m/s. No write to source physics.
+const STATES=new Set(['grip','armed','brake','entry','drift','recover']);
+const NUMBERS=['driftAngleDeg','slipAngleDeg','lateralVelocity','roadGrip','cleanDriftTime','exitBoost','momentBoostWindow','driftCharge','yawDeg'];
+function createDrivingVisualSnapshot(){
+ return {driftState:'grip',isDrifting:false,driftAngleDeg:0,slipAngleDeg:0,driftDirection:0,lateralVelocity:0,roadGrip:1,cleanDriftTime:0,exitBoost:0,momentBoostWindow:0,driftCharge:0,nitroActive:false,yawDeg:0};
+}
+function updateDrivingVisualSnapshot(target,source){
+ if(!target||!source||typeof target!=='object'||typeof source!=='object')throw new TypeError('snapshot and source required');
+ if(!STATES.has(source.driftState))throw new TypeError('invalid driftState');
+ if(typeof source.isDrifting!=='boolean'||typeof source.nitroActive!=='boolean')throw new TypeError('drift/nitro flags must be boolean');
+ if(![-1,0,1].includes(source.driftDirection))throw new TypeError('invalid driftDirection');
+ for(const key of NUMBERS)if(!Number.isFinite(source[key]))throw new TypeError(key+' must be finite');
+ // Validate before mutation: reject NaN without corrupting previous renderer state.
+ target.driftState=source.driftState;
+ target.isDrifting=source.isDrifting;
+ target.driftDirection=source.driftDirection;
+ target.nitroActive=source.nitroActive;
+ for(const key of NUMBERS)target[key]=source[key];
+ return target;
+}
+module.exports={createDrivingVisualSnapshot,updateDrivingVisualSnapshot};
+
+  },
+  "./DriftVisualRig.cjs": function(require, module) {
+'use strict';
+// Optical-only sway. Road already accounts for -playerX*HALF_WIDTH; never
+// apply game lateral position again. Yaw already includes V51's slip term.
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+function createDriftVisualRig(){return {offsetX:0,cameraX:0};}
+function resetDriftVisualRig(rig){rig.offsetX=0;rig.cameraX=0;return rig;}
+function updateDriftVisualRig(rig,drive,dtSeconds){
+ if(!rig||!drive||!Number.isFinite(dtSeconds)||dtSeconds<0)throw new TypeError('valid rig, snapshot and nonnegative dt required');
+ if(dtSeconds===0)return rig;
+ const dt=Math.min(dtSeconds,.1);
+ const active=drive.isDrifting||drive.driftState==='recover';
+ const slip=clamp(Math.abs(drive.slipAngleDeg)/18,0,1);
+ const side=Math.sign(drive.driftAngleDeg||drive.driftDirection||drive.slipAngleDeg);
+ const recover=drive.driftState==='recover';
+ const motion=clamp(drive.lateralVelocity,-1.6,1.6)*.065;
+ const target=active?clamp(-side*.30*slip*(recover?.65:1)+motion,-.4,.4):0;
+ rig.offsetX+=(target-rig.offsetX)*(1-Math.exp(-dt*(recover?13:11)));
+ rig.cameraX+=(rig.offsetX*.4-rig.cameraX)*(1-Math.exp(-dt*4));
+ return rig;
+}
+module.exports={createDriftVisualRig,updateDriftVisualRig,resetDriftVisualRig};
+
+  },
   "./Full3DScene.cjs": function(require, module) {
 'use strict';
 const {createVehicle3D} = require('./Vehicle3D.cjs');
 const {createVehiclePose, updateVehiclePose} = require('./VehiclePoseBridge.cjs');
+const {createDrivingVisualSnapshot,updateDrivingVisualSnapshot} = require('./DrivingVisualSnapshot.cjs');
+const {createDriftVisualRig,updateDriftVisualRig} = require('./DriftVisualRig.cjs');
 
 // Full WebGL road/world renderer. This is intentionally NOT a Canvas overlay.
 // World coordinates: +X right, +Y up, -Z forward. Camera is behind the car (+Z).
@@ -561,6 +613,9 @@ function createFull3DScene(THREE,canvas) {
  let car=createVehicle3D(THREE,{color:0x1a2330});
  scene.add(car.root);
  const pose=createVehiclePose();
+ const driving=createDrivingVisualSnapshot();
+ const driftRig=createDriftVisualRig();
+ const gripFrame=createDrivingVisualSnapshot();
  let lastCarColor='',renderRandomSeed=0x6f34ac19;
  function with3DOnlyRandom(callback){
   const original=Math.random;
@@ -701,6 +756,8 @@ function createFull3DScene(THREE,canvas) {
    const previous=car;car=with3DOnlyRandom(()=>createVehicle3D(THREE,{color:value,quality}));
    scene.add(car.root);previous.dispose();lastCarColor=frame.carColor;
   }
+  updateDrivingVisualSnapshot(driving,frame.driving||gripFrame);
+  updateDriftVisualRig(driftRig,driving,Math.max(0,dt));
   updateVehiclePose(pose,{
    screenX:480,screenY:475,yawDeg:Number(frame.yawDeg)||0,
    rollDeg:Number(frame.rollDeg)||0,pitchDeg:Number(frame.pitchDeg)||0,
@@ -709,12 +766,12 @@ function createFull3DScene(THREE,canvas) {
    braking:!!frame.braking,boosting:!!frame.boosting
   },Math.max(0,dt));
   car.applyPose(pose);
-  car.root.position.set(0,.02,3.15);
+  car.root.position.set(driftRig.offsetX,.02,3.15);
   car.root.scale.set(.92,.83,.92);
   // Camera sits behind +Z and looks down -Z: the rear (taillights +Z)
   // ALWAYS faces the camera. Do not rotate the car 180 degrees.
-  camera.position.set(clamp(Number(frame.steer)||0,-1,1)*.12,3.55,10.35);
-  camera.lookAt(clamp(Number(frame.steer)||0,-1,1)*.3,1.25,-19);
+  camera.position.set(driftRig.cameraX+clamp(Number(frame.steer)||0,-1,1)*.08,3.55,10.35);
+  camera.lookAt(driftRig.cameraX*.4+clamp(Number(frame.steer)||0,-1,1)*.22,1.25,-19);
   scene.background.setHex(frame.night?0x10213b:0x6793ad);
   scene.fog.color.setHex(frame.night?0x233b58:0x809caa);
   renderer.render(scene,camera);

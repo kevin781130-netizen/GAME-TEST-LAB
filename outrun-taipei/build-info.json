@@ -1,12 +1,15 @@
 {
   "game": "Outrun Taipei",
-  "version": "56.0.0",
-  "displayVersion": "V56.0",
+  "version": "56.1.0-playtest",
+  "displayVersion": "V56.1 DRIFT PLAYTEST",
   "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
   "sourceBranch": "main",
-  "sourceCommit": "f0c83a6fb4725b594d0e0e85506cdaeee92f113d",
+  "sourceCommit": "4618545a120d9fd9f1a0e7c68334617dc18fca80",
+  "mergedPullRequest": 21,
   "rendererDefault": "full-webgl-3d",
   "canvas2dVisible": false,
   "requires": "WebGL support",
-  "qaStatus": "code/API verified; deployed visual browser QA pending"
+  "deployedVia": "manual GitHub REST tree commit, Actions-free",
+  "qaStatus": "7x108 physics-frame parity verified with V55 in V8; actual Chromium/WebGL visual QA unverified",
+  "rollbackSourceBranch": "backup/main-before-v56-1-playtest-20261009"
 }
