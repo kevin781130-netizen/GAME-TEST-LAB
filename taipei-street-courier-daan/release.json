@@ -3,8 +3,8 @@
   "track": "Three.js playable bridge for parallel Unity Primary",
   "sourceRepository": "kevin781130-netizen/TAIPEI-STREET-COURIER",
   "sourceBranch": "daan-unity-pilot",
-  "sourceCommit": "aeba179f59350001b1a02a097e7adf68d6c8640a",
-  "builtAt": "2026-10-08T03:53:52.490099+00:00",
+  "sourceCommit": "0959f170559e7707c4246d2374c04cc49775509f",
+  "builtAt": "2026-10-08T04:09:04.526374+00:00",
   "entry": "?pilot=daan",
   "mapSource": {
     "url": "https://overpass-api.de/api/interpreter",
@@ -15,11 +15,11 @@
     "sha256": "b3f05ee26f91344d63057de50b8ca2e083b8e364220b87d23d348f5271984829"
   },
   "files": {
-    "index.html": "55749313ce948c402cb806778827d2be598682d58845db5c84de9006bdb41297",
+    "index.html": "704f652b02df5af3a8d8a8feeea8b07178e22458d38db1f9f22b88a6876eb544",
     "map-data/CODE-LICENSE.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
     "map-data/README.md": "1bf2584393f6e7214574a5ff884a1c998700bdecf2a8fcadf8d1efd22f66c943",
-    "map-data/compile_map.py": "36209622c52bc1ac10ca384997997acf20ed188bc2024d6f60910e4821e207b1",
-    "map-data/daan-forest-pilot.json": "f7912bbc4af467baae910b4923037354cd6cb88c1371b7b7a8b6cb5b43e36875",
+    "map-data/compile_map.py": "3382f9a0c4f64f477941d57519b78e9d09c8786c58b55f45a3e8be46d5e8d32d",
+    "map-data/daan-forest-pilot.json": "5a969b3bfa6be0fff4782bed9f3af6ddce0fb572eb6ede249deb6fa31eca667b",
     "map-data/daan.overpassql": "ea438f4317b9de4852cc242fa7bcad4fb944c29d2e1b5ca51f4e2dd3e8d04ac3",
     "map-data/source/daan-overpass.json.gz": "026e5cc303ccf32819ac70409df26fb85a255e7fe6939f7286048bd98475bbe1",
     "world-chunks/chunks/c_-3_-1.json": "248633dfd919e3469901ebf8dc869d5ea932cab51addf642fd850f1df0f77d73",

@@ -32,6 +32,11 @@ def join_rings(parts):
         if p[0]==p[-1] and len(p)>=4:rings.append(p[:-1])
     return rings
 
+def layer_tags(t):
+    try:layer=int(t.get('layer','0'))
+    except ValueError:layer=0
+    return {'layer':layer,'underground':layer<0 or t.get('location')=='underground'}
+
 def compile_map(raw,source_hash):
     elements=raw['elements'];nodes={e['id']:e for e in elements if e['type']=='node' and 'lat' in e};ways={e['id']:e for e in elements if e['type']=='way'}
     result={'schema':1,'id':'daan-forest-pilot','name':'大安森林公園探索試玩區','bbox':list(BBOX),'projection':{'method':'local-equirectangular','originLat':ORIGIN[0],'originLon':ORIGIN[1],'earthRadius':R,'units':'metres','gameUnitsPerMetre':0.2},'source':{'url':'https://overpass-api.de/api/interpreter','copyright':'© OpenStreetMap contributors','license':'ODbL-1.0','licenseUrl':'https://opendatacommons.org/licenses/odbl/1-0/','timestamp':raw.get('osm3s',{}).get('timestamp_osm_base','unknown'),'sha256':source_hash},'roads':[],'paths':[],'areas':[],'entrances':[],'pois':[]}
@@ -49,7 +54,7 @@ def compile_map(raw,source_hash):
             outer=join_rings([ways[m['ref']]['nodes'] for m in e['members'] if m['type']=='way' and m.get('role','outer') in ('','outer') and m['ref'] in ways]);inner=join_rings([ways[m['ref']]['nodes'] for m in e['members'] if m['type']=='way' and m.get('role')=='inner' and m['ref'] in ways])
             for i,ring in enumerate(outer):
                 pts=points(ring)
-                if len(pts)==len(ring) and any(inside(p) for p in pts):result['areas'].append({'id':f"relation/{e['id']}/{i}",'kind':kind,'name':t.get('name',''),'points':pts,'holes':[{'points':points(h)} for h in inner if len(points(h))==len(h) and contains(pts,points(h)[0])],'levels':t.get('building:levels','')})
+                if len(pts)==len(ring) and any(inside(p) for p in pts):result['areas'].append({'id':f"relation/{e['id']}/{i}",'kind':kind,'name':t.get('name',''),'points':pts,'holes':[{'points':points(h)} for h in inner if len(points(h))==len(h) and contains(pts,points(h)[0])],'levels':t.get('building:levels',''),**layer_tags(t)})
             relation_members.update(m['ref'] for m in e['members'] if m['type']=='way')
     for e in elements:
         t=e.get('tags',{});sid=f"{e['type']}/{e['id']}"
@@ -63,7 +68,7 @@ def compile_map(raw,source_hash):
             except (ValueError,IndexError):width=WIDTH.get(highway,5)
             result['paths' if highway in PATH else 'roads'].append({'id':sid,'name':t.get('name',''),'kind':highway,'widthMetres':min(40,max(1,width)),'points':pts,'oneway':t.get('oneway')=='yes'})
         kind=area_kind(t)
-        if kind and e['id'] not in relation_members and ids[0]==ids[-1] and len(pts)>=4:result['areas'].append({'id':sid,'name':t.get('name',''),'kind':kind,'points':pts[:-1],'holes':[],'levels':t.get('building:levels','')})
+        if kind and e['id'] not in relation_members and ids[0]==ids[-1] and len(pts)>=4:result['areas'].append({'id':sid,'name':t.get('name',''),'kind':kind,'points':pts[:-1],'holes':[],'levels':t.get('building:levels',''),**layer_tags(t)})
     for key in ('roads','paths','areas','entrances'):result[key].sort(key=lambda f:f['id'])
     park=next((a for a in result['areas'] if a['name']=='大安森林公園'),None)
     if park:
