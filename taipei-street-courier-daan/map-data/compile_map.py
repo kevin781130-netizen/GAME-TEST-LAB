@@ -7,6 +7,7 @@ import argparse, hashlib, json, math
 from pathlib import Path
 ORIGIN=(25.0305,121.5375)
 BBOX=(25.022,121.525,25.039,121.550)
+PILOT_BOUNDS=(25.024,121.529,25.037,121.542)
 R=6378137.0
 DRIVE={'primary','secondary','tertiary','residential','unclassified','living_street','service','primary_link','secondary_link','tertiary_link'}
 PATH={'footway','path','pedestrian','cycleway','steps'}
@@ -40,6 +41,7 @@ def layer_tags(t):
 def compile_map(raw,source_hash):
     elements=raw['elements'];nodes={e['id']:e for e in elements if e['type']=='node' and 'lat' in e};ways={e['id']:e for e in elements if e['type']=='way'}
     result={'schema':1,'id':'daan-forest-pilot','name':'大安森林公園探索試玩區','bbox':list(BBOX),'projection':{'method':'local-equirectangular','originLat':ORIGIN[0],'originLon':ORIGIN[1],'earthRadius':R,'units':'metres','gameUnitsPerMetre':0.2},'source':{'url':'https://overpass-api.de/api/interpreter','copyright':'© OpenStreetMap contributors','license':'ODbL-1.0','licenseUrl':'https://opendatacommons.org/licenses/odbl/1-0/','timestamp':raw.get('osm3s',{}).get('timestamp_osm_base','unknown'),'sha256':source_hash},'roads':[],'paths':[],'areas':[],'entrances':[],'pois':[]}
+    result['pilotBounds']=list(PILOT_BOUNDS)
     def points(ids):return [project(nodes[i]['lat'],nodes[i]['lon']) for i in ids if i in nodes]
     def inside(p):return BBOX[0]<=p['lat']<=BBOX[2] and BBOX[1]<=p['lon']<=BBOX[3]
     def area_kind(t):
@@ -58,7 +60,7 @@ def compile_map(raw,source_hash):
             relation_members.update(m['ref'] for m in e['members'] if m['type']=='way')
     for e in elements:
         t=e.get('tags',{});sid=f"{e['type']}/{e['id']}"
-        if e['type']=='node' and t.get('railway')=='subway_entrance' and inside(e):result['entrances'].append({'id':sid,'name':t.get('name',t.get('ref','捷運入口')),'point':project(e['lat'],e['lon'])})
+        if e['type']=='node' and t.get('railway')=='subway_entrance' and inside(e):result['entrances'].append({'id':sid,'name':t.get('name','捷運 '+t.get('ref','')+' 號出口'),'ref':t.get('ref',''),'level':t.get('level','0'),'point':project(e['lat'],e['lon'])})
         if e['type']!='way':continue
         ids=e.get('nodes',[]);pts=points(ids)
         if len(pts)!=len(ids) or len(pts)<2 or not any(inside(p) for p in pts):continue
