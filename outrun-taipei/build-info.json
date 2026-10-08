@@ -1,0 +1,11 @@
+{
+  "game": "Outrun Taipei",
+  "version": "55.0.0",
+  "displayVersion": "V55.0",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "main",
+  "sourceCommit": "c6698fd9014464f05826dfcd7780b6fd9d8155ec",
+  "rendererDefault": "hybrid",
+  "fallbackQuery": "?renderer=2d",
+  "status": "browser-preview; visual QA pending"
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>台北極速傳說｜Taipei Sunset Drive V53</title>
+<title>台北極速傳說｜Taipei Sunset Drive V55.0</title>
 <style>
   :root{
     --arcade-red:#e61e2b; --arcade-yellow:#ffd200; --arcade-blue:#0090ea; --arcade-teal:#00e5ff;
@@ -164,7 +164,7 @@
     
     <div id="taipei-landmark-title" style="position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:9;pointer-events:none;background:rgba(5,15,30,.88);border:1px solid #ffd200;border-radius:20px;padding:5px 18px;font-size:12px;font-weight:900;letter-spacing:.12em;color:#ffd200;box-shadow:0 0 16px rgba(255,210,0,.4);opacity:0;transition:opacity .25s"></div>
 
-    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V53 遊戲畫面"></canvas>
+    <canvas id="gameCanvas" width="960" height="540" aria-label="台北極速傳說 V55.0 遊戲畫面"></canvas>
 
     <div id="top-hud">
       <div class="hud-card"><span class="hud-label">TIME</span><span class="hud-value" id="hud-time">92.0</span></div>
@@ -530,8 +530,8 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
 }
 </style>
     <div id="overlay">
-      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V53 · CLEAN ROOM 3D FEEL</div>
-      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V53</span></h1>
+      <div class="eyebrow">SUNSET / POWER SLIDE / LAUGH • 台北融合街機版 V55.0 · HYBRID 3D PREVIEW</div>
+      <h1>台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V55.0</span></h1>
       <div class="subtitle">90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。</div>
       
       
@@ -598,7 +598,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V53.1</strong><span>GROUNDED ROADSIDE · TAIPEI LANDMARKS</span>
+    <span>CURRENT TEST BUILD</span><strong>V55.0</strong><span>HYBRID 3D PREVIEW · 2D FALLBACK</span>
   </div>
 </div>
 
@@ -723,6 +723,42 @@ const HUD_FONT = 'Impact, "Arial Black", sans-serif';
 // DOM ELEMENTS
 // ============================================================
 const canvas = document.getElementById('gameCanvas');
+// V55 public preview: hybrid is the default; ?renderer=2d restores Legacy Stable.
+const v55HybridRequested=typeof window!=='undefined'&&!!window.location&&
+  !/[?&]renderer=(?:2d|legacy)(?:&|$)/.test(window.location.search||'');
+let v55Hybrid=null,v55HasFrame=false;
+const v55RenderFrame={
+ screenX:0,screenY:0,yawDeg:0,rollDeg:0,pitchDeg:0,steer:0,
+ speedKmh:0,scaleX:1,direction:1,braking:false,boosting:false
+};
+function v55LoadExperimentalOverlay(){
+ if(!v55HybridRequested||typeof document.createElement!=='function')return;
+ const scripts=['assets/vendor/three-r149.min.js','assets/hybrid-renderer.js'];
+ function loadNext(index){
+  if(index===scripts.length){
+   if(!window.THREE||!window.TaipeiHybrid)return;
+   const layer=document.createElement('canvas');
+   layer.id='v55-hybrid-canvas';
+   layer.setAttribute('aria-hidden','true');
+   layer.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;visibility:hidden;';
+   canvas.parentNode.appendChild(layer);
+   try{v55Hybrid=window.TaipeiHybrid.createHybridOverlay(window.THREE,layer,{quality:graphicsQuality});}
+   catch(error){layer.remove();console.warn('V55 WebGL unavailable; keeping legacy 2D car',error);}
+   return;
+  }
+  const script=document.createElement('script');
+  script.src=scripts[index];
+  script.onload=()=>loadNext(index+1);
+  script.onerror=()=>console.warn('V55 optional 3D asset unavailable: '+scripts[index]);
+  document.head.appendChild(script);
+ }
+ loadNext(0);
+}
+window.v55HybridStatus=()=>({
+ requested:!!v55HybridRequested,initialized:!!v55Hybrid,
+ ready:!!v55Hybrid?.ready,contextLost:!!v55Hybrid?.contextLost,
+ disposed:!!v55Hybrid?.disposed
+});
 const displayCtx=canvas.getContext('2d');
 const arcadeBuffer=document.createElement('canvas');arcadeBuffer.width=960;arcadeBuffer.height=540;
 let ctx=arcadeBuffer.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
@@ -1922,8 +1958,8 @@ leaderboardBackBtn.addEventListener('click', () => {
 });
 
 const DEFAULT_OVERLAY = {
-  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V53',
-  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V53</span>',
+  eyebrow: 'SUNSET / POWER SLIDE / LAUGH • 台北爆笑街機版 V55.0',
+  title: '台北極速傳說<br><span class="title-sub">TAIPEI SUNSET DRIVE V55.0</span>',
   subtitle: '90 年代大型機公路賽車構圖語彙 · 甩尾集氮、儲存加速器。15 個台北街區穿越府城、水岸、高架與山城。',
   button: 'START / 選台出發 ↗'
 };
@@ -4011,6 +4047,23 @@ function drawPlayer(){
  let cx=W/2+pose.offsetX,cy=H-65+brakeVisual*2-wanganTuning.suspension*2+chassisPitch*.75,scale=1,yaw=pose.yaw,roll=chassisRoll;
  if(Math.abs(playerX)>drivableHalf()&&!crashSequence)cy+=Math.sin(simulationTime*24)*1.2;
  if(crashSequence){const p=crashPose(crashSequence.anim,crashSequence.side);cx=p.x;cy=p.y;scale=p.scale;roll=p.roll;yaw=0;}
+ const v55Eligible=!!v55Hybrid&&!v55Hybrid.disposed&&!v55Hybrid.contextLost&&
+  !currentCar.isBike&&!currentCar.isTruck&&!crashSequence;
+ v55HasFrame=v55Eligible;
+ if(v55Eligible){
+  v55RenderFrame.screenX=cx;
+  v55RenderFrame.screenY=cy;
+  v55RenderFrame.yawDeg=yaw;
+  v55RenderFrame.rollDeg=roll;
+  v55RenderFrame.pitchDeg=chassisPitch;
+  v55RenderFrame.steer=steer;
+  v55RenderFrame.speedKmh=speed;
+  v55RenderFrame.scaleX=pose.scaleX;
+  v55RenderFrame.direction=motionDirection;
+  v55RenderFrame.braking=braking;
+  v55RenderFrame.boosting=boosting||exitBoost>0;
+ }
+ const v55Use3D=v55Eligible&&v55Hybrid.ready;
  ctx.save();ctx.translate(cx,cy);ctx.scale(scale*pose.scaleX,scale);if(roll)ctx.rotate(roll*Math.PI/180);
  if(!crashSequence){
   // V53 grounding: soft penumbra, dark core under the body and individual wheel-contact patches so the car sits on the asphalt.
@@ -4021,8 +4074,8 @@ function drawPlayer(){
   ctx.fillStyle=skyMood==='sunset'?'rgba(255,214,160,.07)':'rgba(170,205,235,.07)';ctx.beginPath();ctx.ellipse(sx*.5,27,wide*.86,3.2,0,0,Math.PI*2);ctx.fill(); // faint road sheen under the car
 
   if(wanganTuning.neon&&speed>50){ctx.fillStyle=['#4bbfc6aa','#e667a1aa','#ecc36aaa'][wanganTuning.neon-1];ctx.beginPath();ctx.ellipse(pose.shadowX*.6,25,currentCar.isBike?26:92*(1+pose.intensity*.14),5,0,0,Math.PI*2);ctx.fill();}}
- if(boosting||exitBoost>0)drawNitroExhaust(yaw);
- drawRigidVehicle(yaw,braking);ctx.restore();
+ if((boosting||exitBoost>0)&&!v55Use3D)drawNitroExhaust(yaw);
+ if(!v55Use3D)drawRigidVehicle(yaw,braking);ctx.restore();
 }
 
 function drawCrashEjection(c){drawChaseScene(c);}
@@ -4230,9 +4283,12 @@ function drawGoalCelebrationScene(){
 
 function render(dt){
   if(inRadioScreen){
+    if(v55Hybrid)v55Hybrid.hide();
+    v55HasFrame=false;
     drawRadioScreen();presentArcade();
     return;
   }
+  v55HasFrame=false;
   ctx.save();
   const comfortShake=Math.min(screenShake,V50_COMFORT.shakeMax)*V50_COMFORT.motionScale;
   if(comfortShake > 0.10) ctx.translate(Math.round(rand(-comfortShake, comfortShake)), Math.round(rand(-comfortShake * 0.45, comfortShake * 0.45)));
@@ -4259,10 +4315,10 @@ function render(dt){
     ctx.fillRect(0, 0, W, H);
   }
   ctx.restore();
-  presentArcade();
+  presentArcade(dt);
 }
 
-function presentArcade(){
+function presentArcade(dt=0){
  displayCtx.setTransform(graphicsScale,0,0,graphicsScale,0,0);
  displayCtx.imageSmoothingEnabled=true;displayCtx.imageSmoothingQuality='high';displayCtx.clearRect(0,0,W,H);
  const active=clamp((boosting?.42:0)+(exitBoost>0?.24:0)+boostKick*.58,0,1);
@@ -4277,6 +4333,13 @@ function presentArcade(){
  displayCtx.drawImage(arcadeBuffer,crop*graphicsScale,crop*graphicsScale,(W-crop*2)*graphicsScale,(H-crop*2)*graphicsScale,0,0,W,H);
  if(active>.08){displayCtx.globalAlpha=active*.05;displayCtx.globalCompositeOperation='screen';displayCtx.drawImage(arcadeBuffer,(crop+2)*graphicsScale,crop*graphicsScale,(W-crop*2)*graphicsScale,(H-crop*2)*graphicsScale,0,0,W,H);}
  displayCtx.restore();
+ if(v55Hybrid){
+  if(v55HasFrame){
+   v55Hybrid.render(v55RenderFrame,dt,{
+    crop,zoom,lean,lateralLook,verticalShift:Math.abs(chassisPitch)*.08
+   },canvas.width,canvas.height,graphicsQuality);
+  }else v55Hybrid.hide();
+ }
 }
 
 // Original architecture details with a restrained arcade palette.
@@ -6491,6 +6554,7 @@ function loop(now){
 
 setGraphicsQuality(v54StoredGraphics(),false);
 applyRuleLabels(); resetGame(); updateHUD(); drawRouteMap(); render(0);
+v55LoadExperimentalOverlay();
 requestAnimationFrame(loop);
 
 })();
