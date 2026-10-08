@@ -504,12 +504,131 @@ function updateDriftVisualRig(rig,drive,dtSeconds){
 module.exports={createDriftVisualRig,updateDriftVisualRig,resetDriftVisualRig};
 
   },
+  "./DriftPresentation.cjs": function(require, module) {
+'use strict';
+// Presentation-only yaw limiter; V51 driftAngle/slipAngle/physics/score are authoritative.
+// A straight road must not produce the same huge 3D body angle as a hairpin.
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function presentationYawDegrees(snapshot,curves,speedKmh) {
+ const yaw=Number(snapshot?.yawDeg)||0,angle=Math.abs(yaw);
+ const active=!!(snapshot?.isDrifting||snapshot?.driftState==='recover');
+ if(!active)return clamp(yaw,-9,9);
+ const points=Array.isArray(curves)?curves:[];
+ let bend=0;
+ for(let i=0;i<Math.min(15,points.length);i++){
+  const weight=1-i/25;
+  bend=Math.max(bend,Math.abs(Number(points[i])||0)*weight);
+ }
+ const speed=clamp(Number(speedKmh)||0,0,325);
+ const speedEase=clamp((speed-60)/180,0,1);
+ // Nighttime Taipei straight: restrained 10–16°; more rotation only for
+ // a sustained corner at pace. Preserve signed V51 yaw; never invent drift.
+ const cap=clamp(10+8.0*speedEase+8.5*clamp(bend/1.6,0,1),10,26.5);
+ return Math.sign(yaw)*Math.min(angle,cap);
+}
+module.exports={presentationYawDegrees};
+  },
+  "./CityKit.cjs": function(require, module) {
+'use strict';
+// Original Taipei-inspired modular facades. Instanced geometry: no borrowed maps, logos or GLTF.
+// Building bodies are owned by Full3DScene; this adds balconies, shopfronts and actual windows.
+function createCityKit(THREE, scene, registerGeometry, registerMaterial, boxGeometry, point, hash) {
+ const MAX= {glass:3500, bands:1100, shops:140, signs:140, canopies:140, roof:140};
+ const materials={
+  glass:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
+  bands:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
+  shops:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
+  signs:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
+  canopies:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
+  roof:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}))
+ };
+ const meshes={},count={},dummy=new THREE.Object3D(),swatch=new THREE.Color();
+ for(const key of Object.keys(MAX)){
+  const mesh=new THREE.InstancedMesh(boxGeometry,materials[key],MAX[key]);
+  mesh.name='TaipeiCityKit_'+key;
+  mesh.count=0;mesh.frustumCulled=false;
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(mesh);meshes[key]=mesh;count[key]=0;
+ }
+ const facades=[0x293a48,0x37494b,0x4c5863,0x60584e,0x374d5d,0x655448,0x374b47,0x4c5360];
+ const warmWindows=[0x223748,0x395268,0xb1a171,0x4c6872,0xcfad70,0x334b60];
+ const shopColors=[0x234c59,0x6c3e49,0x3e5653,0x67543f,0x2a4558,0x70485a];
+ const signColors=[0xe8a45c,0x47c8c5,0xd16b79,0xf5cf82,0x77b5c9];
+ function add(key,x,y,z,w,h,d,rotation,color){
+  const i=count[key]++;if(i>=MAX[key]){count[key]=MAX[key];return;}
+  dummy.position.set(x,y,z);
+  dummy.rotation.set(0,rotation,0);
+  dummy.scale.set(w,h,d);
+  dummy.updateMatrix();meshes[key].setMatrixAt(i,dummy.matrix);
+  swatch.setHex(color);meshes[key].setColorAt(i,swatch);
+ }
+ function update(frame,points,halfWidth){
+  for(const key of Object.keys(count))count[key]=0;
+  const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
+  if(urban){
+   const seed=Number(frame.seed)||1,segment=Math.floor(frame.segment||0);
+   for(let i=5;i<125;i+=3){
+    const c=points[i],absolute=segment+i;
+    for(const side of [-1,1]){
+     const h=hash(absolute*37+side*99+seed);
+     const width=5+hash(absolute*11+side*33)*6;
+     const height=7+h*23;
+     const lateral=(1.75+h*2.3)*halfWidth*side;
+     // Roadward face: +X for buildings to the left, -X for those on the right.
+     const toward=-side;
+     const frontage=point(c,lateral+toward*(width*.5+.07),-.15);
+     const rot=-c.heading, floors=Math.min(9,Math.max(2,Math.floor((height-1.9)/2.8)));
+     const style=Math.floor(hash(absolute*19+seed)*facades.length);
+     const bandColor=facades[style],base=point(c,lateral,-.15);
+     // Distinct ground-floor shop depth, projecting canopy, and colored sign fascia.
+     add('shops',frontage.x,frontage.y+1.07,frontage.z,.10,2.05,width*.86,rot,shopColors[(style+Math.abs(absolute))%shopColors.length]);
+     add('signs',frontage.x+toward*.11,frontage.y+2.3,frontage.z,.15,.48,width*.86,rot,signColors[(style+absolute+side+signColors.length*100)%signColors.length]);
+     add('canopies',frontage.x+toward*.27,frontage.y+2.03,frontage.z,.53,.09,width*.94,rot,0x263b47);
+     for(let floor=0;floor<floors;floor++){
+      const y=frontage.y+3.4+floor*2.8;
+      if(y>base.y+height-1.0)break;
+      // Thin 3D balcony ledges and setbacks are silhouette cues, not decals.
+      add('bands',frontage.x+toward*.12,y-.76,frontage.z,.38,.12,width*.94,rot,bandColor);
+      for(let column=0;column<3;column++){
+       const v=(column-1)*width*.27;
+       const x=frontage.x+Math.sin(c.heading)*v;
+       const z=frontage.z+Math.cos(c.heading)*v;
+       const light=hash(absolute*199+side*131+floor*17+column*43);
+       const tint=warmWindows[Math.floor(light*warmWindows.length)];
+       add('glass',x+toward*.10,y,z,.09,1.24,width*.19,rot,tint);
+      }
+      // Windows also on the camera-facing end wall; avoid blank billboard slabs.
+      const endZ=base.z+Math.cos(c.heading)*width*.39,endX=base.x+Math.sin(c.heading)*width*.39;
+      for(const n of [-1,1]){
+       const x=endX+Math.cos(c.heading)*n*width*.22,z=endZ+Math.sin(c.heading)*n*width*.22;
+       const tint=warmWindows[Math.floor(hash(absolute*73+floor*29+n*11+1000)*warmWindows.length)];
+       add('glass',x,y,z,width*.17,1.1,.10,rot,tint);
+      }
+     }
+     // Mechanical penthouse/roof silhouette instead of featureless flat white cuboids.
+     add('roof',base.x,base.y+height+.45,base.z,width*.45,.85,width*.33,rot,0x273541);
+    }
+   }
+  }
+  for(const key of Object.keys(meshes)){
+   const mesh=meshes[key];mesh.count=count[key];
+   mesh.instanceMatrix.needsUpdate=true;
+   if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
+  }
+ }
+ function dispose(){for(const mesh of Object.values(meshes))scene.remove(mesh);}
+ return {update,dispose,meshes};
+}
+module.exports={createCityKit};
+  },
   "./Full3DScene.cjs": function(require, module) {
 'use strict';
 const {createVehicle3D} = require('./Vehicle3D.cjs');
 const {createVehiclePose, updateVehiclePose} = require('./VehiclePoseBridge.cjs');
 const {createDrivingVisualSnapshot,updateDrivingVisualSnapshot} = require('./DrivingVisualSnapshot.cjs');
 const {createDriftVisualRig,updateDriftVisualRig} = require('./DriftVisualRig.cjs');
+const {presentationYawDegrees} = require('./DriftPresentation.cjs');
+const {createCityKit} = require('./CityKit.cjs');
 
 // Full WebGL road/world renderer. This is intentionally NOT a Canvas overlay.
 // World coordinates: +X right, +Y up, -Z forward. Camera is behind the car (+Z).
@@ -539,27 +658,32 @@ function createFull3DScene(THREE,canvas) {
  let active=true, lost=false,ready=false;
  const geometry=g=>(geometries.push(g),g);
  const material=m=>(materials.push(m),m);
+ // Dynamic build tag only after the V56.1A renderer is actually loaded.
+ // The static V56.0 HTML remains a recoverable fallback if the bundle fails.
+ const label=canvas.ownerDocument?.querySelector?.('#build-version strong');
+ if(label)label.textContent='V56.1A';
  const scene=new THREE.Scene();
  scene.background=new THREE.Color(0x10213b);
  scene.fog=new THREE.FogExp2(0x24364d,.0055);
  const camera=new THREE.PerspectiveCamera(66,16/9,.12,490);
  camera.position.set(0,3.6,10.4);
  camera.lookAt(0,1.0,-18);
- scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,2.25));
- const sunlight=new THREE.DirectionalLight(0xffe6bf,2.35);
+ scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,1.3));
+ const sunlight=new THREE.DirectionalLight(0xffe6bf,1.05);
  sunlight.position.set(-36,80,-65);scene.add(sunlight);
  const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:'high-performance'});
  renderer.setPixelRatio(1);
  renderer.setClearColor(0x101b2e,1);
  renderer.outputEncoding=THREE.sRGBEncoding;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.35;
+ renderer.toneMappingExposure=1.0;
  let lastW=0,lastH=0,lastDpr=0;
  const roadMaterials=[
-  material(new THREE.MeshStandardMaterial({color:0x303945,roughness:.94,side:THREE.DoubleSide})),
-  material(new THREE.MeshStandardMaterial({color:0x59616b,roughness:1,side:THREE.DoubleSide})),
-  material(new THREE.MeshBasicMaterial({color:0xecefe6,side:THREE.DoubleSide})),
-  material(new THREE.MeshBasicMaterial({color:0x2ad9e7,side:THREE.DoubleSide}))
+  // Dynamic road strips have no normals; BasicMaterial prevents pitch-black roads.
+  material(new THREE.MeshBasicMaterial({color:0x283744,toneMapped:false,side:THREE.DoubleSide})),
+  material(new THREE.MeshBasicMaterial({color:0x3c4a55,toneMapped:false,side:THREE.DoubleSide})),
+  material(new THREE.MeshBasicMaterial({color:0xe2e2d2,toneMapped:false,side:THREE.DoubleSide})),
+  material(new THREE.MeshBasicMaterial({color:0x46b8c1,toneMapped:false,side:THREE.DoubleSide}))
  ];
  const roads=[];
  const maxQuad=COUNT*2*5;
@@ -589,26 +713,27 @@ function createFull3DScene(THREE,canvas) {
  };
  const boxG=geometry(new THREE.BoxGeometry(1,1,1));
  const coneG=geometry(new THREE.ConeGeometry(1,1,7));
- const buildingMat=material(new THREE.MeshStandardMaterial({color:0xffffff,roughness:.82,metalness:.12}));
- const glassMat=material(new THREE.MeshStandardMaterial({color:0x547a93,roughness:.28,metalness:.35,emissive:0x101e32,emissiveIntensity:.28}));
+ // Stable facade colors: per-instance palette must never wash to white under bright lights.
+ const buildingMat=material(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}));
+ const glassMat=material(new THREE.MeshBasicMaterial({color:0x314d66,toneMapped:false}));
  const treesMat=material(new THREE.MeshStandardMaterial({color:0x305548,roughness:1}));
  const polesMat=material(new THREE.MeshStandardMaterial({color:0xc1c3bd,metalness:.4,roughness:.55}));
  const buildings=new THREE.InstancedMesh(boxG,buildingMat,120);
- const windows=new THREE.InstancedMesh(boxG,glassMat,120);
+ const cityKit=createCityKit(THREE,scene,geometry,material,boxG,point,hash);
  const trees=new THREE.InstancedMesh(coneG,treesMat,120);
  const lights=new THREE.InstancedMesh(boxG,polesMat,50);
- for(const mesh of [buildings,windows,trees,lights]){
+ for(const mesh of [buildings,trees,lights]){
   mesh.frustumCulled=false;
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   scene.add(mesh);
  }
  const dummy=new THREE.Object3D();
- const palette=[0xc5c0af,0x8aa0a6,0x747d8b,0xd6bda7,0x4c687d,0xa99f91,0x9fada1];
+ const palette=[0x566a77,0x6e777c,0x68766e,0x816d63,0x536677,0x796a5b,0x66777b,0x555c66];
  const swatch=new THREE.Color();
  const sky=material(new THREE.MeshBasicMaterial({color:0xe5c2a2,fog:false}));
  const sun= new THREE.Mesh(geometry(new THREE.SphereGeometry(11,12,9)),sky);
  sun.position.set(-128,77,-275);scene.add(sun);
- const ground=new THREE.Mesh(geometry(new THREE.PlaneGeometry(6000,6000)),material(new THREE.MeshStandardMaterial({color:0x32484b,roughness:1})));
+ const ground=new THREE.Mesh(geometry(new THREE.PlaneGeometry(6000,6000)),material(new THREE.MeshBasicMaterial({color:0x283c43,toneMapped:false})));
  ground.rotation.x=-Math.PI/2;ground.position.y=-.22;scene.add(ground);
  let car=createVehicle3D(THREE,{color:0x1a2330});
  scene.add(car.root);
@@ -685,7 +810,7 @@ function createFull3DScene(THREE,canvas) {
   }
   const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
   const routeSeed=frame.seed||1;
-  let ib=0,iw=0,it=0,il=0;
+  let ib=0,it=0,il=0;
   for(let i=5;i<COUNT;i+=3){
    const c=pts[i];
    const absolute=Math.floor(frame.segment||0)+i;
@@ -696,13 +821,10 @@ function createFull3DScene(THREE,canvas) {
     if(urban){
       const height=7+h*23;const width=5+hash(absolute*11+side*33)*6;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
-      dummy.rotation.set(0,c.heading*.35,0);
+      dummy.rotation.set(0,-c.heading,0);
       dummy.scale.set(width,height,width*.8);
       dummy.updateMatrix();if(ib<120){buildings.setMatrixAt(ib,dummy.matrix);
         swatch.setHex(palette[Math.floor(h*palette.length)]);buildings.setColorAt(ib,swatch);ib++;}
-      dummy.scale.set(width*.91,Math.max(1,height*.47),width*.04);
-      dummy.position.set(anchor.x,anchor.y+height*.63,anchor.z+width*.42);
-      dummy.updateMatrix();if(iw<120){windows.setMatrixAt(iw++,dummy.matrix);}
     }else{
       const height=7+h*9;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
@@ -716,7 +838,8 @@ function createFull3DScene(THREE,canvas) {
     }
    }
   }
-  const assignments=[[buildings,ib],[windows,iw],[trees,it],[lights,il]];
+  cityKit.update(frame,pts,HALF_WIDTH);
+  const assignments=[[buildings,ib],[trees,it],[lights,il]];
   for(const [m,count] of assignments){m.count=count;m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;}
  }
  function updateTraffic(frame,pts){
@@ -759,7 +882,7 @@ function createFull3DScene(THREE,canvas) {
   updateDrivingVisualSnapshot(driving,frame.driving||gripFrame);
   updateDriftVisualRig(driftRig,driving,Math.max(0,dt));
   updateVehiclePose(pose,{
-   screenX:480,screenY:475,yawDeg:Number(frame.yawDeg)||0,
+   screenX:480,screenY:475,yawDeg:presentationYawDegrees(driving,frame.curves,frame.speedKmh),
    rollDeg:Number(frame.rollDeg)||0,pitchDeg:Number(frame.pitchDeg)||0,
    steer:Number(frame.steer)||0,speedKmh:Math.max(0,Number(frame.speedKmh)||0),
    scaleX:1,direction:frame.direction===-1?-1:1,
@@ -770,8 +893,15 @@ function createFull3DScene(THREE,canvas) {
   car.root.scale.set(.92,.83,.92);
   // Camera sits behind +Z and looks down -Z: the rear (taillights +Z)
   // ALWAYS faces the camera. Do not rotate the car 180 degrees.
-  camera.position.set(driftRig.cameraX+clamp(Number(frame.steer)||0,-1,1)*.08,3.55,10.35);
-  camera.lookAt(driftRig.cameraX*.4+clamp(Number(frame.steer)||0,-1,1)*.22,1.25,-19);
+  // Look ahead at the actual curved centerline, not in the steering-key direction.
+  const forward=points[13];
+  const aimX=clamp((forward?.x||0)*.085,-.65,.65)+driftRig.cameraX*.36;
+  camera.position.set(driftRig.cameraX+clamp(Number(frame.steer)||0,-1,1)*.035,3.55,10.35);
+  camera.lookAt(aimX,1.25,-19);
+  const targetFov=clamp(64+(Number(frame.speedKmh)||0)*.018+(frame.boosting?1.4:0),64,72);
+  const cameraBlend=1-Math.exp(-clamp(dt,0,.10)*5);
+  camera.fov+=(targetFov-camera.fov)*cameraBlend;
+  camera.updateProjectionMatrix();
   scene.background.setHex(frame.night?0x10213b:0x6793ad);
   scene.fog.color.setHex(frame.night?0x233b58:0x809caa);
   renderer.render(scene,camera);
@@ -781,7 +911,7 @@ function createFull3DScene(THREE,canvas) {
   if(!active)return;active=false;ready=false;
   canvas.removeEventListener('webglcontextlost',lostHandler);
   canvas.removeEventListener('webglcontextrestored',restoredHandler);
-  car.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
+  car.dispose();cityKit.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
   renderer.dispose();
  }
  return {render,dispose,get ready(){return ready&&!lost&&active},get contextLost(){return lost}};

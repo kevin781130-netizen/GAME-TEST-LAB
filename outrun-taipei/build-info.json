@@ -1,15 +1,18 @@
 {
   "game": "Outrun Taipei",
-  "version": "56.1.0-playtest",
-  "displayVersion": "V56.1 DRIFT PLAYTEST",
+  "version": "56.1A-playtest",
+  "displayVersion": "V56.1A",
   "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
-  "sourceBranch": "main",
-  "sourceCommit": "4618545a120d9fd9f1a0e7c68334617dc18fca80",
-  "mergedPullRequest": 21,
+  "sourceBranch": "fix/v56-1a-whitebox-drift-camera",
+  "sourceCommit": "f64dab3afe984699808fe5769351f06a21b7aac9",
+  "sourceMainBase": "4618545a120d9fd9f1a0e7c68334617dc18fca80",
+  "pullRequest": 22,
   "rendererDefault": "full-webgl-3d",
-  "canvas2dVisible": false,
-  "requires": "WebGL support",
-  "deployedVia": "manual GitHub REST tree commit, Actions-free",
-  "qaStatus": "7x108 physics-frame parity verified with V55 in V8; actual Chromium/WebGL visual QA unverified",
-  "rollbackSourceBranch": "backup/main-before-v56-1-playtest-20261009"
+  "assets": [
+    "assets/vendor/three-r149.min.js",
+    "assets/hybrid-renderer.js?v=56.1A-f64dab3"
+  ],
+  "deployedVia": "GitHub API direct commit (no paid Actions required)",
+  "qaStatus": "V8 with real Three r149 / mock GPU passed, real deployed pixels and controls await player QA",
+  "rollbackBranch": "backup/outrun-taipei-before-v56-1a-20261009"
 }
