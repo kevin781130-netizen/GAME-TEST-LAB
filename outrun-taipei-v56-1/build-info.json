@@ -1,0 +1,11 @@
+{
+  "game": "Outrun Taipei",
+  "version": "56.1.0",
+  "displayVersion": "V56.1",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feature/v56-1-drift-city-art",
+  "sourceCommit": "e66e804d9a3b4bc44638dacc90f71cde5eda0278",
+  "renderer": "full-webgl-3d",
+  "stage": "DRAFT P0 DRIFT/CITY PREVIEW; NOT VISUALLY APPROVED",
+  "mainUnchanged": true
+}
