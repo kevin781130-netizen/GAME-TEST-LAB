@@ -21,7 +21,7 @@
       "roadRefs": 19,
       "buildings": 68,
       "bytes": 24289,
-      "lodBytes": 6462
+      "lodBytes": 13195
     },
     {
       "id": "-6:0",
@@ -38,7 +38,7 @@
       "roadRefs": 51,
       "buildings": 284,
       "bytes": 90906,
-      "lodBytes": 26693
+      "lodBytes": 55329
     },
     {
       "id": "-6:1",
@@ -55,7 +55,7 @@
       "roadRefs": 7,
       "buildings": 20,
       "bytes": 7358,
-      "lodBytes": 1931
+      "lodBytes": 3780
     },
     {
       "id": "-5:-2",
@@ -72,7 +72,7 @@
       "roadRefs": 58,
       "buildings": 399,
       "bytes": 132251,
-      "lodBytes": 38549
+      "lodBytes": 81154
     },
     {
       "id": "-5:-1",
@@ -89,7 +89,7 @@
       "roadRefs": 143,
       "buildings": 430,
       "bytes": 163050,
-      "lodBytes": 41134
+      "lodBytes": 85369
     },
     {
       "id": "-5:0",
@@ -106,7 +106,7 @@
       "roadRefs": 122,
       "buildings": 652,
       "bytes": 212941,
-      "lodBytes": 61492
+      "lodBytes": 128939
     },
     {
       "id": "-5:1",
@@ -123,7 +123,7 @@
       "roadRefs": 32,
       "buildings": 30,
       "bytes": 18767,
-      "lodBytes": 2889
+      "lodBytes": 5728
     },
     {
       "id": "-4:-2",
@@ -140,7 +140,7 @@
       "roadRefs": 100,
       "buildings": 455,
       "bytes": 157590,
-      "lodBytes": 44016
+      "lodBytes": 87974
     },
     {
       "id": "-4:-1",
@@ -157,7 +157,7 @@
       "roadRefs": 222,
       "buildings": 599,
       "bytes": 232632,
-      "lodBytes": 57721
+      "lodBytes": 113894
     },
     {
       "id": "-4:0",
@@ -174,7 +174,7 @@
       "roadRefs": 109,
       "buildings": 266,
       "bytes": 108734,
-      "lodBytes": 25313
+      "lodBytes": 54710
     },
     {
       "id": "-4:1",
@@ -191,7 +191,7 @@
       "roadRefs": 7,
       "buildings": 29,
       "bytes": 12574,
-      "lodBytes": 2815
+      "lodBytes": 5770
     },
     {
       "id": "-3:-2",
@@ -208,7 +208,7 @@
       "roadRefs": 49,
       "buildings": 166,
       "bytes": 60826,
-      "lodBytes": 16123
+      "lodBytes": 32137
     },
     {
       "id": "-3:-1",
@@ -225,7 +225,7 @@
       "roadRefs": 69,
       "buildings": 314,
       "bytes": 107260,
-      "lodBytes": 30315
+      "lodBytes": 61456
     },
     {
       "id": "-3:0",
@@ -242,7 +242,7 @@
       "roadRefs": 51,
       "buildings": 161,
       "bytes": 61892,
-      "lodBytes": 15402
+      "lodBytes": 33101
     },
     {
       "id": "-3:1",
@@ -259,7 +259,7 @@
       "roadRefs": 9,
       "buildings": 22,
       "bytes": 9263,
-      "lodBytes": 2152
+      "lodBytes": 4728
     }
   ],
   "totals": {
@@ -267,7 +267,7 @@
     "roadRefs": 1048,
     "buildings": 3895,
     "bytes": 1400333,
-    "lodBytes": 373007
+    "lodBytes": 767264
   },
   "roads": {
     "license": "ODbL-1.0",
