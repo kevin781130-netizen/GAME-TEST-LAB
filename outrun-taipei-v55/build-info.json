@@ -1,0 +1,7 @@
+{
+  "source_branch": "codex/v55-hybrid-render-foundation",
+  "source_commit": "b62ed4e89b01d3f55a1ae414b572a16d9dde5cf2",
+  "deployment_kind": "V55 experimental opt-in hybrid renderer",
+  "test_url_suffix": "?renderer=hybrid",
+  "warning": "Not production accepted; visual/browser verification pending"
+}
