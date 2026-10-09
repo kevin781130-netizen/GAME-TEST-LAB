@@ -164,6 +164,8 @@
 #quaternius-art-status{font-size:11px;flex:1 1 200px;color:#b6d7d3}
 #quaternius-lab-panel a{color:#8bffdb}
 @media(max-width:730px){#quaternius-lab-panel{padding:5px 8px;font-size:11px}#quaternius-art-toggle{padding:8px}}
+/* P16 desktop safety: keep the experimental toggle visible, never clipped by a vertically centered tall canvas. */
+@media(min-width:731px){html,body{height:auto!important;min-height:100vh!important;overflow-y:auto!important}body{justify-content:flex-start!important;padding-top:8px!important}#game-shell{margin:0 auto!important}#game-container{max-height:69vh!important}}
 </style>
 <script type="importmap">{"imports":{"three":"./assets/vendor/three-r149-esm-shim.js"}}</script>
 </head>
