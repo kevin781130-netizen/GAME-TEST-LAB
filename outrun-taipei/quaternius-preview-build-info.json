@@ -1,0 +1,19 @@
+{
+  "product": "Outrun Taipei Quaternius Art Preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "main",
+  "sourceCommit": "f5d33732d0161eb961823ff2521830a0097f61ed",
+  "sourceVersion": "P14 / Quaternius staged facade art",
+  "artAssets": "Quaternius Downtown City MegaKit Standard (CC0 1.0)",
+  "vendor": "Three.js r149 (MIT)",
+  "previewPath": "previews/quaternius-downtown/streetblock.html",
+  "reviewPath": "previews/quaternius-downtown/browser-review.html",
+  "launchPath": "try-quaternius.html",
+  "originalGameEntry": "index.html",
+  "originalGameBuild": "V56.1A-playtest from fix/v56-1a-whitebox-drift-camera",
+  "newBuildingsInGameplay": false,
+  "originalGameEntryModified": false,
+  "actualWebGLVisualReview": "NOT VERIFIED",
+  "automatedRunner": "NOT AVAILABLE",
+  "mode": "Non-destructive sidecar art deployment; manual frontend acceptance needed"
+}

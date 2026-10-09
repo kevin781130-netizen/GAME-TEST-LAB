@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<title>Outrun Taipei｜Quaternius 台北街屋試看・原版賽車</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#f0f6fb;background:#0b1320}
+*{box-sizing:border-box}
+body{margin:0}
+header{padding:17px clamp(14px,3vw,34px);border-bottom:1px solid #32495d;background:linear-gradient(100deg,#142c38,#17263d)}
+h1{font-size:clamp(19px,3vw,28px);line-height:1.35;margin:0 0 6px}
+p{margin:0;line-height:1.6;color:#b9ccd9;font-size:13px}
+main{max-width:1550px;margin:0 auto;padding:16px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 11px}
+button,a.link{font:inherit;text-decoration:none;color:#eaf8ff;background:#243b50;border:1px solid #648196;border-radius:9px;padding:9px 13px;cursor:pointer;font-size:13px}
+button[aria-pressed="true"]{background:#227668;border-color:#7ae9d3;color:white;font-weight:700}
+button:focus-visible,a:focus-visible{outline:2px solid #92ffea;outline-offset:2px}
+a.link{display:inline-flex;align-items:center}
+.frame{position:relative;border:1px solid #415a6d;border-radius:12px;overflow:hidden;background:#101b29;height:clamp(410px,75vh,850px)}
+iframe{border:0;width:100%;height:100%;display:block;background:#111}
+.notes{margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.notes p{max-width:930px}
+.small{font-size:11px;color:#97b0c1;margin-top:8px}
+a{color:#93e6df}
+@media(max-width:680px){.frame{height:67vh;min-height:430px}button,a.link{padding:11px 10px}}
+</style>
+</head>
+<body>
+<header>
+<h1>台北極速傳說｜街屋美術試玩入口</h1>
+<p>獨立 Quaternius 建築展間（P14）與現有 V56.1A 賽車分開載入，保留原版路線、物理、碰撞與紀錄。</p>
+</header>
+<main>
+<nav class="toolbar" aria-label="切換試玩內容">
+<button id="art" type="button" aria-pressed="true">台北街屋 3D 預覽</button>
+<button id="game" type="button" aria-pressed="false">原版賽車試玩 V56.1A</button>
+<a class="link" id="direct" href="./previews/quaternius-downtown/streetblock.html" target="_blank" rel="noopener">新分頁全螢幕開啟 <span aria-hidden="true">↗</span></a>
+<a class="link" href="./previews/quaternius-downtown/browser-review.html" target="_blank" rel="noopener">24 張畫面驗收</a>
+</nav>
+<div class="frame">
+<iframe id="playframe" title="台北街屋 WebGL 3D 預覽" src="./previews/quaternius-downtown/streetblock.html" allowfullscreen loading="eager"></iframe>
+</div>
+<div class="notes">
+<p id="hint" role="status">街屋展間：拖曳旋轉、滾輪縮放；可選 3／5／7 棟、日夜與近遠景 LOD。這是建築美術預覽，**尚未放入駕車賽道**。</p>
+</div>
+<p class="small">Quaternius Downtown City MegaKit CC0 1.0；Three.js r149 MIT。P14 來源：Outrun-Taipei/main <code>f5d33732</code>。此頁不修改正式賽車程式或地圖。已部署的畫面仍需以實際瀏覽器驗收。</p>
+</main>
+<script>
+(function(){
+'use strict';
+var modes={
+ art:{title:'台北街屋 WebGL 3D 預覽',url:'./previews/quaternius-downtown/streetblock.html',
+ hint:'街屋展間：拖曳旋轉、滾輪縮放；可選 3／5／7 棟、日夜與近遠景 LOD。這是建築美術預覽，尚未放入駕車賽道。'},
+ game:{title:'Outrun Taipei V56.1A 現有賽車',url:'./index.html',
+ hint:'現有 V56.1A：點入畫面讓鍵盤取得焦點後試玩。新街屋尚未接入實際賽道；請使用「新分頁全螢幕開啟」獲得較完整操作空間。'}
+};
+var frame=document.getElementById('playframe');
+var a=document.getElementById('art'),b=document.getElementById('game');
+function change(mode){
+var state=modes[mode];
+frame.title=state.title;
+if(frame.getAttribute('src')!==state.url)frame.setAttribute('src',state.url);
+document.getElementById('direct').href=state.url;
+document.getElementById('hint').textContent=state.hint;
+a.setAttribute('aria-pressed',String(mode==='art'));
+b.setAttribute('aria-pressed',String(mode==='game'));
+}
+a.addEventListener('click',function(){change('art');});
+b.addEventListener('click',function(){change('game');});
+})();
+</script>
+</body>
+</html>
