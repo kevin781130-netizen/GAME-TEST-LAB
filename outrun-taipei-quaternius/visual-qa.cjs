@@ -79,6 +79,13 @@ async function run(){
    page.on('requestfailed',r=>badRequests.push(r.url()+': '+r.failure()?.errorText));
    await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
    await page.waitForFunction(()=>!!window.quaterniusRaceLabStatus,{timeout:45000});
+   // P16 visibility regression: controls must be reachable without scrolling.
+   const toggleBounds=await page.locator('#quaternius-lab-panel').boundingBox();
+   if(!toggleBounds || toggleBounds.x < -1 || toggleBounds.y < -1 ||
+      toggleBounds.x+toggleBounds.width > viewport.width+1 ||
+      toggleBounds.y+toggleBounds.height > viewport.height+1){
+     report.errors.push(viewport.name+': streetfront toggle clipped by viewport: '+JSON.stringify(toggleBounds));
+   }
    await page.waitForFunction(()=>!!document.querySelector('#v56-full-3d-canvas')||!!document.querySelector('#v56-webgl-status')?.textContent.includes('錯誤'),null,{timeout:45000});
    const canvas=page.locator('#v56-full-3d-canvas');
    await canvas.waitFor({state:'attached',timeout:30000});
