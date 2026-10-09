@@ -1622,7 +1622,7 @@
   const frontZ=Math.abs(lz/Math.max(b.d,1))>=Math.abs(lx/Math.max(b.w,1));
   const face=frontZ?a+(lz>=0?0:Math.PI):
     a+(lx>=0?Math.PI/2:-Math.PI/2);
-  const d=(frontZ?b.d:b.w)/2-.12;
+  const d=(frontZ?b.d:b.w)/2+.08;
   return{a:face,x:b.x+Math.sin(face)*d,z:b.z+Math.cos(face)*d,
     width:frontZ?b.w:b.d};
  }
@@ -1739,27 +1739,27 @@
    const style=seed%styles.length,base=b.y;
    // Every painted detail sits on an existing validated building facade
    // (or immediately at its edge). NONE are added to physical solid arrays.
-   push('arcadeBeam',f,0,-.43,base+3.18,front,.24,1.12);
+   push('arcadeBeam',f,0,.65,base+3.18,front,.24,1.12);
    for(const u of [-front*.42,0,front*.42]){
-    push('arcadePillar',f,u,-.26,base+1.51,.18,3.03,.18);
+    push('arcadePillar',f,u,.87,base+1.51,.18,3.03,.18);
     columns++;
    }
-   push('shop',f,0,-.71,base+1.38,front*.77,2.45,.09);
-   push('sign'+style,f,0,.06,base+2.72,Math.min(4.2,front*.68),.58,.15);
+   push('shop',f,0,.12,base+1.38,front*.77,2.45,.09);
+   push('sign'+style,f,0,.25,base+2.72,Math.min(4.2,front*.68),.58,.15);
    signs++;
    if(seed%3!==0&&b.height>=16){
     const nx=seed%2?front*.3:-front*.3;
-    push('vertical'+style,f,nx,.30,base+5.0,.67,2.35,.17);
+    push('vertical'+style,f,nx,.43,base+5.0,.67,2.35,.17);
     signs++;
    }
    const floors=Math.min(6,Math.floor((b.height-4)/3.6));
    for(let floor=0;floor<floors;floor++){
     const y=base+5.2+floor*3.35;
     if(y+1>b.y+b.height)break;
-    push('balcony',f,0,.10,y,front*.55,.12,.45);
-    push('balcony',f,0,.43,y+.39,front*.55,.78,.075);
+    push('balcony',f,0,.28,y,front*.55,.12,.45);
+    push('balcony',f,0,.53,y+.39,front*.55,.78,.075);
     if((floor+seed)%2===0)
-     push('ac',f,-front*.31,.29,y+.52,.80,.60,.55);
+     push('ac',f,-front*.31,.42,y+.52,.80,.60,.55);
    }
    if(b.height>=15){
     const rooftop={...f,x:b.x,z:b.z,a:0};
@@ -1777,7 +1777,7 @@
     if(!isRoad){
      push('scooterBody',f,front*.24,.63,base+.66,.42,.45,1.42);
      push('scooterSeat',f,front*.24,.63,base+.96,.32,.15,.67);
-     push('scooterWheel',f,front*.24,.14,base+.26,.85,1,1);
+     push('scooterWheel',f,front*.24,.35,base+.26,.85,1,1);
      push('scooterWheel',f,front*.24,1.12,base+.26,.85,1,1);
      push('scooterStem',f,front*.24,1.02,base+1.04,.12,.72,.12);
      scooters++;

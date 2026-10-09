@@ -2,7 +2,7 @@
   "schema": 1,
   "previewOnly": true,
   "sourceRepository": "kevin781130-netizen/TAIPEI-STREET-COURIER",
-  "sourceFeatureCommit": "4ba950ce39d7bcfbf27138d65624cbedc7a995f4",
+  "sourceFeatureCommit": "5e7a3fa4f59b97eb3e41a3683e7509dbcaf37a91",
   "basePublicPreviewSourceCommit": "f33c51d4d38f1cf3215aebf9d195928351fdc337",
   "artAssetCommit": "08f0c913f6783cc81f9f6105a7cdda8562b1c192",
   "assets": [
@@ -40,5 +40,6 @@
     "medium": 32,
     "high": 56
   },
-  "cosmeticsOnly": true
+  "cosmeticsOnly": true,
+  "urbanDetailPlacement": "facades, signs and columns anchored outside existing building exterior; no collision updates"
 }
