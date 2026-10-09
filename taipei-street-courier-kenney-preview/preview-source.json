@@ -2,7 +2,7 @@
   "schema": 1,
   "previewOnly": true,
   "sourceRepository": "kevin781130-netizen/TAIPEI-STREET-COURIER",
-  "sourceFeatureCommit": "45fa18ec40f73ad505aee6b46cb64972d7cbbcfb",
+  "sourceFeatureCommit": "18e49fbe262e05003c9d8b1aa6b5b1569e4505d1",
   "basePublicPreviewSourceCommit": "f33c51d4d38f1cf3215aebf9d195928351fdc337",
   "artAssetCommit": "08f0c913f6783cc81f9f6105a7cdda8562b1c192",
   "assets": [
@@ -50,5 +50,18 @@
     "arcadePillars": "2 when frontage under 4",
     "scooters": "only frontage >=3.4"
   },
-  "visualCloudAudit": "VTK 9.6.2 EGL offline approximation inspected; real browser/WebGL acceptance still pending"
+  "visualCloudAudit": "VTK 9.6.2 EGL offline approximation inspected; real browser/WebGL acceptance still pending",
+  "urbanDetailVisibleProof": {
+    "revision": "P8-29",
+    "optin": "urban=on",
+    "testStatus": "PASS (mocked Three.js/DOM)",
+    "candidateBackfill": "applies cap only after a road-facing building passes all geometry filters",
+    "titleAnchor": "actual getPlayerStartPos() while TITLE/LOADING",
+    "hud": "bottom-left with mounted building/sign/scooter counts and same-page ON/OFF toggle",
+    "addedExterior": [
+      "windowGlass",
+      "windowFrame"
+    ],
+    "realBrowserWebGLVerification": "pending"
+  }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant"><head><meta name="courier-preview-source" content="ad2b6ebac0061b6b966d7bb626217d390292de39"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#081b25"><link rel="icon" href="data:,"><title>Kenney 台北街景獨立試玩｜貓狗快送</title><link rel="stylesheet" href="./preview.css"><style>body{font-family:system-ui,'Noto Sans TC',sans-serif}#preview-deploy-status{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 14px;max-width:min(94vw,820px);text-align:center;border-radius:9px;background:#193a4a;color:#eff5e7;font-size:13px;box-shadow:0 2px 14px #0009;pointer-events:none}</style><script type="importmap">{
+<html lang="zh-Hant"><head><meta name="courier-preview-source" content="18e49fbe262e05003c9d8b1aa6b5b1569e4505d1"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#081b25"><link rel="icon" href="data:,"><title>Kenney 台北街景獨立試玩｜貓狗快送</title><link rel="stylesheet" href="./preview.css"><style>body{font-family:system-ui,'Noto Sans TC',sans-serif}#preview-deploy-status{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 14px;max-width:min(94vw,820px);text-align:center;border-radius:9px;background:#193a4a;color:#eff5e7;font-size:13px;box-shadow:0 2px 14px #0009;pointer-events:none}</style><script type="importmap">{
  "imports":{
  "three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
@@ -26,7 +26,7 @@
 <div id="preview-deploy-status">Kenney CC0 街景試玩載入中（原正式版不變）</div><script type="module">
 const box=document.getElementById('preview-deploy-status');
 const say=(message,failed=false)=>{box.textContent=message;box.style.color=failed?'#fff':'#eff5e7';box.style.background=failed?'#8f3238':'#193a4a';};
-const source='ad2b6ebac0061b6b966d7bb626217d390292de39';
+const source='18e49fbe262e05003c9d8b1aa6b5b1569e4505d1';
 try{
  say('正在載入 Three.js r186 與遊戲程式……');
  const [ns,post,render,bloom,output,shader,fxaa,gltf]=await Promise.all([
@@ -57,7 +57,7 @@ try{
  for(const file of files){
   say('載入 '+file+'……');
   await new Promise((ok,no)=>{
-   const script=document.createElement('script');script.src='./'+file;script.onload=ok;
+   const script=document.createElement('script');script.src='./'+file+(file==='kenney-art-adapters.js'?'?v=p829-'+source.slice(0,8):'');script.onload=ok;
    script.onerror=()=>no(new Error('遊戲程式無法取得：'+file));
    document.body.append(script);
   });
@@ -68,12 +68,14 @@ try{
  const interval=setInterval(()=>{
   const game=window.__game;
   if(game?.arcadeReady){
-    say('Kenney 美術試玩 · Three r'+THREE.REVISION+' · 模型載入中，可以開始配送');
+    say('台北街景 P8-29 · 左下角可看新增建築數，並切換 ON／OFF');
    Promise.resolve(game.externalArtPromise).then(()=>{
      const taxi=game.externalArtState?.status||'off',street=game.externalStreetArtState?.status||'off';
      const success=taxi==='loaded'&&street==='loaded';
-     say('Kenney 試玩 '+source.slice(0,8)+' · 計程車 '+taxi+' / 街景 '+street+
-       (success?' · 使用右側面板切換批次 ON/OFF':' · 原始街景已保留'),!success);
+     const urban=game.getTaipeiUrbanDetailStats?.()||{};
+     say('P8-29 新街景：'+(urban.active?urban.buildings+' 棟 / '+urban.signs+' 招牌':'街屋模型載入中')+
+       ' · Kenney '+taxi+'/'+street+' · 左下角可開關',
+       !success&&!urban.active);
    }).catch(error=>say('Kenney 美術載入失敗：'+String(error?.message||error)+' · 已回退至原模型',true));
    clearInterval(interval);
   }

@@ -1596,13 +1596,13 @@
  'use strict';
  if(typeof TaipeiStreetCourier==='undefined')return;
  const P=TaipeiStreetCourier.prototype;
- const active=()=>typeof location!=='undefined'&&
+ const active=game=>typeof location!=='undefined'&&
    /^https?:$/.test(location.protocol||'')&&
-   /(?:^|[?&])urban=on(?:&|$)/.test(location.search||'');
+   (game.urbanDetailManualEnabled??/(?:^|[?&])urban=on(?:&|$)/.test(location.search||''))===true;
  const maxForQuality={low:12,medium:32,high:56};
  const finite=n=>typeof n==='number'&&Number.isFinite(n);
  const types=[
-  'arcadeBeam','arcadePillar','shop','balcony','ac','tank',
+  'arcadeBeam','arcadePillar','shop','windowGlass','windowFrame','balcony','ac','tank',
   'roofShed','scooterBody','scooterSeat','scooterWheel','scooterStem'
  ];
  const styles=[
@@ -1611,10 +1611,7 @@
   {name:'茶屋',color:0x8c5a43,paint:'#9b6046',accent:'#f6eddc'},
   {name:'麵食',color:0x466d7b,paint:'#446579',accent:'#e6f4ef'}
  ];
- const random=(n,salt=0)=>{
-  const x=Math.sin(n*127.1+salt*311.7)*43758.5453123;
-  return x-Math.floor(x);
- };
+
  function chooseFront(b,road){
   const a=Number(b.angle)||0,c=Math.cos(a),s=Math.sin(a);
   const dx=road.x-b.x,dz=road.z-b.z;
@@ -1634,6 +1631,47 @@
    a:f.a
   };
  }
+ P.taipeiUrbanDetailEnabled=function(){return active(this);};
+ P.setTaipeiUrbanDetailEnabled=function(enable){
+  this.urbanDetailManualEnabled=enable===true;
+  const result=this.rebuildTaipeiUrbanDetail();
+  this.updateTaipeiUrbanDetailPanel?.();
+  return result;
+ };
+ P.ensureTaipeiUrbanDetailPanel=function(){
+  if(typeof location==='undefined'||typeof document==='undefined'||!document.body||
+    !/(?:^|[?&])urban=(on|off)(?:&|$)/.test(location.search||''))return null;
+  if(this.taipeiUrbanPanel)return this.taipeiUrbanPanel;
+  const host=document.createElement('section');
+  host.id='taipei-urban-detail-panel';
+  host.setAttribute('aria-label','台北街景美術試玩狀態');
+  host.style.cssText='position:fixed;left:10px;bottom:12px;z-index:99998;'+
+   'background:#102736ef;color:#fff;border:1px solid #a2d4d0;'+
+   'border-radius:8px;padding:8px 10px;font:12px/1.45 system-ui,sans-serif;'+
+   'max-width:min(300px,calc(100vw - 20px));pointer-events:auto';
+  const status=document.createElement('div');
+  status.setAttribute('role','status');
+  const button=document.createElement('button');button.type='button';
+  button.style.cssText='margin-top:5px;cursor:pointer;background:#204957;'+
+   'color:#fff;border:1px solid #99d5de;border-radius:5px;padding:5px 8px';
+  host.appendChild(status);host.appendChild(button);
+  document.body.appendChild(host);
+  button.addEventListener('click',()=>{
+   this.setTaipeiUrbanDetailEnabled(!this.taipeiUrbanDetailEnabled());
+  });
+  this.taipeiUrbanPanel={host,status,button};
+  return this.taipeiUrbanPanel;
+ };
+ P.updateTaipeiUrbanDetailPanel=function(){
+  const panel=this.taipeiUrbanPanel;
+  if(!panel)return;
+  const st=this.getTaipeiUrbanDetailStats(),on=this.taipeiUrbanDetailEnabled();
+  panel.status.textContent=!on?'🏘 街景 OFF · 原始外觀':
+   st.active?'🏘 街景 ON · '+st.buildings+' 棟 / '+st.signs+
+     ' 招牌 / '+st.scooters+' 機車':
+   '🏘 街景 ON · 等待建築串流 · '+(st.nearChunks||0)+' 區塊';
+  panel.button.textContent=on?'關閉街景，比較原版':'開啟台北街景';
+ };
  P.clearTaipeiUrbanDetail=function(){
   const current=this.taipeiUrbanDetailGroup;
   if(current){
@@ -1647,8 +1685,10 @@
   this.taipeiUrbanDetailGroup=null;
   this.taipeiUrbanDetailStats={
    active:false,buildings:0,signs:0,scooters:0,
-   arcadeColumns:0,meshBatches:0,instances:0
+   arcadeColumns:0,meshBatches:0,instances:0,
+   nearChunks:0,candidates:0,roadRejected:0,frontageRejected:0
   };
+  this.updateTaipeiUrbanDetailPanel?.();
  };
  P.ensureTaipeiUrbanDetailAssets=function(){
   if(this.taipeiUrbanDetailAssets)return this.taipeiUrbanDetailAssets;
@@ -1666,6 +1706,8 @@
    arcadeBeam:mat('arcade lintel',0xbaa89b),
    arcadePillar:mat('arcade pillar',0xd0b9a6),
    shop:mat('shop glass',0x507482,{roughness:.24,metalness:.08}),
+   windowGlass:mat('glazed Taipei window',0x9cc0ca,{roughness:.26,metalness:.10}),
+   windowFrame:mat('dark iron grille',0x354850,{roughness:.65,metalness:.3}),
    balcony:mat('balcony railing',0x4f6063,{metalness:.35}),
    ac:mat('air conditioner',0xe1e2db),
    tank:mat('rooftop water tank',0x819ba1,{metalness:.15}),
@@ -1694,7 +1736,8 @@
   return(this.taipeiUrbanDetailAssets={box,wheel,tank,materials,signMaterials});
  };
  P.rebuildTaipeiUrbanDetail=function(){
-  if(!active()){
+  this.ensureTaipeiUrbanDetailPanel?.();
+  if(!active(this)){
    this.clearTaipeiUrbanDetail();
    return false;
   }
@@ -1704,12 +1747,17 @@
   const limit=maxForQuality[quality]||maxForQuality.high;
   const rows=new Map(types.map(x=>[x,[]]));
   for(let i=0;i<styles.length;i++){rows.set('sign'+i,[]);rows.set('vertical'+i,[]);}
-  const origin=this.carPos||this.getPlayerStartPos?.()||{x:0,z:0};
+  // Match the actual west-Taipei TITLE/LOADING streaming anchor (not carPos 0,0).
+  const title=this.gameState==='TITLE'||this.gameState==='LOADING'||!this.presentationReady;
+  const origin=(title?this.getPlayerStartPos?.():this.carPos)||
+    this.getPlayerStartPos?.()||this.carPos||{x:0,z:0};
   const selected=[];
   const entries=[...(this.worldChunkRenderEntries?.entries?.()||[])];
+  let nearChunks=0;
   entries.sort(([a],[b])=>String(a).localeCompare(String(b)));
   for(const [key,entry] of entries){
    if(entry.tier!=='near')continue;
+   nearChunks++;
    for(const b of entry.colliders||[]){
     if(b.kind!=='open-building'||!finite(b.x)||!finite(b.z)||!
       [b.w,b.d,b.height,b.y].every(finite)||
@@ -1722,19 +1770,21 @@
    const db=(b.x-origin.x)**2+(b.z-origin.z)**2;
    return da-db||String(a._key).localeCompare(String(b._key))||a.x-b.x||a.z-b.z;
   });
-  let buildings=0,signs=0,scooters=0,columns=0;
+  let buildings=0,signs=0,scooters=0,columns=0,roadRejected=0,frontageRejected=0;
   function push(kind,f,u,out,y,w,h,d){
    const p=placed(f,u,out,y);
    if([p.x,p.y,p.z,w,h,d,p.a].some(n=>!finite(n)||Math.abs(n)>1e6))return;
    rows.get(kind).push({...p,w,h,d});
   }
-  for(const b of selected.slice(0,limit)){
+  // Rejected facades must not exhaust the limited visual building quota.
+  for(const b of selected){
+   if(buildings>=limit)break;
    let road;
    try{road=this.snapRoad?.({x:b.x,z:b.z});}catch(_e){}
    if(!road||!finite(road.x)||!finite(road.z)||
-      Math.hypot(road.x-b.x,road.z-b.z)>42)continue;
+      Math.hypot(road.x-b.x,road.z-b.z)>42){roadRejected++;continue;}
    const f=chooseFront(b,road),front=Math.min(12,f.width*.84);
-   if(front<2.4)continue;
+   if(front<2.4){frontageRejected++;continue;}
    const seed=Math.floor(Math.abs(b.x*19+b.z*37+b.height*11));
    const style=seed%styles.length,base=b.y;
    // Every painted detail sits on an existing validated building facade
@@ -1760,6 +1810,9 @@
    for(let floor=0;floor<floors;floor++){
     const y=base+5.2+floor*3.35;
     if(y+1>b.y+b.height)break;
+    push('windowGlass',f,front*.07,.145,y+.7,Math.max(.9,front*.38),1.26,.055);
+    push('windowFrame',f,front*.07,.205,y+1.39,Math.max(.9,front*.41),.11,.085);
+    push('windowFrame',f,front*.07,.205,y+.03,Math.max(.9,front*.41),.11,.085);
     push('balcony',f,0,.28,y,front*.55,.12,.45);
     push('balcony',f,0,.53,y+.39,front*.55,.78,.075);
     if((floor+seed)%2===0)
@@ -1827,12 +1880,15 @@
    this.taipeiUrbanDetailGroup=group;
   }
   this.taipeiUrbanDetailStats={active:batches>0,buildings,signs,scooters,
-    arcadeColumns:columns,meshBatches:batches,instances};
+    arcadeColumns:columns,meshBatches:batches,instances,nearChunks,
+    candidates:selected.length,roadRejected,frontageRejected,quality};
+  this.updateTaipeiUrbanDetailPanel?.();
   return batches>0;
  };
  P.getTaipeiUrbanDetailStats=function(){return this.taipeiUrbanDetailStats||{
    active:false,buildings:0,signs:0,scooters:0,arcadeColumns:0,
-   meshBatches:0,instances:0
+   meshBatches:0,instances:0,nearChunks:0,candidates:0,
+   roadRejected:0,frontageRejected:0
  };};
  // Streaming owns the NEAR lifecycle. Build/unbuild decorative instances
  // only when the game already rebuilds its streamed detail batches.
