@@ -1342,6 +1342,7 @@
       triangles:info?.render?.triangles??null,
       geometries:info?.memory?.geometries??null,
       textures:info?.memory?.textures??null,
+      urban:game?.getTaipeiUrbanDetailStats?.()||null,
       gameState:game?.gameState||'unknown',
       quality:budget.quality||'unknown'
     };
@@ -1474,6 +1475,8 @@
           ' · 街 '+data.streetBatches+' / 車 '+data.taxiBatches,
         'Calls '+fmt(data.drawCalls)+' · Tri '+fmt(data.triangles),
         'GPU 資源物件：Geo '+fmt(data.geometries)+' / Tex '+fmt(data.textures),
+        '台北街景：'+(data.urban?.active?'ON':'OFF')+
+          ' · '+fmt(data.urban?.buildings)+' 棟 / '+fmt(data.urban?.scooters)+' 台機車',
         'RAF 間隔：p50 '+(median===null?'—':median.toFixed(1))+
           'ms · p95 '+(p95===null?'—':p95.toFixed(1))+'ms'
       ].join('\n');
@@ -1580,5 +1583,263 @@
       return output;
     };
   }
+})();
+
+/* Original procedural Taiwanese urban detail; feature branch P8-27 */
+/* P8-27: original procedural Taipei streetscape, visual-only and opt-in.
+ * Reuses existing streamed NEAR building colliders AS POSITION REFERENCES
+ * without changing them, street geometry, traffic AI, physics or routes.
+ * No third-party models, brands, text assets, timers or network requests.
+ * ?urban=on over HTTP(S), ?urban=off/default preserves original rendering.
+ */
+(function(){
+ 'use strict';
+ if(typeof TaipeiStreetCourier==='undefined')return;
+ const P=TaipeiStreetCourier.prototype;
+ const active=()=>typeof location!=='undefined'&&
+   /^https?:$/.test(location.protocol||'')&&
+   /(?:^|[?&])urban=on(?:&|$)/.test(location.search||'');
+ const maxForQuality={low:12,medium:32,high:56};
+ const finite=n=>typeof n==='number'&&Number.isFinite(n);
+ const types=[
+  'arcadeBeam','arcadePillar','shop','balcony','ac','tank',
+  'roofShed','scooterBody','scooterSeat','scooterWheel','scooterStem'
+ ];
+ const styles=[
+  {name:'西門',color:0x993947,paint:'#9a3d4f',accent:'#fff0d4'},
+  {name:'街坊',color:0x627b68,paint:'#4c755c',accent:'#f8e8bb'},
+  {name:'茶屋',color:0x8c5a43,paint:'#9b6046',accent:'#f6eddc'},
+  {name:'麵食',color:0x466d7b,paint:'#446579',accent:'#e6f4ef'}
+ ];
+ const random=(n,salt=0)=>{
+  const x=Math.sin(n*127.1+salt*311.7)*43758.5453123;
+  return x-Math.floor(x);
+ };
+ function chooseFront(b,road){
+  const a=Number(b.angle)||0,c=Math.cos(a),s=Math.sin(a);
+  const dx=road.x-b.x,dz=road.z-b.z;
+  const lx=dx*c-dz*s,lz=dx*s+dz*c;
+  const frontZ=Math.abs(lz/Math.max(b.d,1))>=Math.abs(lx/Math.max(b.w,1));
+  const face=frontZ?a+(lz>=0?0:Math.PI):
+    a+(lx>=0?Math.PI/2:-Math.PI/2);
+  const d=(frontZ?b.d:b.w)/2-.12;
+  return{a:face,x:b.x+Math.sin(face)*d,z:b.z+Math.cos(face)*d,
+    width:frontZ?b.w:b.d};
+ }
+ function placed(f,u,outward,height){
+  return{
+   x:f.x+Math.cos(f.a)*u+Math.sin(f.a)*outward,
+   y:height,
+   z:f.z-Math.sin(f.a)*u+Math.cos(f.a)*outward,
+   a:f.a
+  };
+ }
+ P.clearTaipeiUrbanDetail=function(){
+  const current=this.taipeiUrbanDetailGroup;
+  if(current){
+   this.scene?.remove?.(current);
+   current.traverse?.(obj=>{
+    // InstancedMesh.dispose releases instance GPU buffers, NOT shared source
+    // geometry/material/texture; those live for the entire preview session.
+    if(obj.isInstancedMesh)try{obj.dispose?.();}catch(_e){}
+   });
+  }
+  this.taipeiUrbanDetailGroup=null;
+  this.taipeiUrbanDetailStats={
+   active:false,buildings:0,signs:0,scooters:0,
+   arcadeColumns:0,meshBatches:0,instances:0
+  };
+ };
+ P.ensureTaipeiUrbanDetailAssets=function(){
+  if(this.taipeiUrbanDetailAssets)return this.taipeiUrbanDetailAssets;
+  if(typeof THREE?.InstancedMesh!=='function')return null;
+  const mat=(name,color,extras={})=>
+   new THREE.MeshStandardMaterial({
+    name:'Taipei original cosmetic '+name,color,roughness:.86,
+    metalness:0,...extras
+   });
+  const box=new THREE.BoxGeometry(1,1,1);
+  const wheel=new THREE.CylinderGeometry(.25,.25,.12,9);
+  wheel.rotateZ(Math.PI/2);
+  const tank=new THREE.CylinderGeometry(.48,.48,.95,10);
+  const materials={
+   arcadeBeam:mat('arcade lintel',0xbaa89b),
+   arcadePillar:mat('arcade pillar',0xd0b9a6),
+   shop:mat('shop glass',0x507482,{roughness:.24,metalness:.08}),
+   balcony:mat('balcony railing',0x4f6063,{metalness:.35}),
+   ac:mat('air conditioner',0xe1e2db),
+   tank:mat('rooftop water tank',0x819ba1,{metalness:.15}),
+   roofShed:mat('tin rooftop shed',0x8d9c9b,{metalness:.25}),
+   scooterBody:mat('parked scooter paint',0xa63d51,{metalness:.1}),
+   scooterSeat:mat('scooter saddle',0x252c33),
+   scooterWheel:mat('scooter tire',0x24272a),
+   scooterStem:mat('scooter handlebar',0x9da5aa,{metalness:.35})
+  };
+  const signMaterials=styles.map((s,i)=>{
+   const cv=document.createElement('canvas');cv.width=256;cv.height=128;
+   const ctx=cv.getContext?.('2d');
+   if(ctx){
+    ctx.fillStyle=s.paint;ctx.fillRect(0,0,256,128);
+    ctx.strokeStyle=s.accent;ctx.lineWidth=8;ctx.strokeRect(9,9,238,110);
+    ctx.fillStyle=s.accent;ctx.font='bold 48px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(s.name,128,59,220);
+    ctx.font='15px sans-serif';ctx.fillText('TAIPEI · STREET',128,101,230);
+   }
+   const tex=new THREE.CanvasTexture(cv);
+   if('colorSpace' in tex&&THREE.SRGBColorSpace)tex.colorSpace=THREE.SRGBColorSpace;
+   return mat('original Taiwanese generic sign '+i,0xffffff,
+    {map:tex,emissive:s.color,emissiveIntensity:.11});
+  });
+  return(this.taipeiUrbanDetailAssets={box,wheel,tank,materials,signMaterials});
+ };
+ P.rebuildTaipeiUrbanDetail=function(){
+  if(!active()){
+   this.clearTaipeiUrbanDetail();
+   return false;
+  }
+  const assets=this.ensureTaipeiUrbanDetailAssets();
+  if(!assets||!this.scene)return false;
+  const quality=this.effectiveGraphicsQuality?.()||'high';
+  const limit=maxForQuality[quality]||maxForQuality.high;
+  const rows=new Map(types.map(x=>[x,[]]));
+  for(let i=0;i<styles.length;i++){rows.set('sign'+i,[]);rows.set('vertical'+i,[]);}
+  const origin=this.carPos||this.getPlayerStartPos?.()||{x:0,z:0};
+  const selected=[];
+  const entries=[...(this.worldChunkRenderEntries?.entries?.()||[])];
+  entries.sort(([a],[b])=>String(a).localeCompare(String(b)));
+  for(const [key,entry] of entries){
+   if(entry.tier!=='near')continue;
+   for(const b of entry.colliders||[]){
+    if(b.kind!=='open-building'||!finite(b.x)||!finite(b.z)||!
+      [b.w,b.d,b.height,b.y].every(finite)||
+      b.w<5||b.d<5||b.height<11||b.height>55)continue;
+    selected.push({...b,_key:key});
+   }
+  }
+  selected.sort((a,b)=>{
+   const da=(a.x-origin.x)**2+(a.z-origin.z)**2;
+   const db=(b.x-origin.x)**2+(b.z-origin.z)**2;
+   return da-db||String(a._key).localeCompare(String(b._key))||a.x-b.x||a.z-b.z;
+  });
+  let buildings=0,signs=0,scooters=0,columns=0;
+  function push(kind,f,u,out,y,w,h,d){
+   const p=placed(f,u,out,y);
+   if([p.x,p.y,p.z,w,h,d,p.a].some(n=>!finite(n)||Math.abs(n)>1e6))return;
+   rows.get(kind).push({...p,w,h,d});
+  }
+  for(const b of selected.slice(0,limit)){
+   let road;
+   try{road=this.snapRoad?.({x:b.x,z:b.z});}catch(_e){}
+   if(!road||!finite(road.x)||!finite(road.z)||
+      Math.hypot(road.x-b.x,road.z-b.z)>42)continue;
+   const f=chooseFront(b,road),front=Math.min(12,f.width*.84);
+   if(front<4)continue;
+   const seed=Math.floor(Math.abs(b.x*19+b.z*37+b.height*11));
+   const style=seed%styles.length,base=b.y;
+   // Every painted detail sits on an existing validated building facade
+   // (or immediately at its edge). NONE are added to physical solid arrays.
+   push('arcadeBeam',f,0,-.43,base+3.18,front,.24,1.12);
+   for(const u of [-front*.42,0,front*.42]){
+    push('arcadePillar',f,u,-.26,base+1.51,.18,3.03,.18);
+    columns++;
+   }
+   push('shop',f,0,-.71,base+1.38,front*.77,2.45,.09);
+   push('sign'+style,f,0,.06,base+2.72,Math.min(4.2,front*.68),.58,.15);
+   signs++;
+   if(seed%3!==0&&b.height>=16){
+    const nx=seed%2?front*.3:-front*.3;
+    push('vertical'+style,f,nx,.30,base+5.0,.67,2.35,.17);
+    signs++;
+   }
+   const floors=Math.min(6,Math.floor((b.height-4)/3.6));
+   for(let floor=0;floor<floors;floor++){
+    const y=base+5.2+floor*3.35;
+    if(y+1>b.y+b.height)break;
+    push('balcony',f,0,.10,y,front*.55,.12,.45);
+    push('balcony',f,0,.43,y+.39,front*.55,.78,.075);
+    if((floor+seed)%2===0)
+     push('ac',f,-front*.31,.29,y+.52,.80,.60,.55);
+   }
+   if(b.height>=15){
+    const rooftop={...f,x:b.x,z:b.z,a:0};
+    if(seed%3===0)push('tank',rooftop,0,0,base+b.height+.63,1,1,1);
+    if(seed%5===0)push('roofShed',rooftop,0,0,base+b.height+.4,2.1,.8,1.6);
+   }
+   // Tiny, purely visual parked scooters live at existing shopfronts and
+   // NEVER participate in the rider/NPC collision or gameplay state.
+   if(scooters<24&&seed%2===0){
+    const q=placed(f,front*.24,.63,base+.44);
+    const sample={x:q.x,z:q.z,w:.42,d:1.55,
+      angle:f.a,kind:'cosmetic-parked-scooter'};
+    let isRoad=true;
+    try{isRoad=this.onOrdinaryRoad?.(sample,.2)!==false;}catch(_e){}
+    if(!isRoad){
+     push('scooterBody',f,front*.24,.63,base+.66,.42,.45,1.42);
+     push('scooterSeat',f,front*.24,.63,base+.96,.32,.15,.67);
+     push('scooterWheel',f,front*.24,.14,base+.26,.85,1,1);
+     push('scooterWheel',f,front*.24,1.12,base+.26,.85,1,1);
+     push('scooterStem',f,front*.24,1.02,base+1.04,.12,.72,.12);
+     scooters++;
+    }
+   }
+   buildings++;
+  }
+  const group=new THREE.Group();group.name='P8 Original Taipei Urban Detail (cosmetic only)';
+  group.userData.decorativeOnly=true;
+  const axis=new THREE.Vector3(0,1,0),mat=new THREE.Matrix4(),
+   quat=new THREE.Quaternion(),pos=new THREE.Vector3(),scale=new THREE.Vector3();
+  let batches=0,instances=0;
+  try{
+   for(const [kind,items] of rows){
+    if(!items.length)continue;
+    const sign=kind.startsWith('sign')||kind.startsWith('vertical');
+    const style=sign?Number(kind.replace(/[^0-9]/g,''))||0:null;
+    const geometry=kind==='tank'?assets.tank:kind==='scooterWheel'?assets.wheel:assets.box;
+    const material=sign?assets.signMaterials[style]:assets.materials[kind];
+    if(!material||!geometry)throw Error('Missing original Taipei visual asset '+kind);
+    const mesh=new THREE.InstancedMesh(geometry,material,items.length);
+    mesh.name='P8 Taipei streetscape '+kind;
+    mesh.userData.decorativeOnly=true;
+    mesh.userData.taipeiUrbanDetail=true;
+    mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=true;
+    group.add(mesh);
+    items.forEach((o,i)=>{
+     pos.set(o.x,o.y,o.z);quat.setFromAxisAngle(axis,o.a);
+     scale.set(o.w,o.h,o.d);mat.compose(pos,quat,scale);
+     mesh.setMatrixAt(i,mat);
+    });
+    mesh.instanceMatrix.needsUpdate=true;
+    batches++;instances+=items.length;
+   }
+  }catch(error){
+   group.traverse?.(o=>{if(o.isInstancedMesh)try{o.dispose?.();}catch(_e){}});
+   this.taipeiUrbanDetailError=String(error?.message||error);
+   return false;
+  }
+  this.clearTaipeiUrbanDetail();
+  if(batches){
+   this.scene.add(group);
+   this.taipeiUrbanDetailGroup=group;
+  }
+  this.taipeiUrbanDetailStats={active:batches>0,buildings,signs,scooters,
+    arcadeColumns:columns,meshBatches:batches,instances};
+  return batches>0;
+ };
+ P.getTaipeiUrbanDetailStats=function(){return this.taipeiUrbanDetailStats||{
+   active:false,buildings:0,signs:0,scooters:0,arcadeColumns:0,
+   meshBatches:0,instances:0
+ };};
+ // Streaming owns the NEAR lifecycle. Build/unbuild decorative instances
+ // only when the game already rebuilds its streamed detail batches.
+ const old=P.rebuildWorldChunkDetailBatches;
+ if(typeof old==='function')P.rebuildWorldChunkDetailBatches=function(...args){
+  const result=old.apply(this,args);
+  try{this.rebuildTaipeiUrbanDetail();}catch(e){
+   this.taipeiUrbanDetailError=String(e?.message||e);
+   this.clearTaipeiUrbanDetail();
+  }
+  return result;
+ };
 })();
 

@@ -2,7 +2,7 @@
   "schema": 1,
   "previewOnly": true,
   "sourceRepository": "kevin781130-netizen/TAIPEI-STREET-COURIER",
-  "sourceFeatureCommit": "ad2b6ebac0061b6b966d7bb626217d390292de39",
+  "sourceFeatureCommit": "4ba950ce39d7bcfbf27138d65624cbedc7a995f4",
   "basePublicPreviewSourceCommit": "f33c51d4d38f1cf3215aebf9d195928351fdc337",
   "artAssetCommit": "08f0c913f6783cc81f9f6105a7cdda8562b1c192",
   "assets": [
@@ -31,5 +31,14 @@
     "Experimental split-script CDN base; not a full esbuild build.",
     "Third-party CDN connectivity required for Kenney GLB downloads.",
     "Actual WebGL gameplay has not been tested in the assistant container."
-  ]
+  ],
+  "previewUpdatedFor": "P8-27 original Taipei urban detail — arcade, shops, signs, balconies, AC, rooftop, scooters",
+  "optionalURL": "?externalart=on&artqa=1&urban=on",
+  "urbanDetailLicense": "Original procedural geometry and generic sign canvas graphics; not copied from Taipei Rush",
+  "maxNearBuildings": {
+    "low": 12,
+    "medium": 32,
+    "high": 56
+  },
+  "cosmeticsOnly": true
 }
