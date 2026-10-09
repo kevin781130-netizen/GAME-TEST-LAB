@@ -1,0 +1,22 @@
+{
+  "game": "Outrun Taipei — Quaternius Roadside Test (Independent P15)",
+  "baseRelease": "V56.1A-playtest",
+  "baseBuildRepo": "kevin781130-netizen/GAME-TEST-LAB",
+  "baseDirectory": "outrun-taipei",
+  "baseCommit": "354f66ba13996309669411c42496de0214963943",
+  "originalProductionFilesUntouched": true,
+  "sourceArtRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceArtMain": "f5d33732d0161eb961823ff2521830a0097f61ed",
+  "integration": "optional scene addon driven by read-only V56 corridor geometry",
+  "enabledByDefault": false,
+  "maxStreetfronts": 6,
+  "maxOriginalGLTFVisible": 2,
+  "farMode": "instanced low polygon proxy, shop text preserved",
+  "conservativeRoadClearanceMeters": 8,
+  "LOWGraphicsMode": "automatic visual-only art suppression",
+  "routeAndPhysicsUntouched": true,
+  "all15RoutesPreserved": true,
+  "browserVisualAcceptance": "NOT VERIFIED",
+  "mobileGPUPerformance": "NOT MEASURED",
+  "revert": "go back to /GAME-TEST-LAB/outrun-taipei/ or disable toggle"
+}
