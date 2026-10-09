@@ -1713,7 +1713,7 @@
    for(const b of entry.colliders||[]){
     if(b.kind!=='open-building'||!finite(b.x)||!finite(b.z)||!
       [b.w,b.d,b.height,b.y].every(finite)||
-      b.w<5||b.d<5||b.height<11||b.height>55)continue;
+      b.w<3||b.d<1.6||b.height<9||b.height>55)continue;
     selected.push({...b,_key:key});
    }
   }
@@ -1734,13 +1734,17 @@
    if(!road||!finite(road.x)||!finite(road.z)||
       Math.hypot(road.x-b.x,road.z-b.z)>42)continue;
    const f=chooseFront(b,road),front=Math.min(12,f.width*.84);
-   if(front<4)continue;
+   if(front<2.4)continue;
    const seed=Math.floor(Math.abs(b.x*19+b.z*37+b.height*11));
    const style=seed%styles.length,base=b.y;
    // Every painted detail sits on an existing validated building facade
    // (or immediately at its edge). NONE are added to physical solid arrays.
    push('arcadeBeam',f,0,.65,base+3.18,front,.24,1.12);
-   for(const u of [-front*.42,0,front*.42]){
+   // The real Taipei footprints include many narrow 3-4m street houses.
+   // Two arcade columns on a narrow face leave the shop glass visible.
+   const pillarOffsets=front<4?[-front*.42,front*.42]:
+     [-front*.42,0,front*.42];
+   for(const u of pillarOffsets){
     push('arcadePillar',f,u,.87,base+1.51,.18,3.03,.18);
     columns++;
    }
@@ -1768,7 +1772,7 @@
    }
    // Tiny, purely visual parked scooters live at existing shopfronts and
    // NEVER participate in the rider/NPC collision or gameplay state.
-   if(scooters<24&&seed%2===0){
+   if(scooters<24&&front>=3.4&&seed%2===0){
     const q=placed(f,front*.24,.63,base+.44);
     const sample={x:q.x,z:q.z,w:.42,d:1.55,
       angle:f.a,kind:'cosmetic-parked-scooter'};

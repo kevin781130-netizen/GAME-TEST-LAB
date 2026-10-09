@@ -2,7 +2,7 @@
   "schema": 1,
   "previewOnly": true,
   "sourceRepository": "kevin781130-netizen/TAIPEI-STREET-COURIER",
-  "sourceFeatureCommit": "5e7a3fa4f59b97eb3e41a3683e7509dbcaf37a91",
+  "sourceFeatureCommit": "45fa18ec40f73ad505aee6b46cb64972d7cbbcfb",
   "basePublicPreviewSourceCommit": "f33c51d4d38f1cf3215aebf9d195928351fdc337",
   "artAssetCommit": "08f0c913f6783cc81f9f6105a7cdda8562b1c192",
   "assets": [
@@ -41,5 +41,14 @@
     "high": 56
   },
   "cosmeticsOnly": true,
-  "urbanDetailPlacement": "facades, signs and columns anchored outside existing building exterior; no collision updates"
+  "urbanDetailPlacement": "facades, signs and columns anchored outside existing building exterior; no collision updates",
+  "urbanNarrowFrontages": {
+    "minWidth": 3,
+    "minDepth": 1.6,
+    "minHeight": 9,
+    "minFrontage": 2.4,
+    "arcadePillars": "2 when frontage under 4",
+    "scooters": "only frontage >=3.4"
+  },
+  "visualCloudAudit": "VTK 9.6.2 EGL offline approximation inspected; real browser/WebGL acceptance still pending"
 }
