@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "previewOnly": true,
+  "items": [
+    {
+      "id": "kenney-construction-cone",
+      "role": "street-prop",
+      "path": "models/kenney-construction-cone.glb",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "pack": "Kenney City Kit (Roads)",
+      "sha256": "a67f87e58615dd7ebbe485e7e985a5af9bd145e3619a9908dcbbeb7e43c8321a",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/08f0c913f6783cc81f9f6105a7cdda8562b1c192/packs/city-kit-roads/construction-cone.glb",
+      "licenseEvidenceUrl": "https://kenney.nl/assets/city-kit-roads"
+    },
+    {
+      "id": "kenney-construction-barrier",
+      "role": "street-prop",
+      "path": "models/kenney-construction-barrier.glb",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "pack": "Kenney City Kit (Roads)",
+      "sha256": "498a6dda82a1fdecd0fb7b27cace5ee7c06367cac62f833bba5ae4399505982f",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/08f0c913f6783cc81f9f6105a7cdda8562b1c192/packs/city-kit-roads/construction-barrier.glb",
+      "licenseEvidenceUrl": "https://kenney.nl/assets/city-kit-roads"
+    },
+    {
+      "id": "kenney-light-square",
+      "role": "street-prop",
+      "path": "models/kenney-light-square.glb",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "pack": "Kenney City Kit (Roads)",
+      "sha256": "f167dff6392ec4ea186b8d3e5e3cb55aa5279af6a710ff3ce9f690f226234e17",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/08f0c913f6783cc81f9f6105a7cdda8562b1c192/packs/city-kit-roads/light-square.glb",
+      "licenseEvidenceUrl": "https://kenney.nl/assets/city-kit-roads"
+    },
+    {
+      "id": "kenney-taxi",
+      "role": "traffic",
+      "path": "models/kenney-taxi.glb",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "pack": "Kenney Car Kit",
+      "sha256": "c0ead3df92617dbca425e522003e80777cffc5f8987f664abab1363ff786704c",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/08f0c913f6783cc81f9f6105a7cdda8562b1c192/packs/car-kit/taxi.glb",
+      "licenseEvidenceUrl": "https://kenney.nl/assets/car-kit"
+    }
+  ]
+}

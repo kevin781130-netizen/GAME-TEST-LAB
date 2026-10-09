@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "chunkSize": 160,
+  "origin": [
+    0,
+    0
+  ],
+  "chunks": [
+    {
+      "id": "-6:-1",
+      "x": -6,
+      "z": -1,
+      "file": "chunks/c_-6_-1.json",
+      "lodFile": "chunks/c_-6_-1.lod.json",
+      "bounds": [
+        -960,
+        -160,
+        -800,
+        0
+      ],
+      "roadRefs": 19,
+      "buildings": 68,
+      "bytes": 24289,
+      "lodBytes": 13195
+    },
+    {
+      "id": "-6:0",
+      "x": -6,
+      "z": 0,
+      "file": "chunks/c_-6_0.json",
+      "lodFile": "chunks/c_-6_0.lod.json",
+      "bounds": [
+        -960,
+        0,
+        -800,
+        160
+      ],
+      "roadRefs": 51,
+      "buildings": 284,
+      "bytes": 90906,
+      "lodBytes": 55329
+    },
+    {
+      "id": "-6:1",
+      "x": -6,
+      "z": 1,
+      "file": "chunks/c_-6_1.json",
+      "lodFile": "chunks/c_-6_1.lod.json",
+      "bounds": [
+        -960,
+        160,
+        -800,
+        320
+      ],
+      "roadRefs": 7,
+      "buildings": 20,
+      "bytes": 7358,
+      "lodBytes": 3780
+    },
+    {
+      "id": "-5:-2",
+      "x": -5,
+      "z": -2,
+      "file": "chunks/c_-5_-2.json",
+      "lodFile": "chunks/c_-5_-2.lod.json",
+      "bounds": [
+        -800,
+        -320,
+        -640,
+        -160
+      ],
+      "roadRefs": 58,
+      "buildings": 399,
+      "bytes": 132251,
+      "lodBytes": 81154
+    },
+    {
+      "id": "-5:-1",
+      "x": -5,
+      "z": -1,
+      "file": "chunks/c_-5_-1.json",
+      "lodFile": "chunks/c_-5_-1.lod.json",
+      "bounds": [
+        -800,
+        -160,
+        -640,
+        0
+      ],
+      "roadRefs": 143,
+      "buildings": 430,
+      "bytes": 163050,
+      "lodBytes": 85369
+    },
+    {
+      "id": "-5:0",
+      "x": -5,
+      "z": 0,
+      "file": "chunks/c_-5_0.json",
+      "lodFile": "chunks/c_-5_0.lod.json",
+      "bounds": [
+        -800,
+        0,
+        -640,
+        160
+      ],
+      "roadRefs": 122,
+      "buildings": 652,
+      "bytes": 212941,
+      "lodBytes": 128939
+    },
+    {
+      "id": "-5:1",
+      "x": -5,
+      "z": 1,
+      "file": "chunks/c_-5_1.json",
+      "lodFile": "chunks/c_-5_1.lod.json",
+      "bounds": [
+        -800,
+        160,
+        -640,
+        320
+      ],
+      "roadRefs": 32,
+      "buildings": 30,
+      "bytes": 18767,
+      "lodBytes": 5728
+    },
+    {
+      "id": "-4:-2",
+      "x": -4,
+      "z": -2,
+      "file": "chunks/c_-4_-2.json",
+      "lodFile": "chunks/c_-4_-2.lod.json",
+      "bounds": [
+        -640,
+        -320,
+        -480,
+        -160
+      ],
+      "roadRefs": 100,
+      "buildings": 455,
+      "bytes": 157590,
+      "lodBytes": 87974
+    },
+    {
+      "id": "-4:-1",
+      "x": -4,
+      "z": -1,
+      "file": "chunks/c_-4_-1.json",
+      "lodFile": "chunks/c_-4_-1.lod.json",
+      "bounds": [
+        -640,
+        -160,
+        -480,
+        0
+      ],
+      "roadRefs": 222,
+      "buildings": 599,
+      "bytes": 232632,
+      "lodBytes": 113894
+    },
+    {
+      "id": "-4:0",
+      "x": -4,
+      "z": 0,
+      "file": "chunks/c_-4_0.json",
+      "lodFile": "chunks/c_-4_0.lod.json",
+      "bounds": [
+        -640,
+        0,
+        -480,
+        160
+      ],
+      "roadRefs": 109,
+      "buildings": 266,
+      "bytes": 108734,
+      "lodBytes": 54710
+    },
+    {
+      "id": "-4:1",
+      "x": -4,
+      "z": 1,
+      "file": "chunks/c_-4_1.json",
+      "lodFile": "chunks/c_-4_1.lod.json",
+      "bounds": [
+        -640,
+        160,
+        -480,
+        320
+      ],
+      "roadRefs": 7,
+      "buildings": 29,
+      "bytes": 12574,
+      "lodBytes": 5770
+    },
+    {
+      "id": "-3:-2",
+      "x": -3,
+      "z": -2,
+      "file": "chunks/c_-3_-2.json",
+      "lodFile": "chunks/c_-3_-2.lod.json",
+      "bounds": [
+        -480,
+        -320,
+        -320,
+        -160
+      ],
+      "roadRefs": 49,
+      "buildings": 166,
+      "bytes": 60826,
+      "lodBytes": 32137
+    },
+    {
+      "id": "-3:-1",
+      "x": -3,
+      "z": -1,
+      "file": "chunks/c_-3_-1.json",
+      "lodFile": "chunks/c_-3_-1.lod.json",
+      "bounds": [
+        -480,
+        -160,
+        -320,
+        0
+      ],
+      "roadRefs": 69,
+      "buildings": 314,
+      "bytes": 107260,
+      "lodBytes": 61456
+    },
+    {
+      "id": "-3:0",
+      "x": -3,
+      "z": 0,
+      "file": "chunks/c_-3_0.json",
+      "lodFile": "chunks/c_-3_0.lod.json",
+      "bounds": [
+        -480,
+        0,
+        -320,
+        160
+      ],
+      "roadRefs": 51,
+      "buildings": 161,
+      "bytes": 61892,
+      "lodBytes": 33101
+    },
+    {
+      "id": "-3:1",
+      "x": -3,
+      "z": 1,
+      "file": "chunks/c_-3_1.json",
+      "lodFile": "chunks/c_-3_1.lod.json",
+      "bounds": [
+        -480,
+        160,
+        -320,
+        320
+      ],
+      "roadRefs": 9,
+      "buildings": 22,
+      "bytes": 9263,
+      "lodBytes": 4728
+    }
+  ],
+  "totals": {
+    "chunks": 15,
+    "roadRefs": 1048,
+    "buildings": 3895,
+    "bytes": 1400333,
+    "lodBytes": 767264
+  },
+  "roads": {
+    "license": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "sourceDate": "2026-10-04",
+    "inputSha256": "d02b331db9aec1eee4319577e00492fcabad0959bf9cc252c8ef98de60afdd1a",
+    "cleanup": {
+      "minGameSegment": 1,
+      "droppedTinyFragments": 3,
+      "sourceCleanup": null
+    }
+  },
+  "buildings": {
+    "license": "Government Open Data License v1.0 (source attribution required)",
+    "agency": "臺北市政府",
+    "dataset": "臺北市自動化3D近似建物模型",
+    "sourceCommit": "a456da5f1f4d3ea6f85412413080870ffe4ddff8",
+    "boxAngleConvention": "three-y"
+  },
+  "note": "Full files contain roads + source footprints for NEAR. lodFile contains compact building OBB/height/style for MID/FAR. Roads crossing chunk boundaries can appear in multiple full files; deduplicate by _streamId."
+}

@@ -1,0 +1,294 @@
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;}
+body,html{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Noto Sans TC',sans-serif;}
+#game-canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block;z-index:1;}
+#hud{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;display:none;}
+#hud-timer-container{position:absolute;top:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;}
+#hud-timer-label{font-family:'Bungee',cursive;font-size:13px;color:#FFF;letter-spacing:2px;text-shadow:2px 2px 0 #000;}
+#hud-timer{font-family:'Black Ops One',cursive;font-size:64px;color:#00FF66;line-height:1;text-shadow:3px 3px 0 #000,0 0 25px rgba(0,255,102,.9);}
+#hud-timer.urgent{color:#FF2233!important;animation:pulseUrgent .5s infinite alternate;}
+@keyframes pulseUrgent{0%{transform:scale(1);}100%{transform:scale(1.18);}}
+#hud-fare-box{position:absolute;top:18px;left:24px;}
+.hud-label-tag{font-family:'Bungee',cursive;font-size:13px;color:#FFD700;letter-spacing:1px;text-shadow:2px 2px 0 #000;}
+#hud-total-fare{font-family:'Black Ops One',cursive;font-size:42px;color:#FFDD00;text-shadow:3px 3px 0 #000;line-height:1;}
+#hud-current-fare{font-family:'Bungee',cursive;font-size:18px;color:#00FFCC;text-shadow:2px 2px 0 #000;margin-top:4px;}
+#hud-customer-box{position:absolute;top:18px;right:24px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
+#hud-mode-badge{font-family:'Bungee',cursive;font-size:12px;background:rgba(0,0,0,.7);color:#00E5FF;border:2px solid #00E5FF;border-radius:6px;padding:3px 10px;margin-bottom:4px;}
+#hud-customer-timer{font-family:'Black Ops One',cursive;font-size:48px;color:#FF3344;text-shadow:3px 3px 0 #000;line-height:1;display:none;}
+#hud-destination{font-family:'Bungee',cursive;font-size:18px;color:#FFF;background:rgba(255,34,68,.85);padding:4px 14px;border-radius:8px;border:2px solid #FFF;display:none;}
+#hud-distance{font-weight:900;font-size:15px;color:#FFF;text-shadow:1px 1px 0 #000;display:none;}
+#hud-dash-cluster{position:absolute;bottom:22px;right:24px;display:flex;align-items:flex-end;gap:16px;}
+#hud-gear-shifter{display:flex;flex-direction:column;align-items:center;background:rgba(10,10,15,.85);border:3px solid #FFD700;border-radius:10px;padding:6px 12px;}
+.gear-item{font-family:'Bungee',cursive;font-size:24px;line-height:1.2;color:#444;}
+.gear-item.active-d{color:#00FF66!important;text-shadow:0 0 12px #00FF66;transform:scale(1.15);}
+.gear-item.active-r{color:#FF2233!important;text-shadow:0 0 12px #FF2233;transform:scale(1.15);}
+#hud-speed-gauge{display:flex;flex-direction:column;align-items:center;background:rgba(10,10,15,.85);border:3px solid #FFF;border-radius:12px;padding:8px 18px;}
+#hud-speed{font-family:'Black Ops One',cursive;font-size:52px;color:#00E5FF;line-height:1;text-shadow:3px 3px 0 #000;}
+#hud-speed-unit{font-family:'Bungee',cursive;font-size:13px;color:#AAA;}
+#radar-container{position:absolute;bottom:22px;left:24px;width:140px;height:140px;background:rgba(15,20,25,.85);border:3px solid #00E5FF;border-radius:50%;overflow:hidden;}
+#radar-canvas{width:100%;height:100%;border-radius:50%;}
+#hud-compass{position:absolute;bottom:180px;right:24px;width:120px;height:120px;z-index:11;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.6));}
+#hud-compass-canvas{width:100%;height:100%;}
+#hud-stunt-banner{position:absolute;top:25%;left:50%;transform:translate(-50%,-50%) scale(0);font-family:'Bungee',cursive;font-size:38px;color:#FFF;text-align:center;text-shadow:3px 3px 0 #000;pointer-events:none;transition:transform .15s cubic-bezier(.175,.885,.32,1.275);}
+.stunt-courier-dash{color:#00E5FF!important;}.stunt-courier-drift{color:#FFD700!important;}.stunt-courier-through{color:#FF2277!important;}.stunt-courier-hop{color:#00FF66!important;}.stunt-strike{color:#FF0055!important;font-size:56px!important;}
+#hud-combo-counter{font-size:24px;color:#00FFCC;display:block;margin-top:4px;}
+.tip-floating-popup{position:absolute;font-family:'Black Ops One',cursive;font-size:30px;color:#00FF66;text-shadow:2px 2px 0 #000;pointer-events:none;animation:floatUpFade .8s ease-out forwards;}
+@keyframes floatUpFade{0%{opacity:1;transform:translate(-50%,0) scale(.8);}50%{transform:translate(-50%,-35px) scale(1.25);}100%{opacity:0;transform:translate(-50%,-65px) scale(1);}}
+#hud-status-toast{position:absolute;top:110px;left:50%;transform:translateX(-50%);font-family:'Bungee',cursive;font-size:15px;color:#FFD700;background:rgba(0,0,0,.85);border:2px solid #FFD700;border-radius:20px;padding:6px 18px;opacity:0;transition:opacity .3s;}
+#hud-controls-panel{position:absolute;bottom:180px;left:24px;display:flex;flex-direction:column;gap:6px;pointer-events:auto;}
+.hud-toggle-btn{background:rgba(0,0,0,.7);color:#00E5FF;border:2px solid #00E5FF;border-radius:8px;padding:6px 12px;font-family:'Bungee',cursive;font-size:12px;cursor:pointer;}
+.hud-toggle-btn.on{background:#00E5FF;color:#000;}
+#overlay-screen{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center,rgba(20,25,45,.94) 0%,rgba(5,5,10,.98) 100%);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:50;color:#FFF;padding:20px;overflow-y:auto;}
+.arcade-title-main{font-family:'Black Ops One',cursive;font-size:clamp(38px,6vw,76px);color:#FFD700;letter-spacing:4px;text-shadow:4px 4px 0 #FF2233,0 0 35px rgba(255,215,0,.8);text-align:center;transform:skew(-8deg);margin-bottom:4px;}
+.arcade-subtitle{font-family:'Bungee',cursive;font-size:clamp(14px,2.2vw,22px);color:#00E5FF;letter-spacing:2px;margin-bottom:20px;}
+.selection-heading{font-family:'Bungee',cursive;font-size:15px;color:#FFD700;letter-spacing:2px;margin-bottom:8px;}
+.mode-select-grid{display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap;justify-content:center;max-width:900px;}
+.mode-card{background:rgba(255,255,255,.08);border:3px solid rgba(255,255,255,.25);border-radius:12px;padding:12px 18px;cursor:pointer;display:flex;flex-direction:column;align-items:center;min-width:170px;transition:all .2s;}
+.mode-card:hover{background:rgba(0,229,255,.15);border-color:#00E5FF;}
+.mode-card.selected{background:rgba(255,215,0,.2);border-color:#FFD700;box-shadow:0 0 20px rgba(255,215,0,.5);transform:scale(1.04);}
+.mode-card-title{font-family:'Bungee',cursive;font-size:16px;color:#FFF;margin-bottom:4px;}
+.mode-card-desc{font-size:12px;color:#BBB;text-align:center;}
+.driver-select-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:960px;width:100%;margin-bottom:25px;}
+@media(max-width:768px){.driver-select-grid{grid-template-columns:repeat(2,1fr);}}
+.driver-card{background:rgba(255,255,255,.07);border:3px solid rgba(255,255,255,.25);border-radius:14px;padding:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:all .2s;}
+.driver-card:hover{border-color:#FF2233;}
+.driver-card.selected{background:rgba(255,215,0,.25);border-color:#FFD700;transform:scale(1.05);}
+.driver-avatar{width:65px;height:65px;border-radius:50%;border:3px solid #FFF;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-family:'Black Ops One',cursive;font-size:26px;color:#FFF;}
+.driver-name{font-family:'Bungee',cursive;font-size:18px;color:#FFD700;margin-bottom:2px;}
+.driver-title{font-size:11px;color:#00E5FF;font-weight:900;margin-bottom:8px;}
+.driver-cab-name{font-size:11px;color:#EEE;margin-bottom:10px;}
+.stat-row{width:100%;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#BBB;margin-bottom:3px;}
+.stat-bar-bg{width:60px;height:6px;background:#333;border-radius:3px;overflow:hidden;}
+.stat-bar-fill{height:100%;background:#00FF66;}
+.arcade-btn-start{font-family:'Black Ops One',cursive;font-size:26px;color:#000;background:linear-gradient(180deg,#FFDD00 0%,#FF8800 100%);border:4px solid #FFF;border-radius:40px;padding:12px 48px;cursor:pointer;letter-spacing:2px;}
+.arcade-btn-start:hover{transform:scale(1.08);}
+.action-links-row{display:flex;gap:20px;margin-top:14px;}
+.text-link-btn{background:transparent;border:none;color:#00E5FF;font-family:'Bungee',cursive;font-size:13px;cursor:pointer;text-decoration:underline;}
+#license-screen{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(5,10,20,.96);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:60;padding:20px;color:#FFF;}
+.license-card{width:min(580px,92vw);background:linear-gradient(135deg,#FFF9D2 0%,#F5DEB3 100%);border:6px solid #D4AF37;border-radius:20px;padding:25px;color:#111;position:relative;}
+.license-header{display:flex;justify-content:space-between;border-bottom:3px solid #333;padding-bottom:10px;margin-bottom:15px;}
+.license-title{font-family:'Black Ops One',cursive;font-size:22px;color:#990000;}
+.license-body{display:flex;gap:20px;align-items:center;}
+.license-photo-frame{width:110px;height:125px;border:3px solid #222;background:#444;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#FFF;font-family:'Bungee',cursive;font-size:32px;position:relative;}
+.license-photo-name{position:absolute;bottom:4px;font-size:11px;color:#FFD700;}
+.license-details{flex:1;display:flex;flex-direction:column;gap:6px;}
+.license-stat-line{display:flex;justify-content:space-between;font-size:14px;font-weight:900;border-bottom:1px dashed rgba(0,0,0,.3);}
+.license-stamp{position:absolute;bottom:20px;right:25px;border:5px solid #C00;border-radius:12px;padding:6px 16px;font-family:'Black Ops One',cursive;font-size:38px;color:#C00;transform:rotate(-12deg);}
+#manual-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:70;padding:20px;}
+.manual-content{background:#181A20;border:4px solid #FFD700;border-radius:16px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;color:#FFF;}
+.manual-title{font-family:'Black Ops One',cursive;font-size:26px;color:#FFD700;margin-bottom:14px;text-align:center;}
+.manual-section{margin-bottom:16px;}
+.manual-section h4{font-family:'Bungee',cursive;color:#00E5FF;font-size:15px;margin-bottom:6px;}
+.manual-section p{font-size:13px;color:#DDD;line-height:1.5;margin-bottom:4px;}
+.manual-close-btn{font-family:'Bungee',cursive;font-size:16px;background:#FF2233;color:#FFF;border:2px solid #FFF;border-radius:20px;padding:8px 24px;cursor:pointer;display:block;margin:15px auto 0;}
+#loading-screen{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;color:#FFF;}
+#loading-text{font-family:'Bungee',cursive;font-size:24px;color:#FFD700;margin-bottom:16px;}
+#loading-bar{width:400px;height:8px;background:#222;border-radius:4px;overflow:hidden;}
+#loading-fill{height:100%;background:linear-gradient(90deg,#00E5FF,#00FF66);width:0%;transition:width .3s;}
+#debug-panel{position:absolute;top:8px;right:8px;font-family:monospace;font-size:11px;color:#0F0;background:rgba(0,0,0,.6);padding:4px 8px;border-radius:4px;pointer-events:none;z-index:100;}
+:root{--ink:#081b25;--mint:#00e5cf;--gold:#ffd260;--paper:#f4f2e9}body,html{font-family:system-ui,-apple-system,'Microsoft JhengHei',sans-serif;background:var(--ink)}button{font-family:inherit!important;touch-action:manipulation}button:focus-visible,[role=button]:focus-visible{outline:3px solid white;outline-offset:4px}#debug-panel{display:none}#loading-screen{background:#081b25}#loading-text{font-family:inherit;font-weight:800}#loading-bar{width:min(360px,80vw)}#loading-error{max-width:80vw;font-size:12px;color:#c2d1d6;margin:20px}#overlay-screen{display:none;align-items:stretch;justify-content:center;padding:36px 5vw;background:linear-gradient(90deg,#071821fa 0%,#071821eb 46%,#07182148 76%,#07182112 100%);overflow:auto}.launch-shell{width:min(650px,58vw);padding:10px 0}.brand-line{display:flex;align-items:center;gap:12px;color:var(--mint);font-size:12px;letter-spacing:3px;font-weight:800}.brand-badge{background:var(--mint);color:#081b25;padding:5px 9px;border-radius:4px;font-size:11px;letter-spacing:1px}.arcade-title-main{font-family:inherit;font-size:clamp(36px,5.2vw,70px);letter-spacing:-3px;font-weight:950;font-style:italic;color:var(--paper);text-shadow:none;transform:none;text-align:left;line-height:1.05;margin:22px 0 10px}.arcade-title-main span{color:var(--gold)}.arcade-subtitle{font-family:inherit;color:#adc4cd;font-size:14px;letter-spacing:1px;margin-bottom:22px}.menu-brief{display:flex;gap:24px;margin-bottom:24px;color:#d2e0e5;font-size:13px}.menu-brief b{color:var(--gold);font-size:22px;margin-right:5px}.selection-heading{font-family:inherit;font-size:11px;color:#7e9da9;letter-spacing:2px;margin:16px 0 10px}.mode-select-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0;max-width:none}.mode-card{min-width:0;align-items:flex-start;border:1px solid #45616d;background:#102a36b0;border-radius:8px;padding:12px 14px}.mode-card:hover,.driver-card:hover{border-color:var(--mint)}.mode-card.selected{background:#204338;border-color:var(--gold);box-shadow:none;transform:none}.mode-card-title{font-family:inherit;font-size:14px;font-weight:800}.mode-card-desc{font-size:11px;text-align:left;line-height:1.5;margin-top:4px}.driver-select-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}.driver-card{border:1px solid #45616d;border-radius:8px;padding:10px 6px;background:#102a36b0}.driver-card.selected{border-color:var(--mint);background:#104038;transform:none}.driver-avatar{height:32px;width:32px;font-family:inherit;font-size:17px;border:0;margin-bottom:6px}.driver-name{font-family:inherit;font-size:14px;color:var(--paper)}.driver-title{font-size:10px;color:var(--mint);margin:4px 0}.driver-cab-name{font-size:10px;text-align:center;margin-bottom:0}.arcade-btn-start{font-family:inherit;font-size:18px;font-weight:900;border:0;border-radius:8px;letter-spacing:1px;padding:16px 24px;background:var(--gold);color:var(--ink);width:100%}.arcade-btn-start:hover{transform:none;filter:brightness(1.08)}.action-links-row{gap:14px;flex-wrap:wrap;margin:14px 0}.text-link-btn{color:#bed0d6;font-family:inherit;font-size:11px;text-decoration:none}.record-line{color:#adc4cd;font-size:11px;margin:13px 0}.build-line{font-size:10px;color:#7695a2;line-height:1.7}.city-tag{position:absolute;right:5vw;bottom:5vh;color:white;text-align:right}.city-tag strong{display:block;font-size:30px;font-weight:950;letter-spacing:3px}.city-tag small{letter-spacing:3px;color:var(--mint)}#hud-fare-box{top:22px;left:25px}.hud-label-tag,#hud-timer-label{font-family:inherit;font-size:10px;letter-spacing:2px;color:#adcad4}#hud-total-fare,#hud-timer,#hud-speed,#hud-customer-timer{font-family:system-ui;font-weight:950;text-shadow:0 2px 4px #0006}#hud-total-fare{font-size:38px;color:var(--gold)}#hud-current-fare{font-family:inherit;font-size:12px;color:white}#hud-timer-container{top:18px;background:#081b25bb;padding:8px 22px;border-radius:12px;border:1px solid #66859166}#hud-timer{font-size:48px;color:white}#hud-customer-box{top:22px;right:25px}#hud-mode-badge{font-family:inherit;border:0;border-radius:5px;background:#081b25c0;color:var(--mint);font-size:10px}#hud-destination{font-family:inherit;background:#081b25d9;border:1px solid var(--gold);border-radius:5px;font-size:16px;color:var(--gold)}#hud-customer-timer{font-size:34px;color:var(--gold)}#hud-distance{font-size:11px}#objective-box{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:#081b25de;border:1px solid #507480;border-radius:10px;padding:13px 22px;min-width:320px;text-align:center}#objective-line{font-size:15px;font-weight:800;color:white}#order-item{margin-top:6px;font-size:11px;color:var(--mint)}#hud-compass{top:140px;left:50%;bottom:auto;right:auto;transform:translateX(-50%);width:85px;height:85px}#hud-stunt-banner{top:36%;font-family:inherit;font-weight:950;font-size:28px;text-shadow:0 3px 4px #0009}#hud-combo-counter{font-size:15px}#hud-status-toast{top:240px;font-family:inherit;font-size:12px;border:1px solid var(--gold);border-radius:6px;padding:9px 16px;max-width:85vw}#hud-dash-cluster{bottom:27px;right:25px;gap:8px}#hud-speed-gauge{border:1px solid #507480;border-radius:10px;background:#081b25de;padding:9px 18px}#hud-speed{font-size:42px;color:white}#hud-speed-unit{font-family:inherit;font-size:9px}#hud-gear-shifter{border:1px solid #507480;background:#081b25de}.gear-item{font-family:inherit;font-size:16px}#radar-container{border:1px solid #507480;border-radius:10px;left:25px;bottom:27px;width:140px;height:140px}#radar-canvas{border-radius:0}#route-name{position:absolute;bottom:175px;left:25px;font-size:11px;color:white;background:#081b25cc;padding:5px 9px;border-radius:5px}#hud-controls-panel{top:95px;bottom:auto;left:25px;flex-direction:row;gap:5px}.hud-toggle-btn{font-family:inherit;font-size:9px;border:1px solid #507480;background:#081b25b0;color:#bfd3dc;padding:5px 7px;border-radius:5px}#pause-button{position:absolute;right:25px;top:160px;pointer-events:auto;background:#081b25cc;border:1px solid #507480;color:white;border-radius:7px;padding:9px 14px}#resource-box{position:absolute;right:25px;bottom:158px;width:135px;font-size:10px;color:#cde0e7}.resource-label{display:flex;justify-content:space-between;margin:9px 0 4px}.resource-track{height:4px;background:#081b25c0;border-radius:3px;overflow:hidden}.resource-track div{height:100%;background:var(--mint)}#cargo-fill{background:var(--gold)}#pause-screen{position:absolute;inset:0;z-index:80;background:#061923cc;backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center}.pause-card{width:min(400px,90vw);padding:32px;border:1px solid #466674;border-radius:16px;background:#102935;color:white}.pause-card h2{font-size:28px;margin-bottom:12px}.pause-card p{font-size:12px;color:#adc4cd;margin-bottom:22px;line-height:1.7}.pause-card button{margin-top:9px;width:100%;border-radius:7px;padding:12px;border:1px solid #527581;color:white;background:#183c48}.pause-card #resume-button{background:var(--gold);color:var(--ink);font-weight:800;border:0}#license-screen{background:#081b25ef}.license-card{border:1px solid #668391;border-radius:16px;background:#15323e;color:white;padding:30px;width:min(580px,94vw)}.license-header{border-color:#527481}.license-title{font-family:inherit;color:var(--mint);font-size:22px;font-weight:900}.license-stat-line{border-color:#527481;font-weight:500;padding:7px 0}.license-photo-frame{border-color:#527481;background:#0a232f}.license-stamp{font-family:inherit;font-size:50px;bottom:20px;right:25px;color:var(--gold);border-color:var(--gold)}#lic-fare{color:var(--gold)!important}.license-details{padding-right:40px}#license-screen .arcade-btn-start{max-width:580px}#result-note{color:var(--mint);font-size:13px;margin:20px}.manual-content{background:#102935;border:1px solid #527481;border-radius:12px;font-size:13px}.manual-title,.manual-section h4{font-family:inherit}.manual-section p{line-height:1.8}.manual-close-btn{font-family:inherit;border:0;background:var(--gold);color:var(--ink);border-radius:7px}#mobile-touch-controls{position:absolute;inset:0;z-index:15;display:none;pointer-events:none;align-items:flex-end;justify-content:space-between;padding:18px;touch-action:none}.touch-group{display:flex;gap:8px;pointer-events:auto}.touch-group button{width:56px;height:56px;border-radius:12px;border:1px solid #80b9c6;background:#0e293bcc;color:white;font-size:17px;touch-action:none}.touch-group button.held{background:#00a891}.touch-right{align-items:flex-end}.touch-right button{width:60px}.touch-right .gas{height:80px;background:#00a88bbb;font-size:14px}.touch-right .brake{font-size:13px}#touch-dash{position:absolute;right:22px;bottom:120px;pointer-events:auto;background:#ffc857cc;color:#08212b}
+@media(max-height:760px) and (min-width:760px){#overlay-screen{padding-top:15px;padding-bottom:15px}.arcade-title-main{font-size:50px;margin-top:12px}.menu-brief{margin-bottom:12px}.arcade-subtitle{margin-bottom:12px}.driver-select-grid{margin-bottom:10px}.selection-heading{margin-top:10px}.mode-card{padding:8px 12px}}
+@media(max-width:760px){#overlay-screen{background:linear-gradient(0deg,#081b25fa,#081b25ba);justify-content:flex-start;padding:20px}.launch-shell{width:100%;max-width:560px;margin:auto}.arcade-title-main{font-size:44px;margin-top:16px}.city-tag{display:none}.menu-brief{gap:12px;font-size:11px}.menu-brief b{font-size:17px}.driver-name{font-size:12px}.driver-title{font-size:9px}.driver-cab-name{font-size:9px}#hud-fare-box{top:12px;left:12px}#hud-total-fare{font-size:26px}#hud-current-fare{font-size:10px}#hud-timer-container{top:12px;padding:5px 10px}#hud-timer{font-size:32px}#hud-customer-box{top:12px;right:12px}#hud-destination{font-size:11px;max-width:110px;padding:4px 7px}#hud-customer-timer{font-size:26px}#hud-controls-panel{display:none}#pause-button{top:110px;right:12px;padding:6px 10px}#hud-compass{top:105px;width:64px;height:64px}#hud-status-toast{top:190px}#radar-container{width:100px;height:100px;bottom:118px;left:12px}#route-name{left:12px;bottom:225px;font-size:9px}#hud-dash-cluster{bottom:210px;right:12px}#hud-speed{font-size:26px}#hud-speed-gauge{padding:6px 10px}#hud-gear-shifter{padding:4px 6px}#resource-box{bottom:125px;right:12px;width:90px}#objective-box{min-width:0;width:calc(100% - 24px);bottom:302px;padding:9px}#objective-line{font-size:12px}#order-item{font-size:10px}#hud-stunt-banner{top:42%;font-size:21px}.license-photo-frame{width:65px;height:90px}.license-body{gap:12px}.license-card{padding:20px}.license-stat-line{font-size:12px}}
+@media (pointer:fine){#mobile-touch-controls{display:none!important}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+#phone-message{position:absolute;top:150px;left:25px;z-index:14;width:300px;display:flex;gap:12px;padding:14px;background:#102b38ee;border:1px solid #4a7382;border-radius:12px;color:white;opacity:0;transform:translateX(-15px);transition:opacity .2s,transform .2s;pointer-events:none}#phone-message.visible{opacity:1;transform:none}#phone-avatar{flex:0 0 35px;width:35px;height:35px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#08232e}.phone-body{flex:1}#phone-sender{font-size:12px;font-weight:800}#phone-meta{color:#00e5cf;font-size:9px;margin:3px 0 9px}#phone-text{font-size:13px;line-height:1.65}.voice-bars{display:flex;gap:2px;height:20px;align-items:center}.voice-bars i{width:2px;background:#00e5cf;height:8px}.voice-bars i:nth-child(2){height:16px}.voice-bars i:nth-child(3){height:12px}@media(max-width:760px){#phone-message{top:85px;left:12px;width:calc(100% - 120px);max-width:270px;padding:10px;gap:8px}#phone-avatar{flex-basis:25px;width:25px;height:25px;font-size:12px}#phone-text{font-size:11px}#hud-compass{top:205px}#hud-status-toast{top:275px}#objective-box{bottom:260px}}
+@media (pointer:coarse) and (min-width:761px){#radar-container{bottom:110px;width:100px;height:100px}#route-name{bottom:215px}#hud-dash-cluster{bottom:110px}#resource-box{bottom:215px}#objective-box{bottom:22px;min-width:230px;padding:10px}#hud-compass{top:100px;width:65px;height:65px}#phone-message{top:135px;width:270px}#hud-status-toast{top:220px}#hud-controls-panel{display:none}}
+#btn-toggle-shift-mode[hidden]{display:none!important}
+
+.district-row{display:flex;align-items:center;gap:9px;margin-top:13px;color:#abc4cc;font-size:11px}.district-row select{flex:1;background:#12313e;color:white;border:1px solid #456975;border-radius:5px;padding:8px;min-width:0}.district-row button{border:1px solid #456975;color:#00e5cf;background:#12313e;padding:8px;border-radius:5px}#hud-map-button{position:absolute;right:25px;top:210px;pointer-events:auto;background:#081b25cc;border:1px solid #507480;border-radius:7px;color:#00e5cf;padding:7px 14px}#city-map-modal{position:absolute;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:#071a24f5;padding:15px}.city-map-card{max-width:700px;width:100%;color:white;max-height:96vh;overflow:auto}.city-map-card h2{font-size:23px;color:#ffd260}.city-map-card p{font-size:12px;color:#9fbfc9;margin:7px 0 12px}#city-map-canvas{width:100%;max-height:72vh;object-fit:contain;border:1px solid #426773;border-radius:9px}.city-map-card button{display:block;margin:10px auto;padding:10px 30px;background:#ffd260;color:#09212e;border:0;border-radius:7px;font-weight:800}@media(max-width:760px){#hud-map-button{top:155px;right:12px;padding:6px 10px}}
+/* 1.1 — high-contrast arcade navigation, editorial HUD, customer voice thread */
+#hud-fare-box{top:24px;left:28px;padding:14px 18px;background:linear-gradient(135deg,#0c2834f2,#102c37d9);border:1px solid #597d884d;border-radius:14px;min-width:210px;box-shadow:0 10px 30px #00121b33}.hud-label-tag{color:#95b3be;font-size:10px}#hud-total-fare{font-size:38px;letter-spacing:-1px}#hud-current-fare{color:#b8d0d9;margin-top:5px}#hud-timer-container{top:24px;left:50%;padding:9px 28px;border-radius:14px;min-width:148px;box-shadow:0 8px 24px #06172033}#hud-timer{font-variant-numeric:tabular-nums;font-size:42px;line-height:1.05}#hud-customer-box{top:24px;right:28px;align-items:stretch;gap:7px;width:250px;padding:15px 18px;border:1px solid #496f7d;background:linear-gradient(135deg,#0d2836ef,#153947e8);border-radius:14px;box-shadow:0 10px 30px #00121b33}.order-header{display:flex;align-items:center;justify-content:space-between;gap:6px}#order-state{font-size:10px;letter-spacing:2px;color:#00edd0}#hud-mode-badge{font-size:9px;padding:3px 6px;margin:0;color:#88a8b5;background:#041e2a}#order-customer{font-size:11px;color:#abc6d0}#hud-destination{padding:0;background:none;border:0;color:#ffe08d;font-size:23px;font-weight:900;line-height:1.3}#hud-customer-timer{position:absolute;right:18px;top:67px;font-size:31px;color:#ffe08d}#hud-distance{color:#aec7d2;font-size:10px;text-shadow:none;padding-top:0}.delivery-track{height:3px;background:#345362;border-radius:3px;overflow:hidden;margin-top:3px}#delivery-progress{height:100%;width:100%;background:#ffd260}.order-urgent{border-color:#ff6f6d!important}#hud-customer-box.order-urgent #hud-customer-timer{color:#ff8b82}
+#nav-card{position:absolute;top:127px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:13px;min-width:320px;max-width:430px;background:linear-gradient(120deg,#0d2939ed,#163b48e8);border:1px solid #6b95a366;border-radius:18px;padding:12px 18px 12px 10px;box-shadow:0 16px 50px #03162240}#hud-compass{position:static;transform:none;filter:none;width:96px;height:96px;flex:0 0 96px}.nav-copy{min-width:0;flex:1}.nav-eyebrow{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:1.5px;color:#8cabb7}#nav-phase{padding:3px 6px;background:#00edd01a;border:1px solid #00edd04d;color:#00edd0;border-radius:4px;font-size:9px}#nav-phase.delivery{color:#ffd260;border-color:#ffd26066;background:#ffd26019}.nav-main{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:5px 0}.nav-main strong{font-size:28px;font-weight:950;letter-spacing:-1px;color:white;white-space:nowrap}.nav-main b{font-size:20px;color:#ffd260;font-variant-numeric:tabular-nums;white-space:nowrap}#nav-next-road{font-size:11px;color:#d2e1e7;max-width:230px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}#nav-route-total{display:block;margin-top:5px;font-size:10px;color:#92afbd}#radar-container{width:185px;height:185px;border-radius:15px;border:1px solid #5e87966b;left:28px;bottom:28px;box-shadow:0 12px 30px #051a2733;background:#092330}#radar-canvas{width:100%;height:100%}#route-name{left:28px;bottom:220px;padding:6px 10px;font-size:10px;border:1px solid #6685923d;border-radius:6px}#hud-controls-panel{display:none}#pause-button,#hud-map-button{right:28px;font-size:11px;border-color:#7396a066;background:#0b2938dc}#pause-button{top:213px}#hud-map-button{top:258px}#hud-dash-cluster{right:28px;bottom:28px}#hud-speed-gauge{min-width:110px;padding:13px 20px;border:1px solid #5e87966b;border-radius:14px}#hud-speed{font-size:48px;letter-spacing:-2px;font-variant-numeric:tabular-nums}#hud-speed-unit{letter-spacing:2px;font-size:9px}.gear-item{font-size:14px}#hud-gear-shifter{border-radius:10px;gap:7px;padding:9px}.gear-item.active-d,.gear-item.active-r{text-shadow:none;transform:none}#resource-box{right:28px;bottom:150px;width:155px;padding:10px 14px;background:#0b2938c9;border:1px solid #5e87964d;border-radius:10px}.resource-track{height:5px}.resource-label{font-size:10px}#objective-box{bottom:28px;min-width:380px;padding:14px 24px;border-radius:13px;border-color:#5e87966b;box-shadow:0 10px 30px #051a2733}#objective-line{font-size:16px}#order-item{font-size:11px;color:#a6c7d3}#combo-chip{display:block;color:#8eafb9;font-size:9px;margin-top:8px}.stop-track{height:3px;background:#1e4453;border-radius:3px;overflow:hidden;margin-top:8px}#stop-progress{height:100%;width:0;background:#00edd0}#hud-status-toast{top:270px;font-size:11px;padding:8px 15px;box-shadow:0 8px 24px #00121b33}#hud-stunt-banner{top:43%;font-size:31px;letter-spacing:-1px}#hud-combo-counter{font-size:13px;letter-spacing:2px;margin-top:8px}
+#phone-message{left:28px;top:163px;bottom:auto;width:310px;border-radius:17px;padding:17px;gap:13px;background:linear-gradient(135deg,#0b2635f5,#123744ee);border-color:#678e9c66;box-shadow:0 14px 50px #06162255;z-index:16}.phone-portrait{flex:0 0 44px;text-align:center}#phone-avatar{width:44px;height:48px;border-radius:13px;box-shadow:inset 0 -4px 0 #071b2524;font-size:25px}#phone-event-tag{display:block;font-size:8px;letter-spacing:1.5px;color:#7fabbc;margin-top:7px}#phone-sender{font-size:12px;color:#fff2cd}#phone-meta{font-size:9px;line-height:1.5;color:#77a9b8;margin:4px 0 10px}#phone-text{font-size:14px;line-height:1.7;letter-spacing:.15px;color:#e4edf0}.voice-bars{display:none}.phone-actions{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:13px;padding-top:10px;border-top:1px solid #63889833}.phone-actions small{color:#6f9aa9;font-size:9px}#phone-reply-button{pointer-events:auto;border:1px solid #8ac9cd6b;border-radius:6px;padding:5px 9px;background:#12454a;color:#aefbf0;font-size:10px}#phone-reply-button:disabled{opacity:.4}#rider-reply{margin-top:12px;padding:10px;border-radius:8px;background:#165454;color:#c0f5e8;font-size:11px;line-height:1.7}#rider-reply b{display:block;font-size:9px;color:#74c7b8;margin-bottom:3px}
+@media(max-width:1100px) and (min-width:761px){#phone-message{width:255px}#hud-customer-box{width:210px}#hud-fare-box{min-width:185px}#nav-card{min-width:290px}.nav-main strong{font-size:25px}.nav-main b{font-size:18px}#objective-box{min-width:300px}}
+@media(max-width:760px){#hud-fare-box{top:12px;left:12px;padding:9px 12px;min-width:120px;border-radius:10px}#hud-total-fare{font-size:25px}#hud-current-fare{font-size:9px;max-width:122px}.hud-label-tag{font-size:8px;letter-spacing:1px}#hud-timer-container{top:12px;padding:8px 12px;min-width:66px;border-radius:10px}#hud-timer{font-size:30px}#hud-timer-label{font-size:8px;letter-spacing:1px}#hud-customer-box{top:104px;right:12px;left:auto;width:140px;padding:10px;border-radius:10px;gap:5px}#order-state{font-size:8px;letter-spacing:0}#hud-mode-badge{display:none}#order-customer{font-size:9px;line-height:1.4}#hud-destination{font-size:18px;max-width:120px;padding:0}#hud-customer-timer{position:static;font-size:24px;line-height:1}#hud-distance{font-size:8px;line-height:1.5}#nav-card{top:103px;left:12px;transform:none;min-width:0;width:calc(100% - 174px);max-width:none;gap:6px;padding:9px 9px 9px 4px;border-radius:12px}#hud-compass{width:63px;height:63px;flex-basis:63px}.nav-eyebrow{font-size:7px;letter-spacing:0;gap:5px}#nav-phase{padding:2px 4px;font-size:8px}.nav-main{display:block;margin:4px 0}.nav-main strong{font-size:19px;letter-spacing:0;margin-right:7px}.nav-main b{font-size:13px}#nav-next-road{font-size:9px;max-width:150px}#nav-route-total{font-size:8px;margin-top:3px}#phone-message{top:229px;left:12px;width:calc(100% - 24px);max-width:none;padding:11px 12px;border-radius:11px;gap:10px;min-height:0}.phone-portrait{flex-basis:34px}#phone-avatar{width:34px;height:36px;font-size:20px}#phone-event-tag{font-size:7px}#phone-sender{font-size:11px}#phone-meta{margin:3px 0 6px;font-size:8px}#phone-text{font-size:12px;line-height:1.6}.phone-actions{margin-top:7px;padding-top:7px}#rider-reply{font-size:10px;padding:7px;margin-top:7px}#radar-container{width:108px;height:108px;left:12px;bottom:116px;border-radius:10px}#route-name{left:12px;bottom:230px;font-size:8px;padding:4px 7px}#hud-dash-cluster{right:12px;bottom:195px;gap:5px}#hud-speed-gauge{min-width:65px;padding:7px 9px;border-radius:9px}#hud-speed{font-size:30px}#hud-speed-unit{font-size:7px}#hud-gear-shifter{padding:4px 6px;gap:4px}.gear-item{font-size:11px}#resource-box{right:12px;bottom:113px;width:118px;padding:6px 9px;border-radius:8px}.resource-label{font-size:8px;margin:5px 0 3px}#objective-box{bottom:285px;min-width:0;width:calc(100% - 24px);padding:9px 12px;border-radius:10px}#objective-line{font-size:12px}#order-item{font-size:9px}#combo-chip{font-size:8px;margin-top:5px}.stop-track{margin-top:6px}#hud-status-toast{top:208px;max-width:95vw;padding:5px 9px;font-size:9px;z-index:17}#pause-button{top:17px;right:12px;font-size:9px;padding:6px 9px}#hud-map-button{top:54px;right:12px;font-size:9px;padding:5px 9px}#hud-stunt-banner{top:51%;font-size:23px}.touch-group button{width:48px;height:54px;font-size:15px}.touch-right button{width:54px}#mobile-touch-controls{padding:12px}.touch-group{gap:6px}#touch-dash{bottom:101px;right:12px;height:35px;width:68px;font-size:12px}.touch-right .gas{height:75px}}
+@media(max-width:760px) and (max-height:740px){#phone-message{top:221px;padding:8px 10px}#phone-meta{margin-bottom:3px}#phone-text{font-size:11px}.phone-actions{margin-top:5px;padding-top:4px}#objective-box{bottom:235px}#rider-reply{font-size:9px}#combo-chip{display:none}}
+@media(pointer:coarse) and (min-width:761px){#nav-card{top:16px;left:50%;min-width:290px;padding:7px 12px}#hud-compass{width:62px;height:62px;flex-basis:62px}.nav-main strong{font-size:23px}#hud-timer-container{top:108px;padding:4px 15px}#hud-timer{font-size:28px}#phone-message{top:120px;width:260px;padding:11px}#phone-text{font-size:11px}#radar-container{width:98px;height:98px;bottom:108px}#route-name{bottom:213px}#hud-dash-cluster{bottom:108px}#resource-box{bottom:210px;width:140px}#objective-box{bottom:15px;min-width:290px;padding:8px 14px}#combo-chip{display:none}#pause-button{top:172px}#hud-map-button{top:210px}#hud-status-toast{top:165px}}
+body,html{font-family:'Noto Sans TC',system-ui,sans-serif}#phone-avatar svg{width:100%;height:100%;display:block}#hud-timer,#hud-total-fare,#hud-speed,#hud-customer-timer{font-family:system-ui,sans-serif}@media(max-width:760px) and (max-height:740px){#hud.phone-active #objective-box{opacity:0;pointer-events:none}}
+@media(max-width:760px){#phone-message{top:249px}#hud-status-toast{left:12px;transform:none;max-width:calc(100% - 174px)}#hud-dash-cluster{bottom:225px}#resource-box{bottom:155px}#touch-dash{bottom:90px}}@media(max-width:760px) and (max-height:740px){#phone-message{top:245px}#hud.phone-active #hud-dash-cluster{opacity:0}}
+
+body,html{font-family:'Courier UI Symbols','Noto Sans TC',system-ui,sans-serif}select,input{font-family:inherit}
+/* 1.2 arcade treatment: original orange/teal visual identity. */
+#overlay-screen{background:linear-gradient(90deg,#0d2527f2,#0b2732da 45%,#0c223526 85%)}.brand-badge{background:#ffba48}.arcade-title-main{font-weight:950;text-shadow:4px 5px 0 #0b3540}.arcade-title-main span{color:#ffba48}.arcade-btn-start{background:#ffba48;box-shadow:0 5px 0 #ad6331;border-radius:9px}.mode-card.selected,.driver-card.selected{border-color:#ffba48;background:#9c6b271e}.build-line{line-height:1.9}#hud-fare-box,#hud-timer-container,#hud-customer-box,#nav-card{border-radius:9px;border-top:3px solid #ffbb49}#hud-timer{color:#ffcb58;font-style:italic;text-shadow:3px 3px 0 #4c3a28}#hud-total-fare{color:#f7f1d6;text-shadow:2px 3px 0 #162b2e}#nav-card{border-top-color:#00e5cf}.stunt-courier-dash{color:#ffd36e!important}.stunt-courier-through{color:#ffbe4b!important}#stunt-text{font-style:italic;text-shadow:3px 4px 0 #0d2832}#gear-label{font-size:8px;color:#b3ccd2;white-space:nowrap;margin-top:5px}#air-state{display:block;font-size:10px;color:#ffd36e;margin-top:6px}#speed-lines{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .12s;background:repeating-conic-gradient(from 12deg at 50% 58%,transparent 0deg 12deg,#ffd56955 12.1deg 12.35deg,transparent 12.5deg 19deg);mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%);-webkit-mask-image:radial-gradient(ellipse,transparent 33%,#0009 95%)}#speed-lines.active{opacity:.65}#touch-jump,#touch-wheelie,#touch-upshift,#touch-downshift{position:absolute;pointer-events:auto;width:52px;height:32px;font-size:11px;border:1px solid #83b6ba66;border-radius:6px;color:#fff;background:#173d48d9;bottom:90px}#touch-jump{left:12px;background:#be842add;color:#fff9d4}#touch-wheelie{left:72px}#touch-upshift{right:12px;bottom:130px}#touch-downshift{right:72px;bottom:130px}#touch-dash{right:12px;bottom:90px}#hud-controls-panel{display:flex;bottom:242px;left:28px;flex-direction:row}.hud-toggle-btn{padding:4px 6px;font-size:9px;border:1px solid #91afb94d}
+@media(max-width:760px){#hud-controls-panel{display:none}#air-state{font-size:8px}#gear-label{font-size:7px}#resource-box{bottom:170px}#hud-dash-cluster{bottom:245px}#radar-container{bottom:133px}#route-name{bottom:245px}#objective-box{bottom:310px}#hud-stunt-banner{top:55%;max-width:85vw}#touch-dash{width:72px}#phone-message{background:#102f3bec}#nav-card{border-top-width:2px}}@media(max-width:760px) and (max-height:740px){#hud.phone-active #objective-box,#hud.phone-active #hud-dash-cluster{opacity:0}#objective-box{bottom:285px}#hud-stunt-banner{top:67%}}
+@media(prefers-reduced-motion:reduce){#speed-lines{display:none}.mode-card,.driver-card,#hud-stunt-banner{transition:none}}
+.driver-avatar{overflow:hidden;border-color:#93bdb566;width:60px;height:62px;border-radius:13px}.driver-avatar svg{display:block;width:100%;height:100%}
+
+/* P0: menu/pause-only comparison controls; never overlay gameplay HUD. */
+.handling-picker{display:inline-flex;gap:6px;align-items:center;color:#bed0d6;font-size:11px}
+#handling-mode{font:inherit;color:#f4f2e9;background:#102a36;border:1px solid #527581;border-radius:4px;padding:5px;max-width:100%}
+#handling-mode:focus-visible,#handling-pause-mode:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.pause-card{box-sizing:border-box;max-height:90vh;overflow-y:auto}
+
+/* 2.0 uses the established HUD grid; added UI stays inside existing panels. */
+.arcade-title-main span{color:#ffd263}.brand-badge{transform:skew(-5deg)}
+.mode-card.selected{box-shadow:inset 4px 0 #ffba48}.menu-brief b{color:#ffba48}
+#btn-start:disabled{opacity:.45;cursor:wait}
+#mobile-touch-controls button{touch-action:none;user-select:none;-webkit-user-select:none}
+#hud-controls-panel{top:auto;height:auto;align-items:center}.hud-toggle-btn{height:auto;min-height:0}
+#chain-value{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;color:#8accc1;margin-top:7px}
+#chain-value.hot{color:#ffcf65}
+#target-button{pointer-events:auto;display:block;background:#184956;border:1px solid #598a8e;color:#e8fff8;border-radius:5px;padding:6px 9px;margin-top:6px;font:700 11px inherit;cursor:pointer}
+#target-button:disabled{cursor:default;background:#15313d;color:#8cb5be;border-color:#315460}
+#target-button:focus-visible{outline:2px solid #ffce59;outline-offset:2px}
+#hud-customer-box.order-preview #hud-destination{font-size:18px;line-height:1.45}
+#hud-customer-box.order-preview #hud-distance{line-height:1.7}
+#arcade-splash{position:fixed;left:50%;top:43%;transform:translate(-50%,-50%) rotate(-3deg) scale(.9);z-index:19;pointer-events:none;opacity:0;text-align:center;transition:opacity .12s,transform .12s;width:min(600px,90vw);filter:drop-shadow(0 5px 0 #071a22)}
+#arcade-splash.visible{opacity:1;transform:translate(-50%,-50%) rotate(-3deg) scale(1)}
+#arcade-splash-title{font:950 italic clamp(40px,6vw,78px)/1.05 system-ui,sans-serif;letter-spacing:-3px;color:#ffd45e;text-shadow:3px 4px 0 #713e19}
+#arcade-splash-detail{display:inline-block;margin-top:10px;padding:9px 18px;background:#102e3bea;color:#f5f5df;border:1px solid #ffce5999;border-radius:5px;font-size:15px;line-height:1.6}
+.scoreboard{margin-top:12px;border-top:1px solid #71949555;color:#b8d3d4;font-size:11px;max-width:490px}
+.scoreboard summary{padding:8px 0;cursor:pointer;letter-spacing:1px}
+.scoreboard table{width:100%;border-collapse:collapse;table-layout:fixed}
+.scoreboard td{padding:5px 8px;border-top:1px solid #71949533}.scoreboard td:first-child{color:#ffce59;width:42px}.scoreboard td:last-child{text-align:right}
+#receipt-detail{max-width:440px;margin:8px auto 0;padding:10px 14px;background:#173644;border-radius:6px;color:#b0ced1;font-size:10px;line-height:1.7}
+@media(max-width:760px){
+  #chain-value{font-size:8px;margin-top:3px}#target-button{padding:5px;font-size:9px;margin-top:3px;width:100%}
+  #hud-customer-box.order-preview #hud-destination{font-size:13px;overflow-wrap:anywhere}
+  #hud-customer-box.order-preview #hud-distance{font-size:8px}
+  #hud-customer-box{max-height:178px}#phone-message{top:305px}
+  #hud.phone-active #objective-box{opacity:0;pointer-events:none}
+  #arcade-splash{top:48%}#arcade-splash-title{font-size:38px;letter-spacing:-1.5px}#arcade-splash-detail{font-size:11px;padding:7px 11px}
+  #hud-stunt-banner{display:none}.scoreboard{font-size:10px}.scoreboard td{padding:4px}
+}
+@media(max-width:760px) and (max-height:740px){
+  #phone-message{top:290px;max-height:136px;overflow-y:auto}#hud.phone-active #route-name{opacity:0}
+  #arcade-splash{top:68%}#arcade-splash-title{font-size:31px}
+}
+@media(max-height:520px) and (min-width:641px){
+  #phone-message{display:flex;top:112px;left:112px;width:calc(100% - 322px);max-width:390px;max-height:145px;padding:8px;overflow-y:auto;pointer-events:auto}
+  #phone-message .phone-portrait,#phone-meta,#phone-event-tag{display:none}#phone-text{font-size:11px;line-height:1.4}.phone-actions{margin-top:4px;padding-top:4px}#rider-reply{margin-top:4px;padding:5px;font-size:10px}
+  #hud-fare-box{top:10px;left:12px;min-width:145px;padding:10px}#hud-total-fare{font-size:32px}
+  #hud-timer-container{top:10px;left:205px;min-width:70px;padding:8px;transform:translateX(-50%)}#hud-timer{font-size:35px}
+  #nav-card{top:10px;left:254px;min-width:0;width:calc(100% - 472px);max-width:300px;transform:none;padding:7px}
+  #hud-customer-box{top:10px;right:10px;width:175px;padding:9px;max-height:163px}
+  #hud-destination,#hud-customer-box.order-preview #hud-destination{font-size:14px;line-height:1.3}#hud-customer-timer{position:static;font-size:25px}
+  #hud-distance{font-size:8px}.order-header{font-size:8px}#target-button{font-size:9px;padding:4px;margin-top:3px}
+  #objective-box{display:none}#resource-box{bottom:125px;right:190px;width:130px}#radar-container{width:80px;height:80px;bottom:140px;left:12px}
+  #route-name{display:none}#hud-controls-panel{display:none}#hud-dash-cluster{bottom:18px;right:205px}
+  #hud-speed-gauge{min-width:70px;padding:6px}#hud-speed{font-size:30px}
+  #pause-button{top:181px;right:10px;padding:5px 8px;font-size:10px}#hud-map-button{top:181px;right:82px;padding:5px 8px;font-size:10px}
+  #hud-status-toast{top:135px}#arcade-splash{top:56%}
+}
+@media(prefers-reduced-motion:reduce){#arcade-splash{transition:none;transform:translate(-50%,-50%)}#arcade-splash.visible{transform:translate(-50%,-50%)}}
+
+/* 2.1: readable specialties and intuitive brake/reverse. */
+.driver-cab-name{font-size:10px;line-height:1.45;min-height:29px;white-space:normal}
+#mobile-touch-controls .brake{font-size:11px;line-height:1.2;white-space:normal}
+@media(max-width:640px){.driver-cab-name{font-size:9px;min-height:27px}.driver-title{font-size:12px}}
+
+/* 2.4: stronger late-90s / early-2000s cabinet treatment. */
+#overlay-screen::before,#hud::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,#ffffff08 0 2px,#00000000 2px 6px);mix-blend-mode:soft-light;opacity:.18}
+#overlay-screen::after,#hud::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 2px #ffce5933,inset 0 0 22px #0a283455}
+#overlay-screen,.launch-shell,#hud{position:relative}
+.brand-line,.arcade-subtitle,.record-line{text-shadow:0 2px 0 #0a2330}
+#hud-fare-box,#hud-timer-container,#hud-customer-box,#nav-card,#objective-box,#hud-speed-gauge,#radar-container,#resource-box{box-shadow:0 10px 24px #0316223d,0 0 0 1px #ffffff08 inset}
+#hud-total-fare,#hud-timer,#hud-speed,#hud-customer-timer{font-style:italic;letter-spacing:-1px}
+
+/* 2.5 cabinet fantasy pass */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(circle at center,transparent 58%,#03131b33 82%,#02070b88 100%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;box-shadow:inset 0 0 0 4px #ffcc5a4d,inset 0 0 52px #001219}
+#cabinet-overlay{position:fixed;inset:0;z-index:4;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;color:#ffe8a2;text-shadow:0 2px 0 #05212e;font-weight:900;letter-spacing:2px;mix-blend-mode:screen;opacity:.88}
+#cabinet-overlay b,#cabinet-overlay span{background:linear-gradient(180deg,#ffe391,#ffbe48);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:10px}
+#cabinet-overlay span{color:#7ff4ea;background:none;font-size:9px;letter-spacing:3px}
+#overlay-screen{background:radial-gradient(circle at 20% 18%,#164e61cc 0%,#0f3042e6 30%,#081b25f5 62%,#07151def 100%)}
+.arcade-title-main{transform:skewX(-8deg);text-shadow:5px 6px 0 #0a2433,0 0 22px #ffcf5a4a}
+.brand-badge{box-shadow:0 3px 0 #8d5c22,0 0 16px #ffc85766}
+.arcade-btn-start{box-shadow:0 6px 0 #9d6224,0 0 22px #ffcb5a66}
+#hud-fare-box,#hud-timer-container,#hud-customer-box,#nav-card,#objective-box,#hud-speed-gauge,#resource-box,#radar-container{backdrop-filter:blur(2px);border-top:4px solid #ffbb49}
+#hud-stunt-banner{filter:drop-shadow(0 6px 12px #000)}
+#phone-message{box-shadow:0 12px 28px #00000055}
+#cabinet-overlay.fever b{transform:skewX(-10deg) scale(1.08);filter:drop-shadow(0 0 7px #ffcb59);letter-spacing:3px}
+#cabinet-overlay.fever span{color:#fff2ad;text-shadow:0 0 8px #ff7b3d}
+#cabinet-overlay.underground b{background:linear-gradient(180deg,#9df7f3,#4fc6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#cabinet-overlay.underground span{color:#ffda69;text-shadow:0 0 8px #00d9ff}
+#hud-stunt-banner .stunt-courier-through,#hud-stunt-banner .stunt-courier-dash{transform:skewX(-7deg)}
+
+/* Comic arcade presentation; layout stays compatible with keyboard and touch. */
+:root{--comic-ink:#172b43;--comic-paper:#fff3cd;--comic-green:#9cff47;--comic-red:#ff6858}
+#overlay-screen{background:linear-gradient(120deg,rgba(23,43,67,.92) 0%,rgba(23,43,67,.87) 43%,rgba(23,43,67,.08) 73%)}
+.menu-panel{border:3px solid #fff0b2;box-shadow:9px 9px 0 #13263a;background:#17314beb}
+.arcade-title-main{color:#ffe34d;text-shadow:4px 4px 0 #ec674d,7px 7px 0 #102638;font-style:italic}
+.driver-avatar{border:3px solid #fff3ca!important;background:#39648b!important;box-shadow:3px 3px 0 #102a41}
+.driver-avatar svg{width:100%;height:100%}
+.driver-card.selected,.mode-card.selected{border-color:#ffe34d!important;box-shadow:4px 4px 0 #132a40}
+.arcade-btn-start{background:#ffde39!important;color:#132b43!important;border:3px solid #132b43!important;box-shadow:6px 6px 0 #ff6858!important;transform:skew(-3deg)}
+#hud-fare-box,#hud-customer-box,#objective-box,#nav-card,#resource-box{border:2px solid #fff0b2;background:#17314bee;box-shadow:4px 4px 0 #14263c}
+#hud-total-fare{color:#ffe34d;text-shadow:3px 3px 0 #e96851}
+#hud-timer{color:#ffde39;text-shadow:3px 3px 0 #132b43}
+#nav-phase.delivery{background:#9cff47!important;color:#17314b!important}
+#hud-compass{display:none!important}
+#arcade-direction{position:static;flex:0 0 120px;transform:none;width:120px;text-align:center;pointer-events:none}
+#arcade-arrow{display:block;width:120px;height:63px;margin:0 auto;filter:drop-shadow(3px 4px 0 #152a42)}
+#arcade-direction small{font-size:7px;font-weight:900;letter-spacing:.4px;color:#fff7d5;text-shadow:2px 2px #122740}
+#current-layer{display:block;font-size:9px;color:#9cff47;letter-spacing:.5px;margin-top:3px}
+#nav-floor{font-size:11px;color:#a8ff62;font-weight:800;white-space:nowrap}
+#map-layer-button{background:#9cff47;color:#152a40;border:2px solid #152a40;padding:9px 18px;border-radius:8px;font:800 13px 'Noto Sans TC';cursor:pointer}
+.comic-info{color:#ffe17b;font-size:11px;line-height:1.6}
+@media(max-width:760px){#arcade-direction{flex-basis:62px;width:62px}#arcade-arrow{width:62px;height:43px}#arcade-direction small{display:none}#current-layer{font-size:9px}#nav-floor{font-size:9px}.menu-panel{box-shadow:4px 4px 0 #13263a}}
+@media(max-height:460px){#arcade-direction{flex-basis:58px;width:58px}#arcade-arrow{width:58px;height:40px}#arcade-direction small,#current-layer{display:none}}
+
+/* Original express-receipt art: mint/amber ink, cut ticket edge and bold numerals. */
+#hud-timer,#hud-total-fare,#hud-customer-timer{font-variant-numeric:tabular-nums;font-weight:1000;letter-spacing:-1px}
+#hud-timer{color:#fff4ac;text-shadow:2px 3px 0 #071923,0 0 18px #ffbd3033}
+#hud-fare-box{border-left:6px solid #6cf5ca;background:linear-gradient(115deg,#0b2734f5,#18394ee8)}
+#hud-customer-box{border-top:5px solid #ffcd62}
+#hud-stunt-banner{font-style:italic;letter-spacing:.6px;text-shadow:2px 2px #081b25}
+#technique-card{position:absolute;top:17%;right:20px;max-width:240px;pointer-events:none;padding:8px 18px 9px 12px;background:#0a2537e8;border-left:4px solid #66efc2;clip-path:polygon(0 0,100% 0,94% 100%,0 100%);color:#f4ffef;box-sizing:border-box}
+#technique-card small{display:block;font-size:9px;letter-spacing:1px;color:#83c8cf}
+#skill-feedback{display:block;font-size:19px;font-weight:900;font-style:italic;line-height:1.4}
+#skill-feedback[data-kind=launch]{color:#ffdf78}#skill-feedback[data-kind=stop]{color:#ff9e91}#skill-feedback[data-kind=exit]{color:#70f1d0}#skill-feedback[data-kind=hop]{color:#9ccaff}
+#skill-chain{font-size:11px;font-weight:800;letter-spacing:.6px}
+#skill-coach-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#061722df;z-index:400;padding:16px;box-sizing:border-box}
+.skill-coach-panel{box-sizing:border-box;width:min(720px,100%);max-height:90dvh;overflow:auto;border:3px solid #7ce8c8;background:#112f41;padding:24px;border-radius:14px;color:#f2f8e7;box-shadow:8px 8px 0 #061b2d}
+.skill-coach-panel h2{font-size:30px;font-style:italic;margin:0 0 8px;color:#ffe091}.skill-coach-panel>p{font-size:13px;line-height:1.65;color:#b9d5dc}
+.skill-drills{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.skill-drills button{font:inherit;text-align:left;background:#1b4356;color:#f1faef;border:2px solid #568d9c;border-radius:9px;padding:16px;cursor:pointer;min-height:115px}
+.skill-drills button:hover,.skill-drills button:focus-visible{border-color:#ffe38b;background:#24536a;outline:3px solid #ffe38b;outline-offset:2px}
+.skill-drills b{display:block;font-size:19px;color:#79f0c5;margin-bottom:7px}.skill-drills span{font-size:12px;line-height:1.7;display:block}
+#btn-coach-close,#btn-drill-retry,#btn-drill-exit{font:800 12px 'Noto Sans TC';padding:8px 12px;border:2px solid #7bd5c1;border-radius:7px;background:#122f40;color:#ecffe8;cursor:pointer;min-height:36px}
+#skill-coach-hud{display:none;position:absolute;bottom:240px;left:20px;width:300px;max-width:calc(100vw - 40px);padding:12px;background:#0b2b3bf2;border:2px solid #84e2c5;border-radius:8px;box-sizing:border-box;pointer-events:auto}
+#drill-title{color:#ffe091;display:block;font-size:17px}#drill-hint{font-size:12px;line-height:1.6;color:#d2ecec;margin:8px 0}
+@media(max-width:760px){#technique-card{top:29%;right:10px;max-width:175px;padding:5px 14px 6px 8px}#skill-feedback{font-size:14px}#technique-card small{font-size:7px}#skill-chain{font-size:9px}.skill-coach-panel{padding:16px}.skill-drills{grid-template-columns:1fr;gap:8px}.skill-drills button{min-height:75px;padding:12px}#skill-coach-hud{bottom:185px;left:10px;width:260px}}
+@media(max-height:500px){#technique-card{top:32%;right:12px;max-width:180px}#skill-feedback{font-size:13px}#technique-card small{display:none}#skill-coach-hud{bottom:105px;left:10px;width:270px;padding:8px}#drill-hint{margin:4px 0;font-size:10px}.skill-drills{grid-template-columns:1fr 1fr}.skill-coach-panel h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){#hud-stunt-banner,#technique-card{animation:none!important;transition:none!important}}
+
+#hud.coach-active #objective-box,#hud.coach-active #hud-customer-box,#hud.coach-active #nav-card{display:none!important}
+#hud.coach-active #hud-controls-panel{display:none!important}
+#skill-coach-hud{z-index:30}
+#hud.coach-active #technique-card,#hud.coach-active #hud-status-toast{display:none!important}
+@media(max-width:760px){#skill-coach-hud{top:140px;bottom:auto;left:10px;width:calc(100vw - 20px)}}
+@media(max-height:500px){#skill-coach-hud{top:140px;bottom:auto;left:110px;width:min(360px,calc(100vw - 125px))}}
+
+/* Text route instructions and a fixed-color GPS trail replace the giant arrow. */
+#arcade-arrow,#arcade-direction>small,#hud-compass{display:none!important}
+#arcade-direction{min-height:0;height:auto}
+
+/* Conversation remains readable in both phone orientations. */
+#phone-message{pointer-events:auto;overscroll-behavior:contain}#phone-message .phone-body{min-width:0}
+@media(max-width:760px){#phone-message{max-height:min(230px,calc(100dvh - 510px));overflow-y:auto}#phone-reply-button{min-height:36px}#hud.phone-active #hud-status-toast{opacity:0}}
+@media(max-height:520px) and (min-width:641px){#phone-reply-button{min-height:32px}#hud.phone-active #hud-status-toast{opacity:0}}
+
+/* 原創街機速度 / 交付回饋（P2-03）。全部為 pointer-events:none 的輕量疊層；Reduced Motion 時不啟用動畫。 */
+#arcade-fx{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+#arcade-fx>div{position:absolute;inset:0;opacity:0}
+/* 速度暗角：邊緣壓暗，隨速度連續變化（不閃爍）。 */
+#arcade-fx .fx-vignette{background:radial-gradient(ellipse at 50% 55%,rgba(7,24,36,0) 52%,rgba(7,24,36,.62) 100%);transition:opacity .18s linear}
+/* Nitro：左青右橘的邊緣色散光暈（chromatic 感），單次短脈衝，不循環。 */
+#arcade-fx .fx-nitro{box-shadow:inset 26px 0 54px -22px rgba(0,229,255,.75),inset -26px 0 54px -22px rgba(255,120,40,.7),inset 0 0 90px rgba(120,255,235,.18);transition:opacity .2s ease-out}
+#arcade-fx .fx-nitro.pulse{animation:fx-nitro-pulse .6s ease-out 1}
+@keyframes fx-nitro-pulse{0%{filter:brightness(1.6)}100%{filter:brightness(1)}}
+/* 落地衝擊：底部一道短暫的壓暗。 */
+#arcade-fx .fx-land{background:linear-gradient(0deg,rgba(7,24,36,.55),rgba(7,24,36,0) 38%)}
+#arcade-fx .fx-land.hit{animation:fx-fade .4s ease-out 1}
+/* PERFECT DELIVERY：中央柔光閃一次 + 文字。 */
+#arcade-fx .fx-flash{background:radial-gradient(circle at 50% 46%,rgba(255,244,196,.7),rgba(120,255,235,.18) 42%,rgba(255,255,255,0) 70%)}
+#arcade-fx .fx-flash.hit{animation:fx-fade .7s ease-out 1}
+#arcade-fx-banner.fx-banner{position:fixed;z-index:30;pointer-events:none;left:50%;top:22%;transform:translateX(-50%);padding:6px 18px;border-radius:999px;background:rgba(10,38,48,.78);border:2px solid #7ff4ea;color:#fff4c4;font:900 22px/1.2 'Noto Sans TC',sans-serif;letter-spacing:.14em;opacity:0}
+#arcade-fx-banner.fx-banner.show{opacity:1}
+#arcade-fx-banner.fx-banner.show.animated{animation:fx-banner-in .5s ease-out 1}
+@keyframes fx-banner-in{0%{transform:translateX(-50%) scale(.82)}100%{transform:translateX(-50%) scale(1)}}
+@keyframes fx-fade{0%{opacity:1}100%{opacity:0}}
+/* HUD 脈衝（擦身而過 / combo 里程碑）：單次、≥ .45s，絕不循環。 */
+.fx-hud-pulse{animation:fx-hud-pulse .5s ease-out 1}
+@keyframes fx-hud-pulse{0%{filter:drop-shadow(0 0 0 rgba(127,244,234,0));transform:scale(1)}35%{filter:drop-shadow(0 0 10px rgba(127,244,234,.95));transform:scale(1.08)}100%{filter:drop-shadow(0 0 0 rgba(127,244,234,0));transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){#arcade-fx .fx-vignette,#arcade-fx .fx-nitro,#arcade-fx .fx-land,#arcade-fx .fx-flash{display:none}#arcade-fx-banner.fx-banner.show.animated{animation:none}.fx-hud-pulse{animation:none}}
