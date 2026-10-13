@@ -1,0 +1,11 @@
+{
+  "game": "Taipei Sunset Drive",
+  "version": "V57-fusion-playtest",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "main",
+  "sourceCommit": "4789e7736ca79bd89137cc87e941e1d7f3c0141d",
+  "deployedVia": "GitHub API direct commit",
+  "rollbackBranch": "backup/main-before-fusion-20261014-0501",
+  "qaStatus": "npm test passed; deployed visual verification pending",
+  "presentationStamp": "FUSION 4789e77"
+}

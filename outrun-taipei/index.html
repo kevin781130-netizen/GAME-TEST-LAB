@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+<meta name="fusion-source-commit" content="4789e7736ca79bd89137cc87e941e1d7f3c0141d">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>台北極速傳說｜Taipei Sunset Drive V56.0</title>
@@ -598,7 +599,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>CURRENT TEST BUILD</span><strong>V56.0</strong><span>FULL WEBGL 3D · REAR CHASE CAMERA</span>
+    <span>FUSION · 4789e77</span><strong>V56.0</strong><span>FULL WEBGL 3D · REAR CHASE CAMERA</span>
   </div>
 </div>
 
@@ -746,7 +747,7 @@ function v56Load3DScene(){
  canvas.parentNode.appendChild(status);
  v56StatusElement=status;
  v56Status('正在載入完整 3D 台北街道…');
- const assets=['assets/vendor/three-r149.min.js','assets/hybrid-renderer.js'];
+ const assets=['assets/vendor/three-r149.min.js?v=4789e77','assets/hybrid-renderer.js?v=4789e77'];
  function load(index){
   if(index>=assets.length){
    try {

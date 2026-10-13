@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Quaternius 建築模組預覽 | 台北極速傳說</title>
+<style>
+:root{color-scheme:dark;--bg:#0c111c;--card:#151f2f;--line:#32445a;--text:#edf5ff;--muted:#a6b9cd;--accent:#64d9c8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Noto Sans TC",sans-serif}
+header{padding:20px clamp(15px,4vw,38px) 13px;border-bottom:1px solid var(--line)}h1{font-size:clamp(19px,3vw,26px);line-height:1.3;margin:3px 0 7px}header p{color:var(--muted);margin:0;font-size:13px}
+.pill{display:inline-block;background:#213f3b;color:var(--accent);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;letter-spacing:.05em}
+main{max-width:1430px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:15px;padding:16px}
+.viewport{position:relative;overflow:hidden;background:linear-gradient(#1c2e43,#0f1724);height:min(72vh,760px);min-height:340px;border:1px solid var(--line);border-radius:12px}
+.viewport canvas{width:100%;height:100%;display:block;touch-action:none}
+.watermark{position:absolute;left:15px;top:13px;padding:6px 10px;border:1px solid #839cb455;background:#101e2dcf;border-radius:8px;font-size:12px;pointer-events:none}
+#status{position:absolute;left:15px;bottom:13px;right:15px;background:#07121ddd;border:1px solid #7290a555;border-radius:8px;padding:8px 11px;color:#d3e7f5;font-size:12px;pointer-events:none}
+aside{display:flex;flex-direction:column;gap:12px}.panel{background:var(--card);border:1px solid var(--line);padding:17px;border-radius:12px}
+h2{font-size:16px;margin:0 0 12px}label{font-weight:650;font-size:13px;display:block;margin-bottom:6px}
+select,button{width:100%;border:1px solid #4b6077;background:#1b2c3e;color:var(--text);padding:11px;border-radius:8px;font:inherit}
+button{cursor:pointer;text-align:left;margin-top:9px}button:hover{border-color:var(--accent)}button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+small{color:var(--muted)}dl{display:grid;grid-template-columns:1fr auto;gap:8px;margin:0;font-size:13px}dt{color:var(--muted)}dd{margin:0;font-variant-numeric:tabular-nums;font-weight:600}
+a{color:#8ed7ff}footer{max-width:1430px;margin:0 auto;padding:4px 17px 28px;color:var(--muted);font-size:12px}
+@media(max-width:780px){main{grid-template-columns:1fr}.viewport{height:54vh;min-height:320px}aside{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+</style>
+</head>
+<body>
+<header><span class="pill">獨立美術預覽 · P2</span>
+<h1>Quaternius Downtown City MegaKit — 建築模組預覽</h1>
+<p>僅顯示免費 CC0 建築素材。此頁不載入台北路線、不更改遊戲地圖、物理、碰撞或玩法。</p></header>
+<main>
+<section class="viewport" aria-label="互動 3D 素材視窗">
+<canvas id="view" aria-label="Quaternius 建築模型 3D 旋轉預覽"></canvas>
+<div class="watermark">拖曳旋轉 · 滾輪縮放 · 右鍵平移</div>
+<div id="status" role="status" aria-live="polite">正在初始化 Three.js 預覽…</div>
+</section>
+<aside>
+<div class="panel"><h2>檢查素材</h2>
+<label for="asset">建築模組</label>
+<select id="asset">
+<option value="Brick_RedWhite_DoubleWindow">紅白磚雙窗立面</option>
+<option value="Brick_Plain_1">紅磚牆面</option>
+<option value="Metal_Window">金屬／混凝土窗面</option>
+<option value="DoorFrame_Trim">入口門框</option>
+</select>
+<button id="reset" type="button">重設鏡頭</button>
+<button id="rotate" type="button" aria-pressed="false">自動旋轉：關閉</button>
+<button id="light" type="button" aria-pressed="false">燈光：日間</button>
+</div>
+<div class="panel"><h2>模型檢查數據</h2>
+<dl>
+<dt>網格物件</dt><dd id="meshes">—</dd>
+<dt>三角面</dt><dd id="tris">—</dd>
+<dt>原始包圍盒</dt><dd id="bounds">—</dd>
+<dt>材質數</dt><dd id="materials">—</dd>
+<dt>GPU Draw Calls</dt><dd id="drawcalls">—</dd>
+</dl><p><small>預覽會自動置中與等比縮放；不代表遊戲中的尺寸或位置。</small></p></div>
+<div class="panel"><h2>保留原始遊戲</h2>
+<p><small>本頁單獨載入資產。後續要套用到台北街景，必須另經效能、地標、道路間距和視覺驗收。</small></p>
+<a href="../../index.html">返回目前版本遊戲</a>
+</div>
+</aside>
+</main>
+<footer>模型：Quaternius Downtown City MegaKit Standard · CC0 1.0。官方來源：
+<a href="https://quaternius.com/packs/downtowncitymegakit.html" target="_blank" rel="noopener noreferrer">Quaternius</a>。
+移植檔案來源和精簡材質說明請見 <a href="../../assets/third_party/quaternius-downtown/README.md">素材 README</a>。
+Three.js r149、GLTFLoader、OrbitControls 均採 MIT 授權。<strong>尚未部署或完成瀏覽器視覺驗收。</strong></footer>
+<script src="../../assets/vendor/three-r149.min.js"></script>
+<script type="importmap">
+{"imports":{"three":"../../assets/vendor/three-r149-esm-shim.js"}}
+</script>
+<script type="module" src="./preview.js"></script>
+</body>
+</html>
