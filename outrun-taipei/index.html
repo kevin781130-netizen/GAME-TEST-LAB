@@ -746,7 +746,7 @@ function v56Load3DScene(){
  canvas.parentNode.appendChild(status);
  v56StatusElement=status;
  v56Status('正在載入完整 3D 台北街道…');
- const assets=['assets/vendor/three-r149.min.js','assets/hybrid-renderer.js?v=56.1A-f64dab3'];
+ const assets=['assets/vendor/three-r149.min.js','assets/hybrid-renderer.js'];
  function load(index){
   if(index>=assets.length){
    try {
@@ -2816,7 +2816,8 @@ function update(dt){
     if(dz > 2600) car.near = false;
   }
 
-  projectRoad(); prepareTrafficSprites();
+  if(v56Full3D){projectRoad();v57PrepareTrafficVisibility();}
+  else{projectRoad();prepareTrafficSprites();}
   for(const car of traffic){
     const contact=trafficContact(previousPlayer,car);
     if(contact&&car.hitTimer<=0&&collisionCooldown<=0){
@@ -4300,19 +4301,9 @@ function drawGoalCelebrationScene(){
   ctx.restore();
 }
 
-function render(dt){
- if(v56Full3D){
-  // Legacy road screen projections are maintained ONLY for physical collision
-  // and near-miss sensor state; none of their Canvas sprites reach the screen.
-  projectRoad();prepareTrafficSprites();
-  if(!v56Scene){
-   if(!v56Error)v56Status('正在載入完整 3D 台北街道…');
-   return;
-  }
-  if(v56Scene.contextLost){
-   v56Status('WebGL 畫面暫停，等待 GPU 恢復…');return;
-  }
-  const first=Math.max(0,Math.floor(playerZ/SEGMENT_LENGTH));
+function v57SceneFrame(){
+  const visualPlayerZ=playerZ+PLAYER_DEPTH;
+  const first=Math.max(0,Math.floor(visualPlayerZ/SEGMENT_LENGTH));
   const here=segments[Math.min(first,segments.length-1)];
   const originY=here?.p1.world.y||0;
   const curves=[],hills=[],corridors=[];
@@ -4323,8 +4314,9 @@ function render(dt){
    hills.push((seg?.p1.world.y||0)-originY);
    corridors.push(roadCorridors(idx));
   }
-  const traffic3D=traffic.slice(0,15).map(car=>({
-   distance:(car.z-playerZ)/SEGMENT_LENGTH,
+  const traffic3D=traffic.slice(0,15).map((car,sourceIndex)=>({
+   sourceIndex,eligible:trafficRoadEligible(car),halfWidth:trafficHalfWidth(car),
+   distance:(car.z-visualPlayerZ)/SEGMENT_LENGTH,
    x:car.x,
    color:car.color
   }));
@@ -4341,11 +4333,10 @@ function render(dt){
   v56DrivingFrame.driftCharge=nitro;
   v56DrivingFrame.nitroActive=boosting;
   v56DrivingFrame.yawDeg=v51DriftVisualYaw();
-  try{
-   const ok=v56Scene.render({
+  return {
     curves,hills,corridors,
     segment:first,
-    fraction:(playerZ%SEGMENT_LENGTH)/SEGMENT_LENGTH,
+    fraction:(visualPlayerZ%SEGMENT_LENGTH)/SEGMENT_LENGTH,
     playerX,traffic:traffic3D,carColor:currentCar.color,
     driving:v56DrivingFrame,
     archetype:currentNode.archetype,seed:currentNode.seed,
@@ -4354,7 +4345,28 @@ function render(dt){
     braking:inputHeld('ArrowDown')||inputHeld('KeyS')||gamepadInput.brake||helperPulse>0,
     boosting:boosting||exitBoost>0,
     night:skyMood!=='sunset'
-   },paused?0:dt,canvas.width,canvas.height,graphicsQuality);
+  };
+}
+function v57PrepareTrafficVisibility(){
+ for(const car of traffic)car.screenBox=null;
+ if(!v56Scene?.ready||v56Scene.contextLost)return;
+ for(const box of v56Scene.prepareTrafficVisibility(v57SceneFrame(),W,H)){
+  if(traffic[box.sourceIndex])traffic[box.sourceIndex].screenBox=box;
+ }
+}
+
+function render(dt){
+ if(v56Full3D){
+  // Collision receipts come from the active 3D camera and traffic meshes.
+  if(!v56Scene){
+   if(!v56Error)v56Status('正在載入完整 3D 台北街道…');
+   return;
+  }
+  if(v56Scene.contextLost){
+   v56Status('WebGL 畫面暫停，等待 GPU 恢復…');return;
+  }
+  try{
+   const ok=v56Scene.render(v57SceneFrame(),paused?0:dt,canvas.width,canvas.height,graphicsQuality);
    if(ok)v56Status('');
   }catch(error){
    v56Error=error?.message||String(error);
@@ -5055,10 +5067,8 @@ function resolveRoadBoundary(index){
   if(hard&&penetration>.055*roadFactor()&&speed>105&&collisionCooldown<=0)triggerCrash(null,{x:W/2+side*80,y:H-85},true);
 }
 function trafficHalfWidth(car){return car.spec.w*.44*1400/(ROAD_WIDTH*W/2);}
-function trafficCollisionEligible(previous,car){
-  if(!car||!car.spec||![car.x,car.z,car.previousX??car.x,car.previousZ??car.z].every(Number.isFinite))return false;
-  // V46: if the renderer cannot produce a visible body box this frame, the car cannot hit the player.
-  if(!car.screenBox||car.screenBox.b<=car.screenBox.t)return false;
+function trafficRoadEligible(car){
+ if(!car?.spec||!Number.isFinite(car.x)||!Number.isFinite(car.z))return false;
   if(currentNode.archetype==='expressway'&&car.spec.scooter)return false;
   // Traffic is intentionally rendered only before the fork warning. Once it leaves that authored road zone,
   // it must stop being a collider too; this removes invisible "ghost car" impacts.
@@ -5069,6 +5079,13 @@ function trafficCollisionEligible(previous,car){
   if(choiceLocked&&corridors.length===2)corridors=[corridors[pendingChoice==='left'?0:1]];
   const carHalf=trafficHalfWidth(car)*.82;
   if(!corridors.some(q=>Math.abs(car.x-q.center)<=Math.max(.04,q.half-carHalf)))return false;
+  return true;
+}
+function trafficCollisionEligible(previous,car){
+  if(!car||!car.spec||![car.x,car.z,car.previousX??car.x,car.previousZ??car.z].every(Number.isFinite))return false;
+  // V46: if the renderer cannot produce a visible body box this frame, the car cannot hit the player.
+  if(!car.screenBox||car.screenBox.b<=car.screenBox.t)return false;
+  if(!trafficRoadEligible(car))return false;
   const fromZ=(car.previousZ??car.z)-previous.z-PLAYER_DEPTH,toZ=car.z-playerZ-PLAYER_DEPTH;
   return Math.min(Math.abs(fromZ),Math.abs(toZ))<1500||fromZ*toZ<=0;
 }

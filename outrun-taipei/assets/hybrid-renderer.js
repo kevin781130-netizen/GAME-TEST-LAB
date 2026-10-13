@@ -504,122 +504,79 @@ function updateDriftVisualRig(rig,drive,dtSeconds){
 module.exports={createDriftVisualRig,updateDriftVisualRig,resetDriftVisualRig};
 
   },
-  "./DriftPresentation.cjs": function(require, module) {
+  "./DrivingEffects.cjs": function(require, module) {
 'use strict';
-// Presentation-only yaw limiter; V51 driftAngle/slipAngle/physics/score are authoritative.
-// A straight road must not produce the same huge 3D body angle as a hairpin.
+// Presentation only: no random calls, wall clock, or writes to driving physics.
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function presentationYawDegrees(snapshot,curves,speedKmh) {
- const yaw=Number(snapshot?.yawDeg)||0,angle=Math.abs(yaw);
- const active=!!(snapshot?.isDrifting||snapshot?.driftState==='recover');
- if(!active)return clamp(yaw,-9,9);
- const points=Array.isArray(curves)?curves:[];
- let bend=0;
- for(let i=0;i<Math.min(15,points.length);i++){
-  const weight=1-i/25;
-  bend=Math.max(bend,Math.abs(Number(points[i])||0)*weight);
- }
- const speed=clamp(Number(speedKmh)||0,0,325);
- const speedEase=clamp((speed-60)/180,0,1);
- // Nighttime Taipei straight: restrained 10–16°; more rotation only for
- // a sustained corner at pace. Preserve signed V51 yaw; never invent drift.
- const cap=clamp(10+8.0*speedEase+8.5*clamp(bend/1.6,0,1),10,26.5);
- return Math.sign(yaw)*Math.min(angle,cap);
+function createEffectState(){return {time:0,speed:0,smoke:0,boost:0};}
+function updateEffectState(state,frame,dt){
+ if(!Number.isFinite(dt)||dt<0)throw new TypeError('nonnegative effect dt required');
+ if(dt===0)return state;
+ const step=Math.min(dt,.1),blend=1-Math.exp(-step*9);
+ const speed=Math.max(0,Number(frame.speedKmh)||0),drive=frame.driving||{};
+ const boost=frame.boosting===true?1:0;
+ const smoke=drive.isDrifting&&speed>55?clamp((Math.abs(drive.slipAngleDeg||0)-3)/15,0,1):0;
+ state.time+=step;
+ state.speed+=(clamp((speed-170)/155,0,1)-state.speed)*blend;
+ state.smoke+=(smoke-state.smoke)*blend;
+ state.boost+=(boost-state.boost)*blend;
+ return state;
 }
-module.exports={presentationYawDegrees};
-  },
-  "./CityKit.cjs": function(require, module) {
-'use strict';
-// Original Taipei-inspired modular facades. Instanced geometry: no borrowed maps, logos or GLTF.
-// Building bodies are owned by Full3DScene; this adds balconies, shopfronts and actual windows.
-function createCityKit(THREE, scene, registerGeometry, registerMaterial, boxGeometry, point, hash) {
- const MAX= {glass:3500, bands:1100, shops:140, signs:140, canopies:140, roof:140};
- const materials={
-  glass:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
-  bands:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
-  shops:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
-  signs:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
-  canopies:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})),
-  roof:registerMaterial(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}))
- };
- const meshes={},count={},dummy=new THREE.Object3D(),swatch=new THREE.Color();
- for(const key of Object.keys(MAX)){
-  const mesh=new THREE.InstancedMesh(boxGeometry,materials[key],MAX[key]);
-  mesh.name='TaipeiCityKit_'+key;
-  mesh.count=0;mesh.frustumCulled=false;
-  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  scene.add(mesh);meshes[key]=mesh;count[key]=0;
- }
- const facades=[0x293a48,0x37494b,0x4c5863,0x60584e,0x374d5d,0x655448,0x374b47,0x4c5360];
- const warmWindows=[0x223748,0x395268,0xb1a171,0x4c6872,0xcfad70,0x334b60];
- const shopColors=[0x234c59,0x6c3e49,0x3e5653,0x67543f,0x2a4558,0x70485a];
- const signColors=[0xe8a45c,0x47c8c5,0xd16b79,0xf5cf82,0x77b5c9];
- function add(key,x,y,z,w,h,d,rotation,color){
-  const i=count[key]++;if(i>=MAX[key]){count[key]=MAX[key];return;}
-  dummy.position.set(x,y,z);
-  dummy.rotation.set(0,rotation,0);
-  dummy.scale.set(w,h,d);
-  dummy.updateMatrix();meshes[key].setMatrixAt(i,dummy.matrix);
-  swatch.setHex(color);meshes[key].setColorAt(i,swatch);
- }
- function update(frame,points,halfWidth){
-  for(const key of Object.keys(count))count[key]=0;
-  const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
-  if(urban){
-   const seed=Number(frame.seed)||1,segment=Math.floor(frame.segment||0);
-   for(let i=5;i<125;i+=3){
-    const c=points[i],absolute=segment+i;
-    for(const side of [-1,1]){
-     const h=hash(absolute*37+side*99+seed);
-     const width=5+hash(absolute*11+side*33)*6;
-     const height=7+h*23;
-     const lateral=(1.75+h*2.3)*halfWidth*side;
-     // Roadward face: +X for buildings to the left, -X for those on the right.
-     const toward=-side;
-     const frontage=point(c,lateral+toward*(width*.5+.07),-.15);
-     const rot=-c.heading, floors=Math.min(9,Math.max(2,Math.floor((height-1.9)/2.8)));
-     const style=Math.floor(hash(absolute*19+seed)*facades.length);
-     const bandColor=facades[style],base=point(c,lateral,-.15);
-     // Distinct ground-floor shop depth, projecting canopy, and colored sign fascia.
-     add('shops',frontage.x,frontage.y+1.07,frontage.z,.10,2.05,width*.86,rot,shopColors[(style+Math.abs(absolute))%shopColors.length]);
-     add('signs',frontage.x+toward*.11,frontage.y+2.3,frontage.z,.15,.48,width*.86,rot,signColors[(style+absolute+side+signColors.length*100)%signColors.length]);
-     add('canopies',frontage.x+toward*.27,frontage.y+2.03,frontage.z,.53,.09,width*.94,rot,0x263b47);
-     for(let floor=0;floor<floors;floor++){
-      const y=frontage.y+3.4+floor*2.8;
-      if(y>base.y+height-1.0)break;
-      // Thin 3D balcony ledges and setbacks are silhouette cues, not decals.
-      add('bands',frontage.x+toward*.12,y-.76,frontage.z,.38,.12,width*.94,rot,bandColor);
-      for(let column=0;column<3;column++){
-       const v=(column-1)*width*.27;
-       const x=frontage.x+Math.sin(c.heading)*v;
-       const z=frontage.z+Math.cos(c.heading)*v;
-       const light=hash(absolute*199+side*131+floor*17+column*43);
-       const tint=warmWindows[Math.floor(light*warmWindows.length)];
-       add('glass',x+toward*.10,y,z,.09,1.24,width*.19,rot,tint);
-      }
-      // Windows also on the camera-facing end wall; avoid blank billboard slabs.
-      const endZ=base.z+Math.cos(c.heading)*width*.39,endX=base.x+Math.sin(c.heading)*width*.39;
-      for(const n of [-1,1]){
-       const x=endX+Math.cos(c.heading)*n*width*.22,z=endZ+Math.sin(c.heading)*n*width*.22;
-       const tint=warmWindows[Math.floor(hash(absolute*73+floor*29+n*11+1000)*warmWindows.length)];
-       add('glass',x,y,z,width*.17,1.1,.10,rot,tint);
-      }
-     }
-     // Mechanical penthouse/roof silhouette instead of featureless flat white cuboids.
-     add('roof',base.x,base.y+height+.45,base.z,width*.45,.85,width*.33,rot,0x273541);
-    }
-   }
+function createDrivingEffects(THREE){
+ const state=createEffectState();
+ const smokeGeometry=new THREE.SphereGeometry(1,7,5);
+ const smokeMaterial=new THREE.MeshBasicMaterial({color:0xcbd6de,transparent:true,opacity:0,depthWrite:false});
+ const smoke=new THREE.InstancedMesh(smokeGeometry,smokeMaterial,24);
+ smoke.name='V57_DriftSmoke';smoke.frustumCulled=false;
+ smoke.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+ const lineGeometry=new THREE.BufferGeometry();
+ const positions=new Float32Array(16*6),attribute=new THREE.BufferAttribute(positions,3);
+ attribute.setUsage(THREE.DynamicDrawUsage);lineGeometry.setAttribute('position',attribute);
+ const lineMaterial=new THREE.LineBasicMaterial({color:0x9cdeff,transparent:true,opacity:0,depthTest:false,depthWrite:false,toneMapped:false});
+ const lines=new THREE.LineSegments(lineGeometry,lineMaterial);
+ lines.name='V57_PeripheralSpeedLines';lines.frustumCulled=false;lines.renderOrder=10;
+ const dummy=new THREE.Object3D();let disposed=false;
+ function update(frame,dt,quality,camera,car){
+  if(disposed)return;
+  updateEffectState(state,frame,dt);
+  // Reattach the same pool when the player chooses a different vehicle.
+  if(smoke.parent!==car.parts.pitch)car.parts.pitch.add(smoke);
+  if(lines.parent!==camera)camera.add(lines);
+  const count=quality==='LOW'?8:24;
+  smoke.visible=state.smoke>.015;smoke.count=count;
+  smokeMaterial.opacity=state.smoke*.17;
+  for(let i=0;i<count;i++){
+   const phase=(state.time*1.15+i/count)%1,side=i%2?1:-1;
+   dummy.position.set(side*(.88+phase*.45),.25+phase*.6,1.18+phase*2.3);
+   dummy.rotation.set(0,0,0);const size=.12+phase*.4;
+   dummy.scale.set(size,size*.75,size);dummy.updateMatrix();smoke.setMatrixAt(i,dummy.matrix);
   }
-  for(const key of Object.keys(meshes)){
-   const mesh=meshes[key];mesh.count=count[key];
-   mesh.instanceMatrix.needsUpdate=true;
-   if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
+  smoke.instanceMatrix.needsUpdate=true;
+  const intensity=Math.max(state.speed*.65,state.boost),lineCount=quality==='LOW'?6:16;
+  lines.visible=intensity>.02;lineMaterial.opacity=intensity*.24;
+  const halfY=Math.tan(camera.fov*Math.PI/360)*5,halfX=halfY*camera.aspect;
+  for(let i=0;i<lineCount;i++){
+   const phase=(state.time*(1.3+state.boost)+i*.618)%1,side=i%2?1:-1;
+   // Stay in the outer fifth of the view, leaving the driving line readable.
+   const x=side*halfX*(.81+phase*.15),y=halfY*((i*7%17)/8-1)*.85;
+   const stretch=1.04+intensity*.045;
+   positions.set([x,y,-5,x*stretch,y*stretch,-5],i*6);
+  }
+  lineGeometry.setDrawRange(0,lineCount*2);attribute.needsUpdate=true;
+  for(const flame of car.parts.exhaustFlames){
+   const pulse=1+state.boost*(.3+.1*Math.sin(state.time*28));
+   flame.scale.set(1,pulse,1);
   }
  }
- function dispose(){for(const mesh of Object.values(meshes))scene.remove(mesh);}
- return {update,dispose,meshes};
+ function dispose(){
+  if(disposed)return;disposed=true;
+  smoke.removeFromParent();lines.removeFromParent();
+  smokeGeometry.dispose();smokeMaterial.dispose();lineGeometry.dispose();lineMaterial.dispose();
+ }
+ return {update,dispose,state};
 }
-module.exports={createCityKit};
+module.exports={createEffectState,updateEffectState,createDrivingEffects};
+
   },
   "./Full3DScene.cjs": function(require, module) {
 'use strict';
@@ -627,8 +584,7 @@ const {createVehicle3D} = require('./Vehicle3D.cjs');
 const {createVehiclePose, updateVehiclePose} = require('./VehiclePoseBridge.cjs');
 const {createDrivingVisualSnapshot,updateDrivingVisualSnapshot} = require('./DrivingVisualSnapshot.cjs');
 const {createDriftVisualRig,updateDriftVisualRig} = require('./DriftVisualRig.cjs');
-const {presentationYawDegrees} = require('./DriftPresentation.cjs');
-const {createCityKit} = require('./CityKit.cjs');
+const {createDrivingEffects}=require('./DrivingEffects.cjs');
 
 // Full WebGL road/world renderer. This is intentionally NOT a Canvas overlay.
 // World coordinates: +X right, +Y up, -Z forward. Camera is behind the car (+Z).
@@ -637,53 +593,109 @@ const COUNT=125, STEP=2.7, HALF_WIDTH=8, MAX_CARS=15;
 const DEG=Math.PI/180;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const hash=(n)=>{let x=(n|0)^0x6b7f4a21;x=Math.imul(x^(x>>>16),0x45d9f3b);x=Math.imul(x^(x>>>16),0x45d9f3b);return ((x^(x>>>16))>>>0)/4294967296;};
+// Attachment-style tangent/normal coordinates, driven by the original route.
+const PLAYER_Z=3.15;
+function sampleRoadPoint(points,index,lateral=0){
+ const j=clamp(Math.floor(index),0,points.length-2),t=index-j;
+ const a=points[j],b=points[j+1];
+ const heading=a.heading+(b.heading-a.heading)*t;
+ return {x:a.x+(b.x-a.x)*t+Math.cos(heading)*lateral,
+  y:a.y+(b.y-a.y)*t,z:a.z+(b.z-a.z)*t+Math.sin(heading)*lateral,heading};
+}
 function previewPoints(input) {
- const {curves=[],hills=[],laneOffsets=[],playerX=0,fraction=0}=input||{};
- // Start a little behind the chase camera so asphalt always extends under
- // the player's rear wheels; the road must not begin in front of the car.
- let x=-playerX*HALF_WIDTH, z=14+STEP*fraction, heading=0;
+ const {curves=[],hills=[],playerX=0,fraction=0}=input||{};
+ let x=0,z=0,heading=0;
  const points=[];
  for(let i=0;i<=COUNT;i++){
-   const curve=clamp(Number(curves[i])||0,-8,8);
-   heading=clamp(heading+curve*.0058,-1.2,1.2);
-   points.push({x,z,y:clamp((Number(hills[i])||0)/260,-5,5),heading});
+   points.push({x,z,y:(Number(hills[i])||0)/260,heading});
+   heading=clamp(heading+clamp(Number(curves[i])||0,-8,8)*.0058,-1.2,1.2);
    x+=Math.sin(heading)*STEP;
    z-=Math.cos(heading)*STEP;
  }
+ // Anchor the actual collision position, including its subsegment fraction.
+ const origin=sampleRoadPoint(points,clamp(fraction,0,1),playerX*HALF_WIDTH);
+ for(const p of points){p.x-=origin.x;p.y-=origin.y;p.z+=PLAYER_Z-origin.z;}
  return points;
+}
+function roadVehiclePose(points,frame){
+ const f=clamp(Number(frame.fraction)||0,0,1),lateral=(Number(frame.playerX)||0)*HALF_WIDTH;
+ const at=sampleRoadPoint(points,f,lateral);
+ const front=sampleRoadPoint(points,f+.4,lateral),rear=sampleRoadPoint(points,f-.4,lateral);
+ return {yaw:-at.heading||0,pitch:Math.atan2(front.y-rear.y,Math.hypot(front.x-rear.x,front.z-rear.z))};
+}
+function createChaseRig(){return {initialized:false,x:0,y:3.55,z:10.35,lookX:0,lookY:1.25,lookZ:-19,fov:66};}
+function updateChaseRig(rig,points,frame,sway,dt){
+ if(!Number.isFinite(dt)||dt<0)throw new TypeError('nonnegative camera dt required');
+ const f=clamp(Number(frame.fraction)||0,0,1);
+ const lateral=(Number(frame.playerX)||0)*HALF_WIDTH;
+ const ahead=sampleRoadPoint(points,f+8,lateral),behind=sampleRoadPoint(points,f-2,lateral);
+ const steer=clamp(Number(frame.steer)||0,-1,1),speed=clamp((Number(frame.speedKmh)||0)/325,0,1);
+ const target={x:sway+steer*.08,y:3.55+clamp(behind.y,-1.1,1.1),z:10.35,
+  lookX:clamp(ahead.x*.48,-3.2,3.2)+sway*.4,
+  lookY:1.25+clamp(ahead.y*.65,-2,3),lookZ:-19,
+  fov:66+speed*1.2+(frame.boosting?1.8:0)};
+ // Exponential damping gives the same response at 30/60/120 FPS. Pause freezes it.
+ const alpha=rig.initialized?1-Math.exp(-Math.min(dt,.1)*5):1;
+ for(const key of Object.keys(target))rig[key]+=(target[key]-rig[key])*alpha;
+ rig.initialized=true;return rig;
+}
+const TAIPEI_SIGNS=['老街牛肉麵','台北茶行','萬華當舖','光華電器','豆花冰品','機車修理'];
+const SIGN_COLORS=[0xaf2839,0x175b59,0x4d285c,0x225b89,0xcf852d,0x243747];
+function streetOffset(corridors,side,width,margin=2){
+ const lanes=corridors?.length?corridors:[{center:0,half:1}];
+ const edge=Math.max(...lanes.map(q=>side*q.center+q.half));
+ return side*(edge*HALF_WIDTH+width/2+margin);
+}
+function createFacadeTexture(THREE){
+ const size=64,data=new Uint8Array(size*size*4);
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const mortar=y%8===0||(x+(Math.floor(y/8)%2)*8)%16===0;
+  const window=x%32>=7&&x%32<25&&y>=15&&y<49;
+  const value=window?90:mortar?155:235;
+  const k=(y*size+x)*4;data[k]=value;data[k+1]=window?120:value;data[k+2]=window?145:value;data[k+3]=255;
+ }
+ const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+ texture.encoding=THREE.sRGBEncoding;texture.needsUpdate=true;return texture;
+}
+function createSignTexture(THREE,text,color,doc){
+ if(!doc?.createElement)return null;
+ const c=doc.createElement('canvas');c.width=128;c.height=512;
+ const g=c.getContext('2d');if(!g)return null;
+ g.fillStyle='#'+color.toString(16).padStart(6,'0');g.fillRect(0,0,128,512);
+ g.strokeStyle='#ffd17a';g.lineWidth=6;g.strokeRect(5,5,118,502);
+ g.fillStyle='#fff6d7';g.textAlign='center';g.textBaseline='middle';
+ g.font='bold 76px "Microsoft JhengHei", "PingFang TC", sans-serif';
+ const chars=Array.from(text),step=440/chars.length;
+ chars.forEach((ch,i)=>g.fillText(ch,64,36+step*(i+.5),104));
+ const texture=new THREE.CanvasTexture(c);texture.encoding=THREE.sRGBEncoding;return texture;
 }
 function createFull3DScene(THREE,canvas) {
  if(!THREE?.WebGLRenderer || !canvas)throw new TypeError('WebGL canvas and Three.js required');
- const geometries=[],materials=[];
+ const geometries=[],materials=[],textures=[];
  let active=true, lost=false,ready=false;
  const geometry=g=>(geometries.push(g),g);
  const material=m=>(materials.push(m),m);
- // Dynamic build tag only after the V56.1A renderer is actually loaded.
- // The static V56.0 HTML remains a recoverable fallback if the bundle fails.
- const label=canvas.ownerDocument?.querySelector?.('#build-version strong');
- if(label)label.textContent='V56.1A';
  const scene=new THREE.Scene();
  scene.background=new THREE.Color(0x10213b);
  scene.fog=new THREE.FogExp2(0x24364d,.0055);
  const camera=new THREE.PerspectiveCamera(66,16/9,.12,490);
  camera.position.set(0,3.6,10.4);
  camera.lookAt(0,1.0,-18);
- scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,1.3));
- const sunlight=new THREE.DirectionalLight(0xffe6bf,1.05);
+ scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,2.25));
+ const sunlight=new THREE.DirectionalLight(0xffe6bf,2.35);
  sunlight.position.set(-36,80,-65);scene.add(sunlight);
  const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:'high-performance'});
  renderer.setPixelRatio(1);
  renderer.setClearColor(0x101b2e,1);
  renderer.outputEncoding=THREE.sRGBEncoding;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.0;
+ renderer.toneMappingExposure=1.35;
  let lastW=0,lastH=0,lastDpr=0;
  const roadMaterials=[
-  // Dynamic road strips have no normals; BasicMaterial prevents pitch-black roads.
-  material(new THREE.MeshBasicMaterial({color:0x283744,toneMapped:false,side:THREE.DoubleSide})),
-  material(new THREE.MeshBasicMaterial({color:0x3c4a55,toneMapped:false,side:THREE.DoubleSide})),
-  material(new THREE.MeshBasicMaterial({color:0xe2e2d2,toneMapped:false,side:THREE.DoubleSide})),
-  material(new THREE.MeshBasicMaterial({color:0x46b8c1,toneMapped:false,side:THREE.DoubleSide}))
+  material(new THREE.MeshStandardMaterial({color:0x303945,roughness:.94,side:THREE.DoubleSide})),
+  material(new THREE.MeshStandardMaterial({color:0x59616b,roughness:1,side:THREE.DoubleSide})),
+  material(new THREE.MeshBasicMaterial({color:0xecefe6,side:THREE.DoubleSide})),
+  material(new THREE.MeshBasicMaterial({color:0x2ad9e7,side:THREE.DoubleSide}))
  ];
  const roads=[];
  const maxQuad=COUNT*2*5;
@@ -713,33 +725,49 @@ function createFull3DScene(THREE,canvas) {
  };
  const boxG=geometry(new THREE.BoxGeometry(1,1,1));
  const coneG=geometry(new THREE.ConeGeometry(1,1,7));
- // Stable facade colors: per-instance palette must never wash to white under bright lights.
- const buildingMat=material(new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}));
- const glassMat=material(new THREE.MeshBasicMaterial({color:0x314d66,toneMapped:false}));
+ const facadeTexture=createFacadeTexture(THREE);textures.push(facadeTexture);
+ const buildingMat=material(new THREE.MeshStandardMaterial({color:0xffffff,map:facadeTexture,roughness:.92,metalness:.04}));
+ const glassMat=material(new THREE.MeshStandardMaterial({color:0x547a93,roughness:.28,metalness:.35,emissive:0x101e32,emissiveIntensity:.28}));
  const treesMat=material(new THREE.MeshStandardMaterial({color:0x305548,roughness:1}));
  const polesMat=material(new THREE.MeshStandardMaterial({color:0xc1c3bd,metalness:.4,roughness:.55}));
  const buildings=new THREE.InstancedMesh(boxG,buildingMat,120);
- const cityKit=createCityKit(THREE,scene,geometry,material,boxG,point,hash);
+ const windows=new THREE.InstancedMesh(boxG,glassMat,120);
  const trees=new THREE.InstancedMesh(coneG,treesMat,120);
  const lights=new THREE.InstancedMesh(boxG,polesMat,50);
- for(const mesh of [buildings,trees,lights]){
+ for(const mesh of [buildings,windows,trees,lights]){
   mesh.frustumCulled=false;
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   scene.add(mesh);
  }
  const dummy=new THREE.Object3D();
- const palette=[0x566a77,0x6e777c,0x68766e,0x816d63,0x536677,0x796a5b,0x66777b,0x555c66];
+ const palette=[0xaf6250,0xcead86,0x9daeb2,0xbd8772,0x83999d,0xd4c1a1,0xa6b6a5];
  const swatch=new THREE.Color();
- const sky=material(new THREE.MeshBasicMaterial({color:0xe5c2a2,fog:false}));
- const sun= new THREE.Mesh(geometry(new THREE.SphereGeometry(11,12,9)),sky);
- sun.position.set(-128,77,-275);scene.add(sun);
- const ground=new THREE.Mesh(geometry(new THREE.PlaneGeometry(6000,6000)),material(new THREE.MeshBasicMaterial({color:0x283c43,toneMapped:false})));
+ const skyMaterial=material(new THREE.ShaderMaterial({
+  side:THREE.BackSide,depthWrite:false,fog:false,
+  uniforms:{top:{value:new THREE.Color(0x53416f)},horizon:{value:new THREE.Color(0xf4ae78)}},
+  vertexShader:'varying vec3 vSky; void main(){vSky=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+  fragmentShader:'uniform vec3 top; uniform vec3 horizon; varying vec3 vSky; void main(){float h=normalize(vSky).y; gl_FragColor=vec4(mix(horizon,top,smoothstep(-0.06,0.65,h)),1.0);}'
+ }));
+ const skyDome=new THREE.Mesh(geometry(new THREE.SphereGeometry(450,24,16)),skyMaterial);skyDome.renderOrder=-10;scene.add(skyDome);
+ const sunMaterial=material(new THREE.MeshBasicMaterial({color:0xffd17c,fog:false,toneMapped:false}));
+ const sun=new THREE.Mesh(geometry(new THREE.SphereGeometry(18,16,12)),sunMaterial);sun.name='V57_SunsetSun';scene.add(sun);
+ const doc=canvas.ownerDocument||(typeof document!=='undefined'?document:null);
+ const signs=TAIPEI_SIGNS.map((text,i)=>{
+  const texture=createSignTexture(THREE,text,SIGN_COLORS[i],doc);if(texture)textures.push(texture);
+  const mat=material(new THREE.MeshBasicMaterial({map:texture,color:texture?0xffffff:SIGN_COLORS[i],side:THREE.DoubleSide,toneMapped:false}));
+  const mesh=new THREE.InstancedMesh(geometry(new THREE.PlaneGeometry(1,1)),mat,40);
+  mesh.name='V57_StreetSign_'+i;mesh.userData.text=text;mesh.frustumCulled=false;
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);scene.add(mesh);return mesh;
+ });
+ const ground=new THREE.Mesh(geometry(new THREE.PlaneGeometry(6000,6000)),material(new THREE.MeshStandardMaterial({color:0x32484b,roughness:1})));
  ground.rotation.x=-Math.PI/2;ground.position.y=-.22;scene.add(ground);
  let car=createVehicle3D(THREE,{color:0x1a2330});
  scene.add(car.root);
  const pose=createVehiclePose();
  const driving=createDrivingVisualSnapshot();
  const driftRig=createDriftVisualRig();
+ const chaseRig=createChaseRig();
+ const effects=createDrivingEffects(THREE);scene.add(camera);
  const gripFrame=createDrivingVisualSnapshot();
  let lastCarColor='',renderRandomSeed=0x6f34ac19;
  function with3DOnlyRandom(callback){
@@ -776,12 +804,14 @@ function createFull3DScene(THREE,canvas) {
  canvas.addEventListener('webglcontextlost',lostHandler);
  canvas.addEventListener('webglcontextrestored',restoredHandler);
 
- function paintWorld(frame,pts){
+ function paintWorld(frame,pts,quality){
   for(const r of roads)r.used=0;
   const corridors=frame.corridors||[];
-  for(let i=0;i<COUNT;i++){
-   const here=pts[i],there=pts[i+1];if(!there)break;
-   const lanes=corridors[i]||[{center:0,half:1}];
+  for(let i=-5;i<COUNT;i++){
+   // Extend asphalt behind the player without shifting traffic/collision data.
+   const here=i<0?sampleRoadPoint(pts,i):pts[i];
+   const there=i<0?sampleRoadPoint(pts,i+1):pts[i+1];if(!there)break;
+   const lanes=corridors[Math.max(0,i)]||[{center:0,half:1}];
    const next=corridors[i+1]||lanes;
    for(let k=0;k<Math.min(2,lanes.length);k++){
     const q=lanes[k],n=next[Math.min(k,next.length-1)];
@@ -810,57 +840,109 @@ function createFull3DScene(THREE,canvas) {
   }
   const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
   const routeSeed=frame.seed||1;
-  let ib=0,it=0,il=0;
-  for(let i=5;i<COUNT;i+=3){
+  let ib=0,iw=0,it=0,il=0;
+  const signCounts=Array(signs.length).fill(0);
+  for(let i=5;i<COUNT;i++){
    const c=pts[i];
    const absolute=Math.floor(frame.segment||0)+i;
+   if(absolute%3!==0)continue;
    for(const side of [-1,1]){
     const h=hash(absolute*37+side*99+routeSeed);
-    const lateral=(1.75+h*2.3)*HALF_WIDTH*side;
+    const width=5+hash(absolute*11+side*33)*6;
+    // Scan the building footprint so widened forks keep their clear shoulder.
+    const neighborhood=corridors.slice(Math.max(0,i-3),i+4).flat();
+    const lateral=streetOffset(neighborhood,side,width,2+h*7);
     const anchor=point(c,lateral,-.15);
     if(urban){
-      const height=7+h*23;const width=5+hash(absolute*11+side*33)*6;
+      const height=7+h*23;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
       dummy.rotation.set(0,-c.heading,0);
       dummy.scale.set(width,height,width*.8);
       dummy.updateMatrix();if(ib<120){buildings.setMatrixAt(ib,dummy.matrix);
         swatch.setHex(palette[Math.floor(h*palette.length)]);buildings.setColorAt(ib,swatch);ib++;}
+      dummy.scale.set(width*.91,Math.max(1,height*.47),width*.04);
+      const facade=point(c,lateral, height*.63-.15);
+      dummy.position.set(facade.x+Math.sin(c.heading)*width*.42,facade.y,facade.z+Math.cos(c.heading)*width*.42);
+      dummy.updateMatrix();if(iw<120){windows.setMatrixAt(iw++,dummy.matrix);}
+      if(quality!=='LOW'&&absolute%6===0){
+       const signIndex=Math.floor(hash(absolute*13+side*41+routeSeed)*signs.length),n=signCounts[signIndex];
+       if(n<40){
+        const sign=point(c,lateral-side*(width/2+.15),6.5);
+        dummy.position.set(sign.x,sign.y,sign.z);
+        dummy.rotation.set(0,side>0?-Math.PI/2-c.heading:Math.PI/2-c.heading,0);
+        dummy.scale.set(1.3,5.2,1);dummy.updateMatrix();signs[signIndex].setMatrixAt(n,dummy.matrix);signCounts[signIndex]++;
+       }
+      }
     }else{
       const height=7+h*9;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
       dummy.rotation.set(0,0,0);dummy.scale.set(2.7+h*2,height,2.7+h*2);
       dummy.updateMatrix();if(it<120)trees.setMatrixAt(it++,dummy.matrix);
     }
-    if(i%12===5&&il<50){
-      dummy.position.set(point(c,side*HALF_WIDTH*1.3).x,c.y+5.2,c.z);
+    if(absolute%12===0&&il<50){
+      const lamp=point(c,streetOffset(neighborhood,side,.18,.7),5.2);
+      dummy.position.set(lamp.x,lamp.y,lamp.z);
       dummy.rotation.set(0,0,0);dummy.scale.set(.18,10,.18);
       dummy.updateMatrix();lights.setMatrixAt(il++,dummy.matrix);
     }
    }
   }
-  cityKit.update(frame,pts,HALF_WIDTH);
-  const assignments=[[buildings,ib],[trees,it],[lights,il]];
+  const assignments=[[buildings,ib],[windows,iw],[trees,it],[lights,il],...signs.map((m,i)=>[m,signCounts[i]])];
   for(const [m,count] of assignments){m.count=count;m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;}
  }
  function updateTraffic(frame,pts){
   for(let i=0;i<trafficMeshes.length;i++){
    const mesh=trafficMeshes[i],item=frame.traffic?.[i];
-   if(!item || !(item.distance>0&&item.distance<COUNT-2)){mesh.group.visible=false;continue;}
-   const j=clamp(Math.floor(item.distance),0,COUNT-2);
-   const frac=item.distance-j,a=pts[j],b=pts[j+1];
+   if(!item || item.eligible===false || !(item.distance>-2&&item.distance<COUNT-2)){mesh.group.visible=false;continue;}
+   const road=sampleRoadPoint(pts,item.distance+(Number(frame.fraction)||0),(Number(item.x)||0)*HALF_WIDTH);
    mesh.group.visible=true;
-   mesh.group.position.set(
-    a.x+(b.x-a.x)*frac + (Number(item.x)||0)*HALF_WIDTH,
-    a.y+(b.y-a.y)*frac+.05,
-    a.z+(b.z-a.z)*frac
-   );
-   mesh.group.rotation.y=a.heading;
+   mesh.group.position.set(road.x,road.y+.05,road.z);
+   mesh.group.rotation.y=-road.heading;
+   mesh.group.scale.x=Number.isFinite(item.halfWidth)?Math.max(.1,item.halfWidth*16/1.7):1;
    const color=item.color||'#f3c21f';
    if(color!==mesh.lastColor){
     mesh.chassis.material.color.set(color);
     mesh.lastColor=color;
    }
   }
+ }
+ const trafficBounds=new THREE.Box3(),corner=new THREE.Vector3();
+ function trafficVisibility(frame,pts,width,height){
+  scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+  const boxes=[];
+  for(let i=0;i<trafficMeshes.length;i++){
+   const mesh=trafficMeshes[i].group,item=frame.traffic?.[i];if(!mesh.visible||!item)continue;
+   trafficBounds.setFromObject(mesh);
+   // Hills can hide the entire vehicle; test the sightline to its highest point.
+   const top=trafficBounds.max.y,tx=mesh.position.x,tz=mesh.position.z;
+   const blocked=pts.some((p,j)=>{
+    const t=(p.z-camera.position.z)/(tz-camera.position.z);
+    if(!(t>0&&t<1))return false;
+    const x=camera.position.x+(tx-camera.position.x)*t;
+    const y=camera.position.y+(top-camera.position.y)*t;
+    if(p.y+.028<=y)return false;
+    const lateral=(x-p.x)*Math.cos(p.heading)/HALF_WIDTH;
+    return (frame.corridors?.[j]||[{center:0,half:1}]).some(q=>Math.abs(lateral-q.center)<=q.half);
+   });
+   if(blocked){mesh.visible=false;continue;}
+   let l=Infinity,r=-Infinity,t=Infinity,b=-Infinity,front=false;
+   for(const x of [trafficBounds.min.x,trafficBounds.max.x])for(const y of [trafficBounds.min.y,trafficBounds.max.y])for(const z of [trafficBounds.min.z,trafficBounds.max.z]){
+    corner.set(x,y,z).applyMatrix4(camera.matrixWorldInverse);
+    if(corner.z>=-camera.near)continue;
+    front=true;corner.applyMatrix4(camera.projectionMatrix);
+    const sx=(corner.x+1)*width/2,sy=(1-corner.y)*height/2;
+    l=Math.min(l,sx);r=Math.max(r,sx);t=Math.min(t,sy);b=Math.max(b,sy);
+   }
+   if(!front||r<=0||l>=width||b<=0||t>=height){mesh.visible=false;continue;}
+   l=clamp(l,0,width);r=clamp(r,0,width);t=clamp(t,0,height);b=clamp(b,0,height);
+   if(r>l&&b>t)boxes.push({sourceIndex:item.sourceIndex??i,l,r,t,b,cx:(l+r)/2,cy:(t+b)/2});
+  }
+  return boxes;
+ }
+ function prepareTrafficVisibility(frame,width=960,height=540){
+  if(!active||lost||!ready)return [];
+  const points=previewPoints(frame);updateTraffic(frame,points);
+  return trafficVisibility(frame,points,width,height);
  }
  function render(frame,dt=0,width=960,height=540,quality='STANDARD'){
   if(!active||lost)return false;
@@ -872,7 +954,7 @@ function createFull3DScene(THREE,canvas) {
   }
   const dpr=quality==='LOW'?.7:quality==='ULTRA'?1.15:1;
   if(lastDpr!==dpr){renderer.setPixelRatio(dpr);lastDpr=dpr;}
-  paintWorld(frame,points);
+  paintWorld(frame,points,quality);
   updateTraffic(frame,points);
   if(frame.carColor!==lastCarColor){
    const value=typeof frame.carColor==='string'?new THREE.Color(frame.carColor).getHex():0x202838;
@@ -882,28 +964,35 @@ function createFull3DScene(THREE,canvas) {
   updateDrivingVisualSnapshot(driving,frame.driving||gripFrame);
   updateDriftVisualRig(driftRig,driving,Math.max(0,dt));
   updateVehiclePose(pose,{
-   screenX:480,screenY:475,yawDeg:presentationYawDegrees(driving,frame.curves,frame.speedKmh),
+   screenX:480,screenY:475,yawDeg:Number(frame.yawDeg)||0,
    rollDeg:Number(frame.rollDeg)||0,pitchDeg:Number(frame.pitchDeg)||0,
    steer:Number(frame.steer)||0,speedKmh:Math.max(0,Number(frame.speedKmh)||0),
    scaleX:1,direction:frame.direction===-1?-1:1,
    braking:!!frame.braking,boosting:!!frame.boosting
   },Math.max(0,dt));
   car.applyPose(pose);
-  car.root.position.set(driftRig.offsetX,.02,3.15);
+  const roadPose=roadVehiclePose(points,frame);
+  car.root.rotation.set(roadPose.pitch,roadPose.yaw,0);
+  car.root.position.set(driftRig.offsetX,.02,PLAYER_Z);
   car.root.scale.set(.92,.83,.92);
   // Camera sits behind +Z and looks down -Z: the rear (taillights +Z)
   // ALWAYS faces the camera. Do not rotate the car 180 degrees.
-  // Look ahead at the actual curved centerline, not in the steering-key direction.
-  const forward=points[13];
-  const aimX=clamp((forward?.x||0)*.085,-.65,.65)+driftRig.cameraX*.36;
-  camera.position.set(driftRig.cameraX+clamp(Number(frame.steer)||0,-1,1)*.035,3.55,10.35);
-  camera.lookAt(aimX,1.25,-19);
-  const targetFov=clamp(64+(Number(frame.speedKmh)||0)*.018+(frame.boosting?1.4:0),64,72);
-  const cameraBlend=1-Math.exp(-clamp(dt,0,.10)*5);
-  camera.fov+=(targetFov-camera.fov)*cameraBlend;
-  camera.updateProjectionMatrix();
-  scene.background.setHex(frame.night?0x10213b:0x6793ad);
-  scene.fog.color.setHex(frame.night?0x233b58:0x809caa);
+  updateChaseRig(chaseRig,points,frame,driftRig.cameraX,Math.max(0,dt));
+  camera.position.set(chaseRig.x,chaseRig.y,chaseRig.z);
+  camera.lookAt(chaseRig.lookX,chaseRig.lookY,chaseRig.lookZ);
+  if(camera.fov!==chaseRig.fov){camera.fov=chaseRig.fov;camera.updateProjectionMatrix();}
+  skyDome.position.copy(camera.position);
+  skyMaterial.uniforms.top.value.setHex(frame.night?0x08152f:0x53416f);
+  skyMaterial.uniforms.horizon.value.setHex(frame.night?0x344861:0xf4ae78);
+  sun.visible=!frame.night;sun.position.set(camera.position.x-110,camera.position.y+40,camera.position.z-290);
+  sunlight.color.setHex(frame.night?0x9dbbff:0xffc58e);
+  glassMat.emissiveIntensity=frame.night?.7:.12;
+  scene.background.setHex(frame.night?0x10213b:0xf4ae78);
+  scene.fog.color.setHex(frame.night?0x233b58:0xd69b82);
+  // A flat ground plane must never cover a descending road.
+  ground.position.y=Math.min(-.22,...points.map(p=>p.y-.22));
+  trafficVisibility(frame,points,width,height);
+  effects.update(frame,Math.max(0,dt),quality,camera,car);
   renderer.render(scene,camera);
   canvas.style.visibility='visible';ready=true;return true;
  }
@@ -911,12 +1000,12 @@ function createFull3DScene(THREE,canvas) {
   if(!active)return;active=false;ready=false;
   canvas.removeEventListener('webglcontextlost',lostHandler);
   canvas.removeEventListener('webglcontextrestored',restoredHandler);
-  car.dispose();cityKit.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
+  effects.dispose();car.dispose();for(const t of textures)t.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
   renderer.dispose();
  }
- return {render,dispose,get ready(){return ready&&!lost&&active},get contextLost(){return lost}};
+ return {render,dispose,prepareTrafficVisibility,get ready(){return ready&&!lost&&active},get contextLost(){return lost}};
 }
-module.exports={createFull3DScene,previewPoints};
+module.exports={createFull3DScene,previewPoints,sampleRoadPoint,roadVehiclePose,createChaseRig,updateChaseRig,streetOffset,TAIPEI_SIGNS};
 
   }
 };
