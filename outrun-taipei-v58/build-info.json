@@ -1,0 +1,7 @@
+{
+  "version": "V58-development-preview",
+  "sourceCommit": "b6c813431c730a7f2cbe070509eab23f058bb8a8",
+  "sourceBranch": "feature/v58-taipei-race-evolution-20261014",
+  "canonicalStable": "../outrun-taipei/",
+  "validation": "Local regressions passed. WebGL CI and visual acceptance pending."
+}
