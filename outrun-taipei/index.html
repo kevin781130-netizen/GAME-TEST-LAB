@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta name="fusion-source-commit" content="4789e7736ca79bd89137cc87e941e1d7f3c0141d">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>台北極速傳說｜Taipei Sunset Drive V56.0</title>
@@ -599,7 +598,7 @@ body{background:radial-gradient(ellipse at 50% 20%,#152a41,#050c14 65%);}
     </div>
   </div>
   <div id="build-version" role="status" aria-label="目前遊戲版本">
-    <span>FUSION · 4789e77</span><strong>V56.0</strong><span>FULL WEBGL 3D · REAR CHASE CAMERA</span>
+    <span>CURRENT TEST BUILD</span><strong>V56.0</strong><span>V58 TAIPEI EVOLUTION · PLAYTEST</span>
   </div>
 </div>
 
@@ -747,7 +746,7 @@ function v56Load3DScene(){
  canvas.parentNode.appendChild(status);
  v56StatusElement=status;
  v56Status('正在載入完整 3D 台北街道…');
- const assets=['assets/vendor/three-r149.min.js?v=4789e77','assets/hybrid-renderer.js?v=4789e77'];
+ const assets=['assets/vendor/three-r149.min.js','assets/hybrid-renderer.js'];
  function load(index){
   if(index>=assets.length){
    try {
@@ -2240,14 +2239,22 @@ document.getElementById('st-bgm3').addEventListener('click', () => { setTrack(3)
 document.getElementById('st-bgm4').addEventListener('click', () => { setTrack(4); say('TEST BGM 4: RIVER BALLAD'); });
 document.getElementById('st-voice').addEventListener('click', () => { playCheckpointChime(); say('TEST VOICE: CHECKPOINT'); });
 
+// Continuous dead-zone remapping: fine corrections start at zero, full lock
+// remains exactly +/-1. This changes input calibration, not vehicle physics.
+function v58SteeringAxis(value){
+ if(!Number.isFinite(value))return 0;
+ const x=clamp(value,-1,1),m=Math.abs(x);
+ return m<=.08?0:Math.sign(x)*(m-.08)/.92;
+}
 // Gamepad API Polling
 function pollGamepads(){
   if(!gamepadsSupported) return;
   const gpList = navigator.getGamepads ? navigator.getGamepads() : [];
-  const gp = gpList && (gpList[0] || gpList[1]);
+  const gp = gpList && Array.from(gpList).find(p=>p&&p.connected!==false);
   if(!gp){ gamepadInput={steer:0,gas:false,brake:false,drift:false,nitro:false}; return; }
 
-  gamepadInput.steer = Math.abs(gp.axes[0]||0)>0.08 ? clamp(gp.axes[0],-1,1) : 0;
+  const dpad=(gp.buttons[15]?.pressed?1:0)-(gp.buttons[14]?.pressed?1:0);
+  gamepadInput.steer = dpad||v58SteeringAxis(gp.axes[0]);
 
   const gpGas = (gp.buttons[7] && gp.buttons[7].value > 0.2) || gp.buttons[0]?.pressed;
   const gpBrake = (gp.buttons[6] && gp.buttons[6].value > 0.2) || gp.buttons[1]?.pressed;
@@ -4302,18 +4309,27 @@ function drawGoalCelebrationScene(){
   ctx.restore();
 }
 
+function v58RaceSigns(){
+ const signs=[{kind:'start',seg:26,label:'TAIPEI / 台北出發',detail:currentNode.id+' · '+scene().label}];
+ const target=v52ApproachTarget();
+ for(const s of v52ApproachSigns())signs.push({kind:'distance',seg:s.index,label:s.zh+' '+s.meters+' M',detail:s.en});
+ if(target)signs.push({kind:'finish',seg:target.index,label:target.zh,detail:target.en});
+ if(v34Mode==='arcade'&&stageLevel<4){const n=nextNodes();signs.push({kind:'fork',seg:FORK_WARN,label:'← '+n.left.id+' / '+n.right.id+' →',detail:n.left.name+' ／ '+n.right.name});}
+ return signs;
+}
 function v57SceneFrame(){
   const visualPlayerZ=playerZ+PLAYER_DEPTH;
   const first=Math.max(0,Math.floor(visualPlayerZ/SEGMENT_LENGTH));
   const here=segments[Math.min(first,segments.length-1)];
   const originY=here?.p1.world.y||0;
-  const curves=[],hills=[],corridors=[];
+  const curves=[],hills=[],corridors=[],deckHeights=[];
   for(let i=0;i<=125;i++){
    const idx=Math.min(first+i,segments.length-1);
    const seg=segments[idx]||here;
    curves.push(seg?.curve||0);
    hills.push((seg?.p1.world.y||0)-originY);
    corridors.push(roadCorridors(idx));
+   deckHeights.push(currentNode.archetype==='expressway'?deckElevation(idx):0);
   }
   const traffic3D=traffic.slice(0,15).map((car,sourceIndex)=>({
    sourceIndex,eligible:trafficRoadEligible(car),halfWidth:trafficHalfWidth(car),
@@ -4335,7 +4351,11 @@ function v57SceneFrame(){
   v56DrivingFrame.nitroActive=boosting;
   v56DrivingFrame.yawDeg=v51DriftVisualYaw();
   return {
-    curves,hills,corridors,
+    curves,hills,corridors,deckHeights,
+    routeId:currentNode.id,raceSigns:v58RaceSigns(),
+    skyColors:skyMood==='sunset'?v40Art().sky:scene().night,
+    groundColor:v40Art().ground[0],mountainColor:v40Art().mountain,
+    landmarks:landmarkTimeline().map((h,modelIndex)=>({id:h.id,modelIndex,name:h.name,seg:h.seg,side:h.side,heightWorld:h.heightWorld,groundDrop:h.groundDrop})),
     segment:first,
     fraction:(visualPlayerZ%SEGMENT_LENGTH)/SEGMENT_LENGTH,
     playerX,traffic:traffic3D,carColor:currentCar.color,
@@ -6306,7 +6326,7 @@ function finishSolo(cleared){
 }
 function updateDrivingHUD(){
   let strongest=0;
-  const idx=Math.floor(playerZ/SEGMENT_LENGTH),lookahead=clamp(Math.round(speed*WORLD_SPEED*1.5/SEGMENT_LENGTH),12,40);
+  const idx=Math.floor((playerZ+PLAYER_DEPTH)/SEGMENT_LENGTH),lookahead=clamp(Math.round(speed*WORLD_SPEED*1.5/SEGMENT_LENGTH),12,40);
   for(let i=idx+5;i<Math.min(segments.length,idx+lookahead);i++)if(Math.abs(segments[i].curve)>Math.abs(strongest))strongest=segments[i].curve;
   const magnitude=Math.abs(strongest),entry=Math.round(v52SafeCornerSpeed(strongest));
   document.getElementById('corner-name').textContent=magnitude<.55?'↑ 前方直線':`${strongest>0?'↗ 右':'↖ 左'}${magnitude>3?'急彎':magnitude>1.5?'中彎':'緩彎'}`;

@@ -578,6 +578,327 @@ function createDrivingEffects(THREE){
 module.exports={createEffectState,updateEffectState,createDrivingEffects};
 
   },
+  "./ScenicVisibility.cjs": function(require, module) {
+'use strict';
+// Authored, absolute segment windows keep the foreground clear while approaching
+// a landmark. The window does not move with the camera, so props cannot pop away
+// as the player drives. Opposite-side street scenery remains intact.
+function inLandmarkVista(landmarks,segment,side){
+ return (landmarks||[]).some(mark=>{
+  if(!Number.isFinite(mark.seg)||(mark.side<0?-1:1)!==side)return false;
+  const approach=mark.seg-segment;
+  return approach>=-18&&approach<=90;
+ });
+}
+module.exports={inLandmarkVista};
+
+  },
+  "./TaipeiLandmarks.cjs": function(require, module) {
+'use strict';
+// Original low-poly interpretations of the authored 2D landmarks. Names/order
+// come from stageLandmarkPlan; this catalog supplies geometry, never route rules.
+const ROUTE_MODELS=Object.freeze({
+ '1A':['gate','office','liberty'], '2A':['hotel','trail'], '2B':['digital'],
+ '3A':['guandu','spring'], '3B':['wheel','museum'], '3C':['dome','chimney'],
+ '4A':['fort','pier'], '4B':['volcano','pavilion'], '4C':['market','tech','rainbow'],
+ '4D':['village','skyline'], '5A':['lovers'], '5B':['lighthouse'],
+ '5C':['teahouse'], '5D':['101'], '5E':['gondola','tea']
+});
+const C={cream:0xe5d8b8,red:0xb43f38,roof:0x316963,gold:0xdbac52,glass:0x659ba7,
+ dark:0x243442,white:0xe7eeea,wood:0x6c4e37,leaf:0x528455,stone:0x77827a,light:0xffcc73};
+function createLandmarkGeometry(T,kind){
+ const positions=[],normals=[],colors=[];
+ const obj=new T.Object3D(),normal=new T.Matrix3(),p=new T.Vector3(),n=new T.Vector3(),color=new T.Color();
+ function part(g,c,x,y,z,sx=1,sy=1,sz=1,rx=0,ry=0,rz=0){
+  const raw=g.index?g.toNonIndexed():g;if(raw!==g)g.dispose();
+  obj.position.set(x,y,z);obj.scale.set(sx,sy,sz);obj.rotation.set(rx,ry,rz);obj.updateMatrix();normal.getNormalMatrix(obj.matrix);color.setHex(c);
+  const a=raw.attributes.position,b=raw.attributes.normal;
+  for(let i=0;i<a.count;i++){
+   p.fromBufferAttribute(a,i).applyMatrix4(obj.matrix);n.fromBufferAttribute(b,i).applyMatrix3(normal).normalize();
+   positions.push(p.x,p.y,p.z);normals.push(n.x,n.y,n.z);colors.push(color.r,color.g,color.b);
+  }raw.dispose();
+ }
+ const box=(x,y,z,w,h,d,c=C.cream,ry=0)=>part(new T.BoxGeometry(1,1,1),c,x,y,z,w,h,d,0,ry);
+ const roof=(x,y,z,w,d,c=C.roof)=>part(new T.CylinderGeometry(0,1,1,4,1),c,x,y,z,w,1.6,d,0,Math.PI/4);
+ const sphere=(x,y,z,w,h,d,c)=>part(new T.SphereGeometry(1,16,10),c,x,y,z,w,h,d);
+ const pole=(x,y,z,r,h,c=C.white)=>part(new T.CylinderGeometry(r,r,h,8),c,x,y,z);
+ function beam(a,b,r,c=C.white){
+  const start=new T.Vector3(...a),end=new T.Vector3(...b),dir=end.clone().sub(start),mid=start.clone().add(end).multiplyScalar(.5);
+  const q=new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),dir.clone().normalize());
+  const e=new T.Euler().setFromQuaternion(q);part(new T.CylinderGeometry(r,r,dir.length(),6),c,mid.x,mid.y,mid.z,1,1,1,e.x,e.y,e.z);
+ }
+ function windows(x,y,z,w,h,rows=3,cols=6){
+  for(let r=0;r<rows;r++)for(let j=0;j<cols;j++)box(x-w/2+(j+.5)*w/cols,y-h/2+(r+.5)*h/rows,z,w/cols*.42,h/rows*.48,.09,(r+j)%3===0?C.light:C.glass);
+ }
+ function pavilion(x=0,z=0,w=9){
+  box(x,.4,z,w, .8,6,C.stone);for(const dx of [-1,1])for(const dz of [-1,1])pole(x+dx*w*.36,3,z+dz*2,.22,5,C.red);
+  roof(x,6,z,w*.78,5,C.roof);
+ }
+ function palace(hotel=false){
+  const floors=hotel?6:2,w=hotel?24:27;
+  box(0,floors+1,0,w,floors*2,8,hotel?C.red:C.cream);
+  for(let f=1;f<=floors;f++){
+   box(0,f*2,4.3,w+1,.25,.8,C.gold);windows(0,f*2-.7,4.08,w-2,1.2,1,12);
+  }
+  roof(0,floors*2+2,0,w*.8,8,hotel?C.gold:C.roof);
+  for(const s of [-1,1]){box(s*12,2,1,8,4,9,C.cream);roof(s*12,5,1,7,7,hotel?C.gold:C.roof);}
+ }
+ function tower(x,z,w,h){box(x,h/2,z,w,h,w,C.glass);for(let y=2;y<h;y+=2)box(x,y,z+w*.51,w,.12,.12,C.cream);box(x,h+.3,z,w*.8,.6,w*.8,C.dark);}
+ function bridge(type){
+  box(0,2,0,38,.7,4,type==='rainbow'?C.red:C.white);
+  for(const x of [-16,0,16])box(x,.8,0,1.1,2,3,C.stone);
+  if(type==='guandu'){
+   for(const x of [-12,0,12])for(const z of [-1.7,1.7]){
+    part(new T.TorusGeometry(5.7,.3,6,24,Math.PI),C.red,x,2.6,z);
+    for(let i=-4;i<=4;i+=2){const y=Math.sqrt(5.7*5.7-i*i);beam([x+i,2.3,z],[x+i,2.6+y,z],.07,C.red);}
+   }
+  }else if(type==='rainbow'){
+   part(new T.TorusGeometry(14,.4,6,32,Math.PI),C.red,0,2.5,0,1,.65,1);
+   for(let x=-12;x<=12;x+=3)beam([x,2.5,0],[x,2.5+Math.sqrt(196-x*x)*.65,0],.06,C.white);
+  }else{
+   beam([-7,2,0],[-2,17,0],.55);beam([-2,17,0],[4,2,0],.4);
+   for(let x=-17;x<=17;x+=3)beam([-2,16,0],[x,2.5,1.5],.06,C.white);
+   for(let x=-14;x<=14;x+=7){box(x,.8,7,4,.8,2,C.white);pole(x,3,7,.05,4);}
+  }
+ }
+ switch(kind){
+ case 'gate':
+  box(0,2,0,13,4,7,C.red);box(0,2,3.6,2.8,3.8,.2,C.dark);box(0,5,0,9,2,5,C.cream);roof(0,6.8,0,9,6,C.gold);roof(0,8,0,6,4,C.gold);break;
+ case 'office':
+  for(const s of [-1,1]){box(s*10,3,0,16,6,6,C.red);windows(s*10,3,3.05,15,5,3,9);}
+  box(0,4,0,5,8,7,C.cream);box(0,10,0,3.3,7,3.5,C.red);box(0,14,0,4,1.2,4,C.cream);roof(0,15,0,3,3,C.red);pole(0,17,0,.06,3);break;
+ case 'liberty':
+  for(let x=-12;x<=12;x+=6){box(x,3.5,0,.7,7,1,C.white);roof(x,7.8,0,4,2,C.roof);}
+  for(let x=-9;x<=9;x+=6){box(x,6,0,5.5,1.2,.8,C.white);roof(x,7.2,0,5,2,C.roof);}break;
+ case 'hotel':palace(true);break;
+ case 'museum':palace(false);box(0,.3,6,16,.6,6,C.white);break;
+ case 'trail':
+  for(let i=0;i<12;i++)box(-6+i, i*.4,.4*i,4,.35,1.6,C.stone);
+  pavilion(7,4,7);for(const x of [-10,-6,12]){pole(x,2,-2,.35,4,C.wood);sphere(x,5,-2,2.5,4,2.5,C.leaf);}break;
+ case 'digital':
+  box(-7,4,0,12,8,11,C.cream);box(6,6,0,11,12,12,C.glass);
+  for(let x=-11;x<=-2;x+=2)box(x,4,5.6,.4,7,.2,C.red);
+  for(let y=2;y<12;y+=2)box(6,y,6.1,10,.6,.2,C.light);break;
+ case 'guandu':case 'rainbow':case 'lovers':bridge(kind);break;
+ case 'spring':
+  sphere(0,0,0,12,1,8,C.stone);sphere(0,.65,0,9,.2,6,0x6cc3b1);
+  for(let i=0;i<7;i++)sphere(-5+i*1.5,1.3+(i%3)*.7,-2,1.3,1.7,1,0xc8d9c9);
+  pavilion(11,0,6);break;
+ case 'wheel':
+  part(new T.TorusGeometry(9,.26,6,48),C.roof,0,11,0);
+  for(let i=0;i<16;i++){const a=i*Math.PI/8,x=Math.sin(a)*9,y=11+Math.cos(a)*9;
+   beam([0,11,0],[x,y,0],.065,C.white);box(x,y-.5,0,1.2,1.2,1.4,i%2?C.red:C.gold);}
+  for(const s of [-1,1])beam([s*5,0,1],[0,11,0],.35,C.cream);box(0,.4,0,13,.8,7,C.dark);break;
+ case 'dome':box(0,1.4,0,28,2.8,17,C.cream);sphere(0,2.5,0,15,5,9,0xaab6b8);break;
+ case 'chimney':
+  box(0,1.6,0,19,3.2,8,C.red);roof(0,3.5,0,14,6,C.dark);pole(6,7,-3,1.0,14,C.red);pole(6,14,-3,1.3,.5,C.cream);windows(0,1.6,4.1,17,2,1,10);break;
+ case 'fort':
+  box(0,3,0,14,6,9,C.red);for(const x of [-6,6])for(const z of [-3.7,3.7])box(x,4,z,2,8,2,C.red);
+  windows(0,3,4.6,12,4,2,5);for(let x=-7;x<=7;x+=2)box(x,6.4,4,1,.8,1,C.cream);pole(5,10,0,.08,5);break;
+ case 'pier':
+  box(0,1,0,27,.5,6,C.wood);for(let x=-12;x<=12;x+=3){pole(x,0,2,.18,2,C.wood);pole(x,0,-2,.18,2,C.wood);}
+  pavilion(5,0,8);for(const x of [-7,1]){box(x,.4,7,6,.8,2.4,C.white);box(x,1.2,7,3,1,2,C.glass);}break;
+ case 'volcano':
+  sphere(0,0,0,14,8,10,C.stone);sphere(-3,5,3,4,1.3,3,0xd8cc8e);
+  for(let i=0;i<6;i++)sphere(-3+i*.3,6+i*1.3,3,1.1+i*.22,1.3,1.2,0xc8d9cb);break;
+ case 'pavilion':sphere(0,-1,0,16,2,12,C.leaf);pavilion();break;
+ case 'market':
+  for(const x of [-8,8])box(x,4,0,1.4,8,2,C.red);box(0,6.5,0,18,1.7,2,C.gold);
+  roof(0,8.5,0,14,3,C.gold);for(let x=-6;x<=6;x+=3)sphere(x,5,0,.55,.75,.55,C.red);
+  for(const s of [-1,1])for(let i=0;i<4;i++){box(s*11,1.4,-i*4,4,2.8,3,C.wood);roof(s*11,3,-i*4,3,3,C.red);}break;
+ case 'tech':case 'skyline':
+  for(let i=0;i<5;i++)tower((i-2)*6,(i%2)*5,4.5,9+(i*7)%15);break;
+ case 'village':
+  for(let i=0;i<6;i++){const x=(i%3-1)*7,z=Math.floor(i/3)*7;box(x,1.6,z,6,3.2,5,C.cream);roof(x,3.5,z,4.8,4.3,C.red);windows(x,1.6,z+2.6,5,2,1,3);}break;
+ case 'lighthouse':
+  for(let i=0;i<6;i++)part(new T.CylinderGeometry(2.3-i*.1,2.4-i*.1,2,8),i%2?C.dark:C.white,0,1+i*2,0);
+  part(new T.CylinderGeometry(2.5,2.5,.4,8),C.dark,0,12.2,0);pole(0,13.1,0,1.6,1.7,C.glass);roof(0,14.5,0,2.3,2.3,C.dark);box(5,1.4,0,6,2.8,5,C.white);break;
+ case 'teahouse':
+  for(let f=0;f<4;f++){box(0,1.2+f*2.5,f*.6,18-f*2,2.4,7,C.wood);roof(0,2.7+f*2.5,f*.6,14-f*1.4,6,C.roof);
+   for(let x=-7+f;x<=7-f;x+=2){box(x,1.8+f*2.5,3.6+f*.6,.7,1.2,.1,C.light);sphere(x,.8+f*2.5,4+f*.6,.4,.6,.4,C.red);}}
+  break;
+ case '101':
+  box(0,2,0,12,4,12,C.glass);box(0,6,0,7,4,7,C.glass);
+  for(let i=0;i<8;i++){const y=9+i*3.2;part(new T.CylinderGeometry(5.3,4.4,3,4),C.glass,0,y,0,1,1,1,0,Math.PI/4);box(0,y+1.5,0,7.6,.25,7.6,C.cream);}
+  box(0,36,0,3.2,7,3.2,C.glass);pole(0,42,0,.2,6,C.white);break;
+ case 'gondola':
+  for(const x of [-13,13]){pole(x,6,0,.35,12);box(x,12,0,5,.4,2,C.white);}
+  for(const z of [-1,1])beam([-18,12,z],[18,12,z],.055,C.dark);
+  for(const x of [-8,0,8]){beam([x,12,1],[x,10,1],.08);box(x,9,1,2,2,2,C.white);box(x,9.5,2.05,1.6,.8,.1,C.glass);}break;
+ case 'tea':
+  for(let i=0;i<7;i++)box(0,.6+i*.32,-i*2,24,1,1.3,C.leaf);
+  box(0,2,5,17,.4,5,C.wood);for(let x=-8;x<=8;x+=2)pole(x,2.7,7,.08,1.4,C.wood);beam([-8,3.3,7],[8,3.3,7],.1,C.wood);pavilion(5,4,6);break;
+ default:throw new Error('Unknown Taipei landmark: '+kind);
+ }
+ const geometry=new T.BufferGeometry();
+ geometry.setAttribute('position',new T.Float32BufferAttribute(positions,3));
+ geometry.setAttribute('normal',new T.Float32BufferAttribute(normals,3));
+ geometry.setAttribute('color',new T.Float32BufferAttribute(colors,3));geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
+}
+function createTaipeiLandmarks(T,scene,sample,offset){
+ let route=null,items=[],disposed=false;
+ const clear=()=>{for(const item of items){scene.remove(item.mesh);item.mesh.geometry.dispose();item.mesh.material.dispose();}items=[];};
+ function update(frame,points){
+  if(disposed)return;
+  const source=frame.landmarks||[],signature=(frame.routeId||'')+':'+source.map(h=>h.id).join('|');
+  if(signature!==route){
+   clear();route=signature;
+   for(const h of source){const model=ROUTE_MODELS[frame.routeId]?.[h.modelIndex];if(!model)continue;
+    const geometry=createLandmarkGeometry(T,model),bounds=geometry.boundingBox;
+    const height=Math.min(68,Math.max(12,(h.heightWorld||5000)/260));
+    const scale=height/Math.max(1,bounds.max.y-bounds.min.y);
+    const mesh=new T.Mesh(geometry,new T.MeshStandardMaterial({vertexColors:true,roughness:.78,metalness:.12,transparent:true}));
+    mesh.name='Taipei_'+h.id+'_'+model;mesh.userData.landmarkName=h.name;mesh.scale.setScalar(scale);mesh.visible=false;scene.add(mesh);
+    items.push({mesh,id:h.id,scale,halfWidth:Math.max(Math.abs(bounds.min.x),Math.abs(bounds.max.x))*scale,
+     halfDepth:Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z))*scale,bottom:bounds.min.y*scale});
+   }
+  }
+  const placements=[];
+  for(const item of items){
+   const h=source.find(h=>h.id===item.id);if(!h){item.mesh.visible=false;continue;}
+   const distance=h.seg-frame.segment;
+   if(distance< -14||distance>124){item.mesh.visible=false;continue;}
+   const i=Math.max(0,Math.min(points.length-2,distance));
+   const radius=Math.ceil(item.halfDepth/2.7)+2;
+   const lanes=(frame.corridors||[]).slice(Math.max(0,i-radius),Math.min(points.length,i+radius+1)).flat();
+   // Visual-only landmarks never straddle the race surface, even gondolas.
+   const lateral=offset(lanes,h.side<0?-1:1,item.halfWidth*2,5);
+   const anchor=sample(points,distance,lateral),drop=Math.max(0,Number(h.groundDrop)||0)/260;
+   item.mesh.position.set(anchor.x,anchor.y-item.bottom-drop,anchor.z);item.mesh.rotation.y=-anchor.heading;
+   item.mesh.visible=true;item.mesh.material.opacity=Math.min(1,(125-distance)/14,(distance+15)/8);
+   item.mesh.material.emissive.setHex(frame.night?0x1a2531:0);item.mesh.material.emissiveIntensity=.25;
+   placements.push({id:h.id,lateral,halfWidth:item.halfWidth,distance});
+  }
+  return placements;
+ }
+ return {update,dispose(){if(disposed)return;disposed=true;clear();},get count(){return items.length;}};
+}
+module.exports={ROUTE_MODELS,createLandmarkGeometry,createTaipeiLandmarks};
+
+  },
+  "./RaceEnvironment.cjs": function(require, module) {
+'use strict';
+const {inLandmarkVista}=require('./ScenicVisibility.cjs');
+// Surface-aware scenery and race readability. All coordinates use the road
+// tangent; every roadside object clears the full authored fork envelope.
+function createRaceEnvironment(T,scene,sample,offset,doc){
+ const geometries=[],materials=[],textures=[],meshes=[];
+ const geo=g=>(geometries.push(g),g),mat=m=>(materials.push(m),m);
+ const add=m=>(scene.add(m),meshes.push(m),m);
+ function ribbon(color,quads=252){
+  const g=geo(new T.BufferGeometry()),a=new T.BufferAttribute(new Float32Array(quads*18),3);a.setUsage(T.DynamicDrawUsage);g.setAttribute('position',a);const normals=new Float32Array(a.array.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;g.setAttribute('normal',new T.BufferAttribute(normals,3));g.setDrawRange(0,0);
+  const material=mat(new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide}));
+  const mesh=add(new T.Mesh(g,material));mesh.frustumCulled=false;return {mesh,a,used:0};
+ }
+ const land=ribbon(0x526c51),water=ribbon(0x337f99),walk=ribbon(0x9b9181),deck=ribbon(0x64727e,504);
+ deck.mesh.name='Race_ExpresswayDeck';
+ function quad(r,a,b,c,d){if(r.used+18>r.a.array.length)return;r.a.array.set([a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z,a.x,a.y,a.z,c.x,c.y,c.z,d.x,d.y,d.z],r.used);r.used+=18;}
+ const cube=geo(new T.BoxGeometry(1,1,1)),hill=geo(new T.SphereGeometry(1,10,6));
+ function pool(g,color,size){const m=add(new T.InstancedMesh(g,mat(new T.MeshStandardMaterial({color,roughness:.9})),size));m.frustumCulled=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);m.count=0;return m;}
+ const rails=pool(cube,0xc3c7be,600),supports=pool(cube,0x77828a,100),hills=pool(hill,0x49705b,40);
+ const markerGeo=geo(new T.PlaneGeometry(1,1));let tex=null;
+ if(doc?.createElement){const c=doc.createElement('canvas');c.width=128;c.height=128;const ctx=c.getContext('2d');if(ctx){
+  ctx.fillStyle='#f8d256';ctx.fillRect(0,0,128,128);ctx.fillStyle='#132632';ctx.beginPath();ctx.moveTo(28,15);ctx.lineTo(68,15);ctx.lineTo(104,64);ctx.lineTo(68,113);ctx.lineTo(28,113);ctx.lineTo(64,64);ctx.closePath();ctx.fill();
+  tex=new T.CanvasTexture(c);tex.encoding=T.sRGBEncoding;textures.push(tex);
+ }}
+ const arrows=add(new T.InstancedMesh(markerGeo,mat(new T.MeshBasicMaterial({map:tex,color:tex?0xffffff:0xf8d256,side:T.DoubleSide})),32));arrows.frustumCulled=false;arrows.instanceMatrix.setUsage(T.DynamicDrawUsage);
+ const dummy=new T.Object3D();
+ function put(mesh,p,w,h,d,heading=0,roll=0){if(mesh.count>=mesh.instanceMatrix.count)return;
+  dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(0,-heading,roll);dummy.scale.set(w,h,d);dummy.updateMatrix();mesh.setMatrixAt(mesh.count++,dummy.matrix);}
+ let disposed=false;
+ function update(frame,points,quality){
+  if(disposed)return;
+  for(const r of [land,water,walk,deck])r.used=0;
+  for(const m of [rails,supports,hills,arrows])m.count=0;
+  const arch=frame.archetype,coast=arch==='coastal',highway=arch==='expressway',mountain=arch==='mountain';
+  land.mesh.material.color.set(frame.groundColor||'#526c51');
+  hills.material.color.set(frame.mountainColor||'#49705b');
+  water.mesh.material.color.setHex(frame.night?0x193d60:0x337f99);water.mesh.material.roughness=.38;
+  const lanesAt=i=>frame.corridors?.[Math.max(0,Math.min(125,i))]||[{center:0,half:1}];
+  for(let i=0;i<points.length-1;i++){
+   const absolute=(frame.segment||0)+i;
+   const lanes=lanesAt(i),next=lanesAt(i+1),height=(frame.deckHeights?.[i]||0)/260;
+   for(const side of [-1,1]){
+    const a=offset(lanes,side,0,0),b=offset(next,side,0,0);
+    const outer=side*180;
+    const p=(index,x,y)=>{const p=sample(points,index,x);p.y+=y;return p;};
+    // Coastal water stays beyond the seawall. Expressway terrain sits below deck.
+    quad(coast&&side<0?water:land,p(i,a+side*1.8,-.25-height),p(i,a+outer,-.25-height),p(i+1,b+outer,-.25-height),p(i+1,b+side*1.8,-.25-height));
+    quad(walk,p(i,a,-.03),p(i,a+side*1.8,-.03),p(i+1,b+side*1.8,-.03),p(i+1,b,-.03));
+    if(highway||coast||mountain){
+     const here=sample(points,i,a+side*.8),there=sample(points,i+1,b+side*.8),mid={x:(here.x+there.x)/2,y:(here.y+there.y)/2+.57,z:(here.z+there.z)/2};
+     const heading=Math.atan2(there.x-here.x,-(there.z-here.z));
+     put(rails,mid,.16,.32,Math.hypot(there.x-here.x,there.z-here.z)+.08,heading);
+     if(absolute%4===0)put(supports,{...here,y:here.y+.3},.15,.65,.15,heading);
+    }
+    if(mountain&&absolute%12===0&&quality!=='LOW'&&!inLandmarkVista(frame.landmarks,absolute,side)){
+     const p=sample(points,i,offset(lanes,side,22,16));p.y-=3;
+     put(hills,p,12,8+(absolute%17),14,0);
+    }
+    if(Math.abs(frame.curves?.[i]||0)>1.35&&absolute%10===0&&Math.sign(frame.curves[i])===-side){
+     const p=sample(points,i,offset(lanes,side,1.2,1.2));p.y+=1.9;
+     put(arrows,p,1.3,1.3,1,points[i].heading,frame.curves[i]<0?Math.PI:0);
+    }
+   }
+   if(highway){
+    for(let j=0;j<lanes.length;j++){
+     const a=lanes[j],b=next[Math.min(j,next.length-1)];
+     for(const side of [-1,1]){const x=(a.center+side*a.half)*8,y=(b.center+side*b.half)*8;
+      const p=sample(points,i,x),q=sample(points,i+1,y);quad(deck,p,q,{...q,y:q.y-1},{...p,y:p.y-1});}
+     if(absolute%12===0&&height>1){const p=sample(points,i,a.center*8);p.y-=height/2;put(supports,p,.9,height,1.4,points[i].heading);}
+    }
+   }
+  }
+  for(const r of [land,water,walk,deck]){r.mesh.geometry.setDrawRange(0,r.used/3);r.a.needsUpdate=true;}
+  for(const m of [rails,supports,hills,arrows])m.instanceMatrix.needsUpdate=true;
+ }
+ return {update,dispose(){if(disposed)return;disposed=true;for(const m of meshes)scene.remove(m);for(const g of geometries)g.dispose();for(const m of materials)m.dispose();for(const t of textures)t.dispose();}};
+}
+module.exports={createRaceEnvironment};
+
+  },
+  "./RaceWayfinding.cjs": function(require, module) {
+'use strict';
+// Physical start/finish/distance/fork boards restored from the 2D race data.
+function createRaceWayfinding(T,scene,sample,offset,doc){
+ let signature='',boards=[],disposed=false;
+ const box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1);
+ const frameMaterial=new T.MeshStandardMaterial({color:0xb9c8c5,roughness:.65,metalness:.3});
+ const clear=()=>{for(const b of boards){scene.remove(b.group);b.texture?.dispose();b.material.dispose();}boards=[];};
+ function textureFor(sign){
+  if(!doc?.createElement)return null;
+  const c=doc.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');if(!g)return null;
+  g.fillStyle=sign.kind==='finish'?'#152e3a':'#12664d';g.fillRect(0,0,1024,256);
+  g.strokeStyle='#e1efcb';g.lineWidth=8;g.strokeRect(12,12,1000,232);g.fillStyle='#fffde2';g.textAlign='center';g.textBaseline='middle';
+  const write=(text,y,size)=>{g.font=`bold ${size}px "Microsoft JhengHei", "PingFang TC", sans-serif`;while(g.measureText(text).width>960&&size>15){size-=2;g.font=`bold ${size}px "Microsoft JhengHei", "PingFang TC", sans-serif`;}g.fillText(text,512,y);};
+  write(sign.label,90,66);write(sign.detail||'',180,46);
+  const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t;
+ }
+ function update(frame,points){
+  if(disposed)return;
+  const source=frame.raceSigns||[],key=(frame.routeId||'')+JSON.stringify(source);
+  if(key!==signature){clear();signature=key;for(const sign of source){
+   const texture=textureFor(sign),material=new T.MeshBasicMaterial({map:texture,color:texture?0xffffff:0x12664d,side:T.DoubleSide});
+   const group=new T.Group();group.name='RaceBoard_'+sign.kind+'_'+sign.seg;
+   const face=new T.Mesh(plane,material);face.position.y=6.3;face.scale.set(12,3,1);group.add(face);
+   const posts=[-1,1].map(()=>{const m=new T.Mesh(box,frameMaterial);group.add(m);return m;});
+   const crossbar=new T.Mesh(box,frameMaterial);crossbar.position.y=8;group.add(crossbar);
+   scene.add(group);boards.push({group,posts,crossbar,texture,material,sign});
+  }}
+  for(const b of boards){const d=b.sign.seg-frame.segment;b.group.visible=d>-4&&d<123;if(!b.group.visible)continue;
+   const at=sample(points,d),i=Math.max(0,Math.min(124,Math.floor(d)));
+   const lanes=(frame.corridors||[]).slice(Math.max(0,i-2),i+3).flat();
+   const left=offset(lanes,-1,.4,1.3),right=offset(lanes,1,.4,1.3);
+   b.group.position.set(at.x,at.y,at.z);b.group.rotation.y=-at.heading;
+   b.posts.forEach((m,i)=>{m.position.set(i?right:left,4,0);m.scale.set(.3,8,.3);});
+   b.crossbar.position.x=(left+right)/2;b.crossbar.scale.set(right-left,.3,.3);
+  }
+ }
+ return {update,dispose(){if(disposed)return;disposed=true;clear();box.dispose();plane.dispose();frameMaterial.dispose();}};
+}
+module.exports={createRaceWayfinding};
+
+  },
   "./Full3DScene.cjs": function(require, module) {
 'use strict';
 const {createVehicle3D} = require('./Vehicle3D.cjs');
@@ -585,6 +906,10 @@ const {createVehiclePose, updateVehiclePose} = require('./VehiclePoseBridge.cjs'
 const {createDrivingVisualSnapshot,updateDrivingVisualSnapshot} = require('./DrivingVisualSnapshot.cjs');
 const {createDriftVisualRig,updateDriftVisualRig} = require('./DriftVisualRig.cjs');
 const {createDrivingEffects}=require('./DrivingEffects.cjs');
+const {createTaipeiLandmarks}=require('./TaipeiLandmarks.cjs');
+const {createRaceEnvironment}=require('./RaceEnvironment.cjs');
+const {createRaceWayfinding}=require('./RaceWayfinding.cjs');
+const {inLandmarkVista}=require('./ScenicVisibility.cjs');
 
 // Full WebGL road/world renderer. This is intentionally NOT a Canvas overlay.
 // World coordinates: +X right, +Y up, -Z forward. Camera is behind the car (+Z).
@@ -657,6 +982,18 @@ function createFacadeTexture(THREE){
  const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
  texture.encoding=THREE.sRGBEncoding;texture.needsUpdate=true;return texture;
 }
+// Small, deterministic sRGB aggregate texture. Lighting remains active, but the
+// asphalt's albedo is charcoal instead of a bright linear RGB paint color.
+function createAsphaltTexture(THREE){
+ const size=64,data=new Uint8Array(size*size*4);
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const grain=Math.floor(hash(y*size+x+591)*17),v=43+grain,k=(y*size+x)*4;
+  data[k]=v;data[k+1]=v+2;data[k+2]=v+4;data[k+3]=255;
+ }
+ const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+ texture.encoding=THREE.sRGBEncoding;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+ texture.magFilter=THREE.LinearFilter;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;return texture;
+}
 function createSignTexture(THREE,text,color,doc){
  if(!doc?.createElement)return null;
  const c=doc.createElement('canvas');c.width=128;c.height=512;
@@ -681,18 +1018,19 @@ function createFull3DScene(THREE,canvas) {
  const camera=new THREE.PerspectiveCamera(66,16/9,.12,490);
  camera.position.set(0,3.6,10.4);
  camera.lookAt(0,1.0,-18);
- scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,2.25));
- const sunlight=new THREE.DirectionalLight(0xffe6bf,2.35);
+ scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,.9));
+ const sunlight=new THREE.DirectionalLight(0xffe6bf,1.25);
  sunlight.position.set(-36,80,-65);scene.add(sunlight);
- const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:'high-performance'});
+ const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:true,powerPreference:'high-performance'});
  renderer.setPixelRatio(1);
  renderer.setClearColor(0x101b2e,1);
  renderer.outputEncoding=THREE.sRGBEncoding;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.35;
+ renderer.toneMappingExposure=1.0;
  let lastW=0,lastH=0,lastDpr=0;
+ const asphaltTexture=createAsphaltTexture(THREE);textures.push(asphaltTexture);
  const roadMaterials=[
-  material(new THREE.MeshStandardMaterial({color:0x303945,roughness:.94,side:THREE.DoubleSide})),
+  material(new THREE.MeshStandardMaterial({color:0xffffff,map:asphaltTexture,roughness:.98,metalness:0,side:THREE.DoubleSide})),
   material(new THREE.MeshStandardMaterial({color:0x59616b,roughness:1,side:THREE.DoubleSide})),
   material(new THREE.MeshBasicMaterial({color:0xecefe6,side:THREE.DoubleSide})),
   material(new THREE.MeshBasicMaterial({color:0x2ad9e7,side:THREE.DoubleSide}))
@@ -705,23 +1043,27 @@ function createFull3DScene(THREE,canvas) {
   const attr=new THREE.BufferAttribute(arr,3);
   attr.setUsage(THREE.DynamicDrawUsage);
   g.setAttribute('position',attr);
+  const uvAttr=new THREE.BufferAttribute(new Float32Array(maxQuad*12),2);uvAttr.setUsage(THREE.DynamicDrawUsage);g.setAttribute('uv',uvAttr);
+  const normals=new Float32Array(arr.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;
+  g.setAttribute('normal',new THREE.BufferAttribute(normals,3));
   g.setDrawRange(0,0);
   const m=new THREE.Mesh(g,mat);
   m.frustumCulled=false;
   scene.add(m);
-  const r={mesh:m,positions:arr,used:0,attr};
+  const r={mesh:m,positions:arr,used:0,attr,uvAttr};
   roads.push(r);return r;
  }
- roadMaterials.map(ribbon);
+ roadMaterials.map(ribbon);roads[0].mesh.name='V58_Asphalt';
  const push=(r,a,b,c,d)=>{
   if(r.used+18>r.positions.length)return;
   const v=r.positions,i=r.used;
   v.set([a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z,a.x,a.y,a.z,c.x,c.y,c.z,d.x,d.y,d.z],i);
+  r.uvAttr.array.set([a.u||0,a.v||0,b.u||0,b.v||0,c.u||0,c.v||0,a.u||0,a.v||0,c.u||0,c.v||0,d.u||0,d.v||0],i/3*2);
   r.used+=18;
  };
- const point=(center,lateral,height=0)=>{
+ const point=(center,lateral,height=0,segment=0)=>{
   const s=Math.cos(center.heading),c=Math.sin(center.heading);
-  return {x:center.x+lateral*s,y:center.y+height,z:center.z+lateral*c};
+  return {x:center.x+lateral*s,y:center.y+height,z:center.z+lateral*c,u:lateral/8,v:segment*STEP/8};
  };
  const boxG=geometry(new THREE.BoxGeometry(1,1,1));
  const coneG=geometry(new THREE.ConeGeometry(1,1,7));
@@ -752,6 +1094,9 @@ function createFull3DScene(THREE,canvas) {
  const sunMaterial=material(new THREE.MeshBasicMaterial({color:0xffd17c,fog:false,toneMapped:false}));
  const sun=new THREE.Mesh(geometry(new THREE.SphereGeometry(18,16,12)),sunMaterial);sun.name='V57_SunsetSun';scene.add(sun);
  const doc=canvas.ownerDocument||(typeof document!=='undefined'?document:null);
+ const wayfinding=createRaceWayfinding(THREE,scene,sampleRoadPoint,streetOffset,doc);
+ const landmarks=createTaipeiLandmarks(THREE,scene,sampleRoadPoint,streetOffset);
+ const environment=createRaceEnvironment(THREE,scene,sampleRoadPoint,streetOffset,doc);
  const signs=TAIPEI_SIGNS.map((text,i)=>{
   const texture=createSignTexture(THREE,text,SIGN_COLORS[i],doc);if(texture)textures.push(texture);
   const mat=material(new THREE.MeshBasicMaterial({map:texture,color:texture?0xffffff:SIGN_COLORS[i],side:THREE.DoubleSide,toneMapped:false}));
@@ -768,6 +1113,8 @@ function createFull3DScene(THREE,canvas) {
  const driftRig=createDriftVisualRig();
  const chaseRig=createChaseRig();
  const effects=createDrivingEffects(THREE);scene.add(camera);
+ const contactShadow=new THREE.Mesh(geometry(new THREE.CircleGeometry(1,24)),material(new THREE.MeshBasicMaterial({color:0x071016,transparent:true,opacity:.28,depthWrite:false})));
+ contactShadow.name='V58_ContactShadow';contactShadow.rotation.x=-Math.PI/2;contactShadow.scale.set(1.12,1.95,1);scene.add(contactShadow);
  const gripFrame=createDrivingVisualSnapshot();
  let lastCarColor='',renderRandomSeed=0x6f34ac19;
  function with3DOnlyRandom(callback){
@@ -819,14 +1166,15 @@ function createFull3DScene(THREE,canvas) {
     const lf=n.center-n.half,rt=n.center+n.half;
     const w=HALF_WIDTH;
     push(roads[1],point(here,(left-.09)*w,.015),point(here,(right+.09)*w,.015),point(there,(rt+.09)*w,.015),point(there,(lf-.09)*w,.015));
-    push(roads[0],point(here,left*w,.028),point(here,right*w,.028),point(there,rt*w,.028),point(there,lf*w,.028));
+    const absolute=(Math.floor(frame.segment)||0)+i;
+    push(roads[0],point(here,left*w,.028,absolute),point(here,right*w,.028,absolute),point(there,rt*w,.028,absolute+1),point(there,lf*w,.028,absolute+1));
     // painted white outside borders and neon-reflective curb piping
     for(const side of [-1,1]){
      const a=(side<0?left:right)*w,b=(side<0?lf:rt)*w;
      push(roads[2],point(here,a-.06,.04),point(here,a+.06,.04),point(there,b+.06,.04),point(there,b-.06,.04));
      push(roads[3],point(here,a+side*.12,.045),point(here,a+side*.18,.045),point(there,b+side*.18,.045),point(there,b+side*.12,.045));
     }
-    if(i%7<4 && q.half>.65){
+    if(((Math.floor(frame.segment||0)+i)%7+7)%7<4 && q.half>.65){
       for(const ratio of [-1/3,1/3]){
        const a=(q.center+q.half*ratio)*w,b=(n.center+n.half*ratio)*w;
        push(roads[2],point(here,a-.04,.042),point(here,a+.04,.042),point(there,b+.04,.042),point(there,b-.04,.042));
@@ -836,7 +1184,7 @@ function createFull3DScene(THREE,canvas) {
   }
   for(const r of roads){
    r.mesh.geometry.setDrawRange(0,r.used/3);
-   if(r.used)r.attr.needsUpdate=true;
+   if(r.used){r.attr.needsUpdate=true;r.uvAttr.needsUpdate=true;}
   }
   const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
   const routeSeed=frame.seed||1;
@@ -852,8 +1200,10 @@ function createFull3DScene(THREE,canvas) {
     // Scan the building footprint so widened forks keep their clear shoulder.
     const neighborhood=corridors.slice(Math.max(0,i-3),i+4).flat();
     const lateral=streetOffset(neighborhood,side,width,2+h*7);
+    const landmarkZone=inLandmarkVista(frame.landmarks,absolute,side);
+    if(landmarkZone)continue;
     const anchor=point(c,lateral,-.15);
-    if(urban){
+    if(urban && frame.archetype!=='expressway'){
       const height=7+h*23;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
       dummy.rotation.set(0,-c.heading,0);
@@ -873,7 +1223,7 @@ function createFull3DScene(THREE,canvas) {
         dummy.scale.set(1.3,5.2,1);dummy.updateMatrix();signs[signIndex].setMatrixAt(n,dummy.matrix);signCounts[signIndex]++;
        }
       }
-    }else{
+    }else if(frame.archetype!=='expressway' && !(frame.archetype==='coastal'&&side<0)){
       const height=7+h*9;
       dummy.position.set(anchor.x,anchor.y+height/2,anchor.z);
       dummy.rotation.set(0,0,0);dummy.scale.set(2.7+h*2,height,2.7+h*2);
@@ -955,6 +1305,13 @@ function createFull3DScene(THREE,canvas) {
   const dpr=quality==='LOW'?.7:quality==='ULTRA'?1.15:1;
   if(lastDpr!==dpr){renderer.setPixelRatio(dpr);lastDpr=dpr;}
   paintWorld(frame,points,quality);
+  environment.update(frame,points,quality);
+  // Three allocates UUIDs while a route's models/signs are first constructed.
+  // Those visual allocations must not advance traffic/gameplay randomness.
+  with3DOnlyRandom(()=>{
+   landmarks.update(frame,points);
+   wayfinding.update(frame,points);
+  });
   updateTraffic(frame,points);
   if(frame.carColor!==lastCarColor){
    const value=typeof frame.carColor==='string'?new THREE.Color(frame.carColor).getHex():0x202838;
@@ -975,6 +1332,8 @@ function createFull3DScene(THREE,canvas) {
   car.root.rotation.set(roadPose.pitch,roadPose.yaw,0);
   car.root.position.set(driftRig.offsetX,.02,PLAYER_Z);
   car.root.scale.set(.92,.83,.92);
+  contactShadow.position.set(driftRig.offsetX,.049,PLAYER_Z);
+  contactShadow.rotation.set(-Math.PI/2+roadPose.pitch,0,roadPose.yaw+pose.yawRad);
   // Camera sits behind +Z and looks down -Z: the rear (taillights +Z)
   // ALWAYS faces the camera. Do not rotate the car 180 degrees.
   updateChaseRig(chaseRig,points,frame,driftRig.cameraX,Math.max(0,dt));
@@ -982,15 +1341,15 @@ function createFull3DScene(THREE,canvas) {
   camera.lookAt(chaseRig.lookX,chaseRig.lookY,chaseRig.lookZ);
   if(camera.fov!==chaseRig.fov){camera.fov=chaseRig.fov;camera.updateProjectionMatrix();}
   skyDome.position.copy(camera.position);
-  skyMaterial.uniforms.top.value.setHex(frame.night?0x08152f:0x53416f);
-  skyMaterial.uniforms.horizon.value.setHex(frame.night?0x344861:0xf4ae78);
+  skyMaterial.uniforms.top.value.set(frame.skyColors?.[0]||(frame.night?'#08152f':'#53416f'));
+  skyMaterial.uniforms.horizon.value.set(frame.skyColors?.[2]||(frame.night?'#344861':'#f4ae78'));
   sun.visible=!frame.night;sun.position.set(camera.position.x-110,camera.position.y+40,camera.position.z-290);
   sunlight.color.setHex(frame.night?0x9dbbff:0xffc58e);
   glassMat.emissiveIntensity=frame.night?.7:.12;
   scene.background.setHex(frame.night?0x10213b:0xf4ae78);
   scene.fog.color.setHex(frame.night?0x233b58:0xd69b82);
   // A flat ground plane must never cover a descending road.
-  ground.position.y=Math.min(-.22,...points.map(p=>p.y-.22));
+  ground.position.y=Math.min(-.22,...points.map((p,i)=>p.y-.3-(frame.deckHeights?.[i]||0)/260));
   trafficVisibility(frame,points,width,height);
   effects.update(frame,Math.max(0,dt),quality,camera,car);
   renderer.render(scene,camera);
@@ -1000,7 +1359,7 @@ function createFull3DScene(THREE,canvas) {
   if(!active)return;active=false;ready=false;
   canvas.removeEventListener('webglcontextlost',lostHandler);
   canvas.removeEventListener('webglcontextrestored',restoredHandler);
-  effects.dispose();car.dispose();for(const t of textures)t.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
+  wayfinding.dispose();landmarks.dispose();environment.dispose();effects.dispose();car.dispose();for(const t of textures)t.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
   renderer.dispose();
  }
  return {render,dispose,prepareTrafficVisibility,get ready(){return ready&&!lost&&active},get contextLost(){return lost}};
