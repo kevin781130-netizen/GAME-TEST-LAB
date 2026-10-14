@@ -769,12 +769,13 @@ function createRaceEnvironment(T,scene,sample,offset,doc){
  const geometries=[],materials=[],textures=[],meshes=[];
  const geo=g=>(geometries.push(g),g),mat=m=>(materials.push(m),m);
  const add=m=>(scene.add(m),meshes.push(m),m);
- function ribbon(color){
-  const g=geo(new T.BufferGeometry()),a=new T.BufferAttribute(new Float32Array(126*6*3*2),3);a.setUsage(T.DynamicDrawUsage);g.setAttribute('position',a);const normals=new Float32Array(a.array.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;g.setAttribute('normal',new T.BufferAttribute(normals,3));g.setDrawRange(0,0);
+ function ribbon(color,quads=252){
+  const g=geo(new T.BufferGeometry()),a=new T.BufferAttribute(new Float32Array(quads*18),3);a.setUsage(T.DynamicDrawUsage);g.setAttribute('position',a);const normals=new Float32Array(a.array.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;g.setAttribute('normal',new T.BufferAttribute(normals,3));g.setDrawRange(0,0);
   const material=mat(new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide}));
   const mesh=add(new T.Mesh(g,material));mesh.frustumCulled=false;return {mesh,a,used:0};
  }
- const land=ribbon(0x526c51),water=ribbon(0x337f99),walk=ribbon(0x9b9181),deck=ribbon(0x64727e);
+ const land=ribbon(0x526c51),water=ribbon(0x337f99),walk=ribbon(0x9b9181),deck=ribbon(0x64727e,504);
+ deck.mesh.name='Race_ExpresswayDeck';
  function quad(r,a,b,c,d){if(r.used+18>r.a.array.length)return;r.a.array.set([a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z,a.x,a.y,a.z,c.x,c.y,c.z,d.x,d.y,d.z],r.used);r.used+=18;}
  const cube=geo(new T.BoxGeometry(1,1,1)),hill=geo(new T.SphereGeometry(1,10,6));
  function pool(g,color,size){const m=add(new T.InstancedMesh(g,mat(new T.MeshStandardMaterial({color,roughness:.9})),size));m.frustumCulled=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);m.count=0;return m;}
@@ -988,15 +989,15 @@ function createFull3DScene(THREE,canvas) {
  const camera=new THREE.PerspectiveCamera(66,16/9,.12,490);
  camera.position.set(0,3.6,10.4);
  camera.lookAt(0,1.0,-18);
- scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,2.25));
- const sunlight=new THREE.DirectionalLight(0xffe6bf,2.35);
+ scene.add(new THREE.HemisphereLight(0xcce9ff,0x44516a,.9));
+ const sunlight=new THREE.DirectionalLight(0xffe6bf,1.25);
  sunlight.position.set(-36,80,-65);scene.add(sunlight);
- const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:'high-performance'});
+ const renderer=new THREE.WebGLRenderer({canvas,alpha:false,antialias:true,powerPreference:'high-performance'});
  renderer.setPixelRatio(1);
  renderer.setClearColor(0x101b2e,1);
  renderer.outputEncoding=THREE.sRGBEncoding;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.35;
+ renderer.toneMappingExposure=1.0;
  let lastW=0,lastH=0,lastDpr=0;
  const roadMaterials=[
   material(new THREE.MeshStandardMaterial({color:0x303945,roughness:.94,side:THREE.DoubleSide})),
@@ -1012,6 +1013,8 @@ function createFull3DScene(THREE,canvas) {
   const attr=new THREE.BufferAttribute(arr,3);
   attr.setUsage(THREE.DynamicDrawUsage);
   g.setAttribute('position',attr);
+  const normals=new Float32Array(arr.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;
+  g.setAttribute('normal',new THREE.BufferAttribute(normals,3));
   g.setDrawRange(0,0);
   const m=new THREE.Mesh(g,mat);
   m.frustumCulled=false;
@@ -1078,6 +1081,8 @@ function createFull3DScene(THREE,canvas) {
  const driftRig=createDriftVisualRig();
  const chaseRig=createChaseRig();
  const effects=createDrivingEffects(THREE);scene.add(camera);
+ const contactShadow=new THREE.Mesh(geometry(new THREE.CircleGeometry(1,24)),material(new THREE.MeshBasicMaterial({color:0x071016,transparent:true,opacity:.28,depthWrite:false})));
+ contactShadow.name='V58_ContactShadow';contactShadow.rotation.x=-Math.PI/2;contactShadow.scale.set(1.12,1.95,1);scene.add(contactShadow);
  const gripFrame=createDrivingVisualSnapshot();
  let lastCarColor='',renderRandomSeed=0x6f34ac19;
  function with3DOnlyRandom(callback){
@@ -1290,6 +1295,8 @@ function createFull3DScene(THREE,canvas) {
   car.root.rotation.set(roadPose.pitch,roadPose.yaw,0);
   car.root.position.set(driftRig.offsetX,.02,PLAYER_Z);
   car.root.scale.set(.92,.83,.92);
+  contactShadow.position.set(driftRig.offsetX,.049,PLAYER_Z);
+  contactShadow.rotation.set(-Math.PI/2+roadPose.pitch,0,roadPose.yaw+pose.yawRad);
   // Camera sits behind +Z and looks down -Z: the rear (taillights +Z)
   // ALWAYS faces the camera. Do not rotate the car 180 degrees.
   updateChaseRig(chaseRig,points,frame,driftRig.cameraX,Math.max(0,dt));
