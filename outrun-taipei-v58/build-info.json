@@ -2,6 +2,16 @@
   "version": "V58-landmark-vista-asphalt-preview",
   "sourceCommit": "77b8d72beb23e9d1a06b2db2c4e5618e32857d60",
   "sourceBranch": "feature/v58-taipei-race-evolution-20261014",
-  "validation": "npm test passed; current commit WebGL screenshot CI pending.",
+  "validation": {
+    "npmTest": "passed",
+    "webglCI": {
+      "run": 38560587921,
+      "status": "success",
+      "landmarkCaptures": 81
+    },
+    "ciScreenshotReview": "far/near/night contact sheets inspected; visibility and road contrast improved",
+    "deployed3DReview": "pending: cloud browser WebGL disabled",
+    "deviceHandlingAndFPS": "pending"
+  },
   "canonicalStable": "../outrun-taipei/"
 }
