@@ -1,0 +1,19 @@
+{
+  "version": "V58-main-playtest",
+  "sourceCommit": "77b8d72beb23e9d1a06b2db2c4e5618e32857d60",
+  "sourceBranch": "main",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "previousPlayable": "../outrun-taipei-legacy-v57/",
+  "backupBranch": "backup/main-before-v58-entry-20261014-2020",
+  "validation": {
+    "npmTest": "passed",
+    "webglCI": {
+      "run": 38560587921,
+      "status": "success",
+      "landmarkCaptures": 81
+    },
+    "ciScreenshotReview": "far/near/night inspected",
+    "deployed3DReview": "pending: cloud browser WebGL disabled",
+    "deviceHandlingAndFPS": "pending"
+  }
+}

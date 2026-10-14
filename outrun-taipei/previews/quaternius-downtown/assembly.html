@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Quaternius 台北街景立面組合樣板｜獨立美術測試</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color-scheme:dark;color:#edf4ff;background:#0b1420}
+*{box-sizing:border-box}body{margin:0}
+header{padding:16px 20px;border-bottom:1px solid #314354;background:#111c29}
+h1{font-size:clamp(19px,2.8vw,27px);margin:3px 0 6px}
+header p{color:#b3c6d5;font-size:13px;margin:0}
+main{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px;padding:14px;max-width:1460px;margin:auto}
+.viewport{position:relative;height:min(75vh,760px);min-height:350px;background:#13283a;border:1px solid #3c566d;border-radius:12px;overflow:hidden}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+.overlay{position:absolute;left:12px;bottom:12px;max-width:calc(100% - 24px);padding:7px 11px;background:#0b1724dc;border:1px solid #648094;border-radius:8px;font-size:12px}
+section.panel{padding:18px;border:1px solid #334b60;background:#172536;border-radius:12px;margin-bottom:12px}
+h2{font-size:15px;margin:0 0 10px}button,select{display:block;width:100%;padding:10px;margin:7px 0 12px;border-radius:7px;background:#20364b;color:#e7f3fc;border:1px solid #647c90;font:inherit;cursor:pointer}
+button:hover{border-color:#80c5d0}button:focus-visible,select:focus-visible{outline:2px solid #65dbc6;outline-offset:2px}
+label{font-size:13px;font-weight:600}dl{display:grid;grid-template-columns:1fr auto;gap:5px;font-size:12px;margin:0}dt{color:#b1c5d7}dd{margin:0;font-variant-numeric:tabular-nums}
+a{color:#8ee4ee}small,.small{color:#aebdcc;font-size:12px}
+footer{padding:0 20px 24px;max-width:1460px;margin:auto;color:#adc3d5;font-size:12px}
+@media(max-width:790px){main{display:block}.viewport{height:53vh;margin-bottom:14px}aside{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}}
+</style>
+</head>
+<body>
+<header>
+<h1>台北街景建築立面｜Quaternius CC0 組合樣板</h1>
+<p>獨立美術實驗：Quaternius CC0 牆面＋台北常見的騎樓、繁體中文招牌、遮雨棚、陽台與冷氣室外機（原創虛構店名）。不讀取或修改遊戲地圖、路線、碰撞或玩法。</p>
+</header>
+<main>
+<div class="viewport" aria-label="獨立 3D 建築樣板">
+<canvas id="canvas" aria-label="可旋轉的 3D 建築示範"></canvas>
+<div class="overlay" id="status" role="status" aria-live="polite">正在載入建築素材…</div>
+</div>
+<aside>
+<section class="panel"><h2>立面組合</h2>
+<label for="style">建築樣式</label>
+<select id="style">
+<option value="mixed">騎樓店住混合｜巷口食堂</option>
+<option value="metal">都會轉角茶舖｜街角茶舖</option>
+<option value="brick">磚造生活街屋｜日常雜貨</option>
+</select>
+<label for="lod-mode">建築細節（LOD）</label>
+<select id="lod-mode">
+<option value="auto">自動（28m 降細節，23m 恢復）</option>
+<option value="near">強制完整模型</option>
+<option value="far">強制低面數代理</option>
+</select>
+<button id="reset" type="button">重設鏡頭</button>
+<button id="lighting" type="button" aria-pressed="false">切換夜間照明</button>
+<div class="small">拖曳旋轉、滾輪縮放、右鍵平移。示範立面約 10m × 6m，並非真實地標；店名皆為虛構。繁體中文招牌由瀏覽器字型繪製。</div>
+</section>
+<section class="panel"><h2>實際 WebGL 指標</h2>
+<dl>
+<dt>建築模組實例</dt><dd id="instances">—</dd>
+<dt>台北立面原型</dt><dd id="taipei-preset">—</dd>
+<dt>原創示範招牌</dt><dd id="taipei-shop">—</dd>
+<dt>近景裝飾物件</dt><dd id="taipei-objects">—</dd>
+<dt>完整立面三角面（估計）</dt><dd id="triangles">—</dd>
+<dt>代理模型三角面（估計）</dt><dd id="far-tris">—</dd>
+<dt>當前 LOD</dt><dd id="lod-state">—</dd>
+<dt>當前立面三角面（估計）</dt><dd id="visible-tris">—</dd>
+<dt>鏡頭距離</dt><dd id="distance">—</dd>
+<dt>Draw Calls（每幀）</dt><dd id="calls">—</dd>
+<dt>RAF FPS（近 90 幀）</dt><dd id="fps">—</dd>
+<dt>畫面尺寸</dt><dd id="resolution">—</dd>
+</dl>
+<p class="small">建築騎樓與招牌只出現在獨立預覽，不代表可通行的遊戲碰撞區。此 FPS 不等於整個遊戲或手機 GPU 表現；視覺及效能尚未實際驗收。</p>
+</section>
+<section class="panel"><h2>安全範圍</h2>
+<div class="small">這是單獨的 HTML + JavaScript，沒有修改 <code>index.html</code>、<code>src/rendering/</code>、任何地圖、地標或玩法程式。</div>
+<p><a href="./index.html">查看單一模組</a></p>
+<p><a href="../../index.html">返回原本遊戲</a></p>
+</section>
+</aside>
+</main>
+<footer>Quaternius Downtown City MegaKit Standard（CC0 1.0）／ Three.js r149（MIT）。新建築組合**預覽專用，不會進入任何正式路線**。</footer>
+<script src="../../assets/vendor/three-r149.min.js"></script>
+<script type="importmap">{"imports":{"three":"../../assets/vendor/three-r149-esm-shim.js"}}</script>
+<script type="module" src="./assembly.js"></script>
+</body></html>

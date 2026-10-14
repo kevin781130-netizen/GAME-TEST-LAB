@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>P13｜Quaternius 台北街屋瀏覽器畫面驗收台</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#e7f0fa;background:#0c1521}
+*{box-sizing:border-box}body{margin:0}
+header{background:#15293a;border-bottom:1px solid #35516b;padding:18px clamp(16px,3vw,32px)}
+header p{color:#bdcfdf;line-height:1.55;font-size:13px;margin:6px 0 0}
+h1{font-size:clamp(19px,2.7vw,27px);margin:4px 0 0}
+main{max-width:1480px;margin:auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px}
+article,aside{min-width:0}
+.panel{background:#142639;border:1px solid #3c536b;border-radius:11px;padding:14px;margin:0 0 12px}
+h2{font-size:17px;margin:0 0 8px}
+p{line-height:1.55}button,input{font:inherit;background:#213c53;color:#ebf2f9;border:1px solid #668299;border-radius:8px;padding:10px}
+button{cursor:pointer}button:hover{border-color:#8ddccd}
+button:disabled{opacity:.45;cursor:default}
+label{display:block;font-size:13px;font-weight:650;margin:8px 0}
+input{width:100%;font-size:12px;letter-spacing:.03em}
+.actions{display:grid;gap:8px}
+.primary{background:#27645d;border-color:#5dbbb0;font-weight:700}
+code{color:#a8dcff}a{color:#95e0dc}
+#preview-stage{position:relative;display:flex;align-items:flex-start;justify-content:flex-start;width:366px;max-width:100%;height:270px;overflow:hidden;border:1px solid #456780;border-radius:8px;background:#273d50}
+#preview-frame{border:0;display:block;flex:none;transform-origin:top left;width:1280px;height:800px}
+#contact-sheet{display:block;max-width:100%;height:auto;max-height:80vh;margin:8px auto;border:1px solid #41566d}
+#progress{margin:10px 0;min-height:40px;background:#0e1c2a;border-radius:6px;padding:9px;font-size:13px}
+.small{font-size:12px;color:#bccfdf}
+.warn{color:#ffe0a3}
+@media(max-width:900px){main{grid-template-columns:1fr}.preview-side{max-width:366px}}
+</style>
+</head>
+<body>
+<header>
+<h1>P13｜台北街屋 3D 瀏覽器畫面驗收台</h1>
+<p>Quaternius CC0 獨立美術預覽。直接用你的瀏覽器擷取 24 組真實 WebGL 畫面，完整尺寸保存在 ZIP，無需 GitHub Actions、Playwright 或 npm。<strong>不載入正式遊戲，不修改 main、路線或玩法。</strong></p>
+</header>
+<main>
+<article>
+<section class="panel">
+<h2>24 張畫面聯絡表（需實際擷取）</h2>
+<p class="small">第十三刀可匯出 28 個檔案：24 張單獨 PNG、聯絡表 PNG、報告 JSON、SHA-256 檢查碼及操作說明，全部放入 ZIP。</p>
+<p class="small">矩陣：3／5／7 棟 × 桌機／手機尺寸 × 完整／遠景 LOD × 白天／夜間。下方的圖像僅在按「開始擷取」後由這台電腦的真實瀏覽器產生。</p>
+<canvas id="contact-sheet" width="1440" height="1536" aria-label="真實 3D 預覽畫面對照表"></canvas>
+<p class="small warn">每張畫面的像素是否正確、招牌繁體中文字形、模型碰撞感及光影品質仍須人工目視。這不代表正式遊戲部署驗收。</p>
+</section>
+</article>
+<aside>
+<section class="panel">
+<h2>一次執行畫面驗收</h2>
+<label for="commit-sha">來源 Git commit（可選，建議在命令列執行 git rev-parse HEAD 後貼上）</label>
+<input id="commit-sha" placeholder="輸入獨立美術支線的 40 位 SHA" autocomplete="off" spellcheck="false"/>
+<p class="small">SHA 為操作者填入，報告會註明未經瀏覽器獨立驗證。</p>
+<div class="actions">
+<button id="start-review" class="primary" type="button">開始擷取 24 組畫面</button>
+<button id="save-image" type="button" disabled>下載畫面聯絡表 PNG</button>
+<button id="save-bundle" type="button" disabled>一鍵下載 24 張原始 PNG＋報告 ZIP</button>
+<button id="save-report" type="button" disabled>下載檢查紀錄 JSON</button>
+</div>
+<div id="progress" role="status" aria-live="polite">尚未開始。</div>
+</section>
+<section class="panel preview-side">
+<h2>實際預覽框架</h2>
+<div id="preview-stage"><iframe id="preview-frame" title="純美術五棟街屋即時 WebGL 畫面" src="about:blank" loading="eager"></iframe></div>
+<p class="small">擷取時會切換模型與虛擬螢幕尺寸；本框架只開啟 <code>streetblock.html</code>，與正式遊戲隔離。</p>
+</section>
+<section class="panel">
+<h2>本機啟動方式</h2>
+<p class="small">在完整 GitHub 專案根目錄、且已切換至 <code>art/quaternius-downtown-buildings-p1</code> 後執行：</p>
+<pre><code>python -m http.server 8000</code></pre>
+<p class="small">開啟：<a href="./browser-review.html">此驗收頁（同源）</a>。如果直接雙擊 HTML 或缺少 Quaternius glTF／BIN／貼圖，瀏覽器可能因檔案安全政策而無法載入。</p>
+<p class="small">擷取完成後，將 ZIP 提供給我（內含完整尺寸 PNG 與 JSON），才能根據實際畫面判斷台北風格、招牌與 LOD 問題。</p>
+</section>
+</aside>
+</main>
+<script type="module" src="./browser-review.js"></script>
+</body>
+</html>
