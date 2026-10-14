@@ -578,6 +578,21 @@ function createDrivingEffects(THREE){
 module.exports={createEffectState,updateEffectState,createDrivingEffects};
 
   },
+  "./ScenicVisibility.cjs": function(require, module) {
+'use strict';
+// Authored, absolute segment windows keep the foreground clear while approaching
+// a landmark. The window does not move with the camera, so props cannot pop away
+// as the player drives. Opposite-side street scenery remains intact.
+function inLandmarkVista(landmarks,segment,side){
+ return (landmarks||[]).some(mark=>{
+  if(!Number.isFinite(mark.seg)||(mark.side<0?-1:1)!==side)return false;
+  const approach=mark.seg-segment;
+  return approach>=-18&&approach<=90;
+ });
+}
+module.exports={inLandmarkVista};
+
+  },
   "./TaipeiLandmarks.cjs": function(require, module) {
 'use strict';
 // Original low-poly interpretations of the authored 2D landmarks. Names/order
@@ -763,6 +778,7 @@ module.exports={ROUTE_MODELS,createLandmarkGeometry,createTaipeiLandmarks};
   },
   "./RaceEnvironment.cjs": function(require, module) {
 'use strict';
+const {inLandmarkVista}=require('./ScenicVisibility.cjs');
 // Surface-aware scenery and race readability. All coordinates use the road
 // tangent; every roadside object clears the full authored fork envelope.
 function createRaceEnvironment(T,scene,sample,offset,doc){
@@ -815,7 +831,7 @@ function createRaceEnvironment(T,scene,sample,offset,doc){
      put(rails,mid,.16,.32,Math.hypot(there.x-here.x,there.z-here.z)+.08,heading);
      if(absolute%4===0)put(supports,{...here,y:here.y+.3},.15,.65,.15,heading);
     }
-    if(mountain&&absolute%12===0&&quality!=='LOW'){
+    if(mountain&&absolute%12===0&&quality!=='LOW'&&!inLandmarkVista(frame.landmarks,absolute,side)){
      const p=sample(points,i,offset(lanes,side,22,16));p.y-=3;
      put(hills,p,12,8+(absolute%17),14,0);
     }
@@ -893,6 +909,7 @@ const {createDrivingEffects}=require('./DrivingEffects.cjs');
 const {createTaipeiLandmarks}=require('./TaipeiLandmarks.cjs');
 const {createRaceEnvironment}=require('./RaceEnvironment.cjs');
 const {createRaceWayfinding}=require('./RaceWayfinding.cjs');
+const {inLandmarkVista}=require('./ScenicVisibility.cjs');
 
 // Full WebGL road/world renderer. This is intentionally NOT a Canvas overlay.
 // World coordinates: +X right, +Y up, -Z forward. Camera is behind the car (+Z).
@@ -965,6 +982,18 @@ function createFacadeTexture(THREE){
  const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
  texture.encoding=THREE.sRGBEncoding;texture.needsUpdate=true;return texture;
 }
+// Small, deterministic sRGB aggregate texture. Lighting remains active, but the
+// asphalt's albedo is charcoal instead of a bright linear RGB paint color.
+function createAsphaltTexture(THREE){
+ const size=64,data=new Uint8Array(size*size*4);
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const grain=Math.floor(hash(y*size+x+591)*17),v=43+grain,k=(y*size+x)*4;
+  data[k]=v;data[k+1]=v+2;data[k+2]=v+4;data[k+3]=255;
+ }
+ const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+ texture.encoding=THREE.sRGBEncoding;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+ texture.magFilter=THREE.LinearFilter;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;return texture;
+}
 function createSignTexture(THREE,text,color,doc){
  if(!doc?.createElement)return null;
  const c=doc.createElement('canvas');c.width=128;c.height=512;
@@ -999,8 +1028,9 @@ function createFull3DScene(THREE,canvas) {
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
  renderer.toneMappingExposure=1.0;
  let lastW=0,lastH=0,lastDpr=0;
+ const asphaltTexture=createAsphaltTexture(THREE);textures.push(asphaltTexture);
  const roadMaterials=[
-  material(new THREE.MeshStandardMaterial({color:0x303945,roughness:.94,side:THREE.DoubleSide})),
+  material(new THREE.MeshStandardMaterial({color:0xffffff,map:asphaltTexture,roughness:.98,metalness:0,side:THREE.DoubleSide})),
   material(new THREE.MeshStandardMaterial({color:0x59616b,roughness:1,side:THREE.DoubleSide})),
   material(new THREE.MeshBasicMaterial({color:0xecefe6,side:THREE.DoubleSide})),
   material(new THREE.MeshBasicMaterial({color:0x2ad9e7,side:THREE.DoubleSide}))
@@ -1013,25 +1043,27 @@ function createFull3DScene(THREE,canvas) {
   const attr=new THREE.BufferAttribute(arr,3);
   attr.setUsage(THREE.DynamicDrawUsage);
   g.setAttribute('position',attr);
+  const uvAttr=new THREE.BufferAttribute(new Float32Array(maxQuad*12),2);uvAttr.setUsage(THREE.DynamicDrawUsage);g.setAttribute('uv',uvAttr);
   const normals=new Float32Array(arr.length);for(let i=1;i<normals.length;i+=3)normals[i]=1;
   g.setAttribute('normal',new THREE.BufferAttribute(normals,3));
   g.setDrawRange(0,0);
   const m=new THREE.Mesh(g,mat);
   m.frustumCulled=false;
   scene.add(m);
-  const r={mesh:m,positions:arr,used:0,attr};
+  const r={mesh:m,positions:arr,used:0,attr,uvAttr};
   roads.push(r);return r;
  }
- roadMaterials.map(ribbon);
+ roadMaterials.map(ribbon);roads[0].mesh.name='V58_Asphalt';
  const push=(r,a,b,c,d)=>{
   if(r.used+18>r.positions.length)return;
   const v=r.positions,i=r.used;
   v.set([a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z,a.x,a.y,a.z,c.x,c.y,c.z,d.x,d.y,d.z],i);
+  r.uvAttr.array.set([a.u||0,a.v||0,b.u||0,b.v||0,c.u||0,c.v||0,a.u||0,a.v||0,c.u||0,c.v||0,d.u||0,d.v||0],i/3*2);
   r.used+=18;
  };
- const point=(center,lateral,height=0)=>{
+ const point=(center,lateral,height=0,segment=0)=>{
   const s=Math.cos(center.heading),c=Math.sin(center.heading);
-  return {x:center.x+lateral*s,y:center.y+height,z:center.z+lateral*c};
+  return {x:center.x+lateral*s,y:center.y+height,z:center.z+lateral*c,u:lateral/8,v:segment*STEP/8};
  };
  const boxG=geometry(new THREE.BoxGeometry(1,1,1));
  const coneG=geometry(new THREE.ConeGeometry(1,1,7));
@@ -1134,7 +1166,8 @@ function createFull3DScene(THREE,canvas) {
     const lf=n.center-n.half,rt=n.center+n.half;
     const w=HALF_WIDTH;
     push(roads[1],point(here,(left-.09)*w,.015),point(here,(right+.09)*w,.015),point(there,(rt+.09)*w,.015),point(there,(lf-.09)*w,.015));
-    push(roads[0],point(here,left*w,.028),point(here,right*w,.028),point(there,rt*w,.028),point(there,lf*w,.028));
+    const absolute=(Math.floor(frame.segment)||0)+i;
+    push(roads[0],point(here,left*w,.028,absolute),point(here,right*w,.028,absolute),point(there,rt*w,.028,absolute+1),point(there,lf*w,.028,absolute+1));
     // painted white outside borders and neon-reflective curb piping
     for(const side of [-1,1]){
      const a=(side<0?left:right)*w,b=(side<0?lf:rt)*w;
@@ -1151,7 +1184,7 @@ function createFull3DScene(THREE,canvas) {
   }
   for(const r of roads){
    r.mesh.geometry.setDrawRange(0,r.used/3);
-   if(r.used)r.attr.needsUpdate=true;
+   if(r.used){r.attr.needsUpdate=true;r.uvAttr.needsUpdate=true;}
   }
   const urban=frame.archetype!=='mountain'&&frame.archetype!=='coastal';
   const routeSeed=frame.seed||1;
@@ -1167,7 +1200,7 @@ function createFull3DScene(THREE,canvas) {
     // Scan the building footprint so widened forks keep their clear shoulder.
     const neighborhood=corridors.slice(Math.max(0,i-3),i+4).flat();
     const lateral=streetOffset(neighborhood,side,width,2+h*7);
-    const landmarkZone=(frame.landmarks||[]).some(mark=>Math.abs(mark.seg-absolute)<18&&(mark.side<0?-1:1)===side);
+    const landmarkZone=inLandmarkVista(frame.landmarks,absolute,side);
     if(landmarkZone)continue;
     const anchor=point(c,lateral,-.15);
     if(urban && frame.archetype!=='expressway'){
@@ -1273,8 +1306,12 @@ function createFull3DScene(THREE,canvas) {
   if(lastDpr!==dpr){renderer.setPixelRatio(dpr);lastDpr=dpr;}
   paintWorld(frame,points,quality);
   environment.update(frame,points,quality);
-  landmarks.update(frame,points);
-  wayfinding.update(frame,points);
+  // Three allocates UUIDs while a route's models/signs are first constructed.
+  // Those visual allocations must not advance traffic/gameplay randomness.
+  with3DOnlyRandom(()=>{
+   landmarks.update(frame,points);
+   wayfinding.update(frame,points);
+  });
   updateTraffic(frame,points);
   if(frame.carColor!==lastCarColor){
    const value=typeof frame.carColor==='string'?new THREE.Color(frame.carColor).getHex():0x202838;

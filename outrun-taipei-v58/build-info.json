@@ -1,7 +1,7 @@
 {
-  "version": "V58-development-preview",
-  "sourceCommit": "82d4695841b8aad85d4f8240813bffcb74ac4fbb",
+  "version": "V58-landmark-vista-asphalt-preview",
+  "sourceCommit": "77b8d72beb23e9d1a06b2db2c4e5618e32857d60",
   "sourceBranch": "feature/v58-taipei-race-evolution-20261014",
-  "canonicalStable": "../outrun-taipei/",
-  "validation": "Local regressions and baseline physics parity passed. Full scene screenshot QA in progress."
+  "validation": "npm test passed; current commit WebGL screenshot CI pending.",
+  "canonicalStable": "../outrun-taipei/"
 }
