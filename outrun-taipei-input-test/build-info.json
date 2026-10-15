@@ -1,0 +1,19 @@
+{
+  "source_repository": "kevin781130-netizen/Outrun-Taipei",
+  "source_branch": "feature/input-edge-nitro-20261016",
+  "source_commit": "1ef580bf371df041091caabf3d1c777d600c237a",
+  "game_file": "play.html",
+  "profiles": {
+    "input": "edges1",
+    "handling": "v59"
+  },
+  "source_blob_sha": {
+    "play.html": "17349450dab0b386929bd4066277a15c5704b3dd",
+    "assets/hybrid-renderer.js": "5ec5549b7bffb5839c1b54d538e8fc82123a26bf",
+    "assets/traffic-lane-intent.js": "dae46635c9f741d9ca9a3c9b4281c4336ef16323",
+    "assets/perf-diagnostics.js": "70e3cd8a71d7f5357917aaa8a8492e464b0e0e56",
+    "assets/vendor/three-r149.min.js": "296059f486c343c12152a38f08b515b9ec6361e6",
+    "assets/vendor/THREE_LICENSE.txt": "f58a8690b49845734299cf5786f6c832ea03293f"
+  },
+  "note": "Isolated preview. Existing production game unchanged. No original drift/collision formula claim."
+}

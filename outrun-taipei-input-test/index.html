@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>台北賽車 · 輸入修正試玩</title>
+<body><p><a href="play.html?input=edges1&amp;handling=v59">進入試玩：反打甩尾＋氮氣輸入修正</a></p>
+<script>
+const target=new URL('play.html',location.href);
+target.search=location.search;
+if(!target.searchParams.has('input'))target.searchParams.set('input','edges1');
+if(!target.searchParams.has('handling'))target.searchParams.set('handling','v59');
+target.hash=location.hash;
+location.replace(target.href);
+</script></body></html>
