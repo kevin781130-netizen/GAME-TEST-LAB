@@ -1,0 +1,21 @@
+{
+  "game": "Outrun-Taipei",
+  "preview": "CHAIN8",
+  "status": "playtest",
+  "handling": "v59",
+  "drift": "chain8",
+  "source_repo": "kevin781130-netizen/Outrun-Taipei",
+  "source_branch": "fix/stage36-drift-route-continuity-20261016",
+  "source_commit": "2ccd7b5755ed0d4cb67b1fb9cf367d5bfed8b7e9",
+  "test_workflow_run": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/38861709226",
+  "test_result": "success",
+  "published_assets": [
+    "index.html",
+    "assets/hybrid-renderer.js",
+    "assets/traffic-lane-intent.js",
+    "assets/perf-diagnostics.js",
+    "assets/vendor/three-r149.min.js",
+    "assets/vendor/THREE_LICENSE.txt"
+  ],
+  "notes": "Isolated experimental CHAIN8 profile; legacy public demo remains unchanged."
+}
