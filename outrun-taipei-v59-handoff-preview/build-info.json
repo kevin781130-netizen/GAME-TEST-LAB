@@ -1,0 +1,16 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V59.5 playable diagnostic preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceCommit": "593b22c273050f3bf23cf80ba393b4e5f677b8e3",
+  "stackedPRs": [
+    29,
+    30,
+    31,
+    32
+  ],
+  "deployedFrom": "GAME-TEST-LAB/main isolated subdirectory",
+  "path": "outrun-taipei-v59-handoff-preview/",
+  "originalProductionPath": "outrun-taipei/",
+  "instrumentation": "RAF interval, game CPU loop time, drift state across route change, opt-in fast-jump; no GPU timing"
+}
