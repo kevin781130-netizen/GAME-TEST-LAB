@@ -4,7 +4,7 @@ const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require('playwright');
 const URL='https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v59-handoff-preview/';
 const SOURCE='593b22c273050f3bf23cf80ba393b4e5f677b8e3';
-const OUT=path.resolve(__dirname,'../../../test-results/v59-live-preview');
+const OUT=path.resolve(__dirname,'../../test-results/v59-live-preview');
 const scenarios=[
  {name:'desktop-left',viewport:{width:1280,height:800},choice:'↙ 左線快測',to:'2A'},
  {name:'mobile-right',viewport:{width:390,height:844},choice:'右線快測 ↘',to:'2B'}
