@@ -1,0 +1,37 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V67 COUNTERSTEER GRIP CATCH isolated browser preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v67-countersteer-grip-catch",
+  "sourceCommit": "3cae5f1213abaf7659eca0fd6d482147711d283d",
+  "sourcePR": 43,
+  "stackedOnPR": 42,
+  "competitionVersion": "59.0",
+  "sourceIndexBlob": "954f480a203c00b21dded7220c38c475c634713c",
+  "previewIndexBlob": "3d97fc640555d1fa79925a952ce3d1f216e0d43b",
+  "difference": "Only title/build banner edited for isolation; game script matches original source commit.",
+  "reviewedSources": [
+    "https://github.com/bobeff/open-source-games",
+    "https://github.com/supertuxkart/stk-code/blob/master/src/karts/skidding.hpp",
+    "https://github.com/VDrift/vdrift/blob/master/src/physics/cartire2.cpp",
+    "https://github.com/juzzlin/DustRacing2D/blob/master/src/game/tire.cpp"
+  ],
+  "zipEvidence": "Uploaded 408-file Stage36 toolkit inspected; no actual MAME capture CSV. G0 ROM static anchor evidence only, not validated original arcade drift physics.",
+  "approvedCheckpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/",
+    "outrun-taipei-v65-corner-drill/",
+    "outrun-taipei-v66-drift-line-preview/"
+  ],
+  "previewPath": "outrun-taipei-v67-grip-catch-preview/"
+}
