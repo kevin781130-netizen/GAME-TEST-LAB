@@ -1,0 +1,15 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V60 corner handling preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v60-high-speed-corner-challenge",
+  "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+  "sourcePr": 36,
+  "stackedOnPr": 35,
+  "competitionVersion": "54.0",
+  "sourceIndexBlob": "75c99ca4ef31c1d7d7347522d981dd90adacc089",
+  "previewIndexBlob": "a388fa53f91ed25c1c7dcf069376d9cb9dd08019",
+  "notes": "Preview HTML changes only the title and visible build banner. Gameplay JS comes from the source commit; dependencies are cloned by SHA within the Git tree.",
+  "productionPathUnchanged": "outrun-taipei/",
+  "previewPath": "outrun-taipei-v60-corner-preview/"
+}
