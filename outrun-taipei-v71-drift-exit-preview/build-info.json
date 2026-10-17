@@ -1,0 +1,21 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V71 qualified drift exit lab preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v71-drift-exit-lab",
+  "sourceCommit": "f31b4bed2da5c4a792faf0ffedb2a9ec62025c19",
+  "sourcePR": 47,
+  "stackedOnPR": 46,
+  "competitionVersion": "61.0",
+  "ciRunId": 39053115353,
+  "ciStatus": "success",
+  "sourceIndexBlob": "462acfa658175c643572aa6efddcefef05d437a3",
+  "previewIndexBlob": "4ac2b935746dad048ff7c1326d41f23fcd5e96ab",
+  "difference": "HTML title and visible build banner only; physical V71 gameplay source unchanged",
+  "assetsFrom": "outrun-taipei-v70-drift-lab-preview/assets",
+  "sharedAssetTree": "097f00b2506ca9a7dd33bc9cd507189b1a431e6",
+  "mechanic": "V71 qualifies real 0.42s neutral drift exit windows for cruise-only V68 vs V69 A/B; score, boost, competitive driving and routes unchanged",
+  "previewPath": "outrun-taipei-v71-drift-exit-preview/",
+  "status": "experimental; no actual deployed WebGL visual signoff",
+  "parentCommit": "b6588bbeff6f753ed4b7a262d52c1f47730b2559"
+}
