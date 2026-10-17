@@ -1,0 +1,32 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V69 Drift Exit Settle isolated preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v69-drift-exit-settle",
+  "sourceCommit": "0f34c78380703ea4024db473f669f811a241da00",
+  "sourcePR": 45,
+  "stackedOnPR": 44,
+  "competitionVersion": "61.0",
+  "sourceIndexBlob": "7c472ec016203301d9916a7dd476baec083362d0",
+  "previewIndexBlob": "61e8bcd1b0bc54262ba65ce1443df1e44d7c0cd5",
+  "difference": "Game HTML changed only in document title and visual build banner, not simulation source.",
+  "v60Checkpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/",
+    "outrun-taipei-v65-corner-drill/",
+    "outrun-taipei-v66-drift-line-preview/",
+    "outrun-taipei-v67-grip-catch-preview/",
+    "outrun-taipei-v68-regrip-preview/"
+  ],
+  "previewPath": "outrun-taipei-v69-exit-settle-preview/"
+}
