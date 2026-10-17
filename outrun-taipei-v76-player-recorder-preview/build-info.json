@@ -1,0 +1,25 @@
+{
+  "project": "Taipei Driving",
+  "kind": "isolated V76 player opt-in local drive recorder",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v76-optin-driving-recorder",
+  "sourceCommit": "8428ac944e4f37fe88b1eacc72c6f33ef588045b",
+  "sourcePR": 52,
+  "stackedOnPR": 51,
+  "competitionVersion": "61.0",
+  "ciRunId": 39062767215,
+  "ciRunUrl": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/39062767215",
+  "sourceIndexBlob": "2fee4c27d1085321b4c7125380e51230534fb2cd",
+  "previewIndexBlob": "e6b707d2009caa2a49915af15848be4d043d8c07",
+  "difference": "Only title and visible build version banner differ; V76 runtime source unchanged",
+  "assetProvenance": "identical Git blob content to previous V71 preview",
+  "privacy": "Explicit user action, memory-only up to 5400 frames, manual JSON download, no upload",
+  "playableUrl": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v76-player-recorder-preview/",
+  "visualAcceptance": "deployed-page visual judgment is separate from passing code/browser CI",
+  "protectedPreviews": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v71-drift-exit-preview/"
+  ],
+  "parentCommit": "995ecbb24eb56bc6ca5525b3b5d4a9de9e486cfa"
+}
