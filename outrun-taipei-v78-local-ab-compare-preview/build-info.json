@@ -3,13 +3,13 @@
   "kind": "isolated V78 import two local player-drive traces",
   "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
   "sourceBranch": "feat/v78-local-drive-ab-compare",
-  "sourceCommit": "d54077755cf8f086d9b83f39c3a0bcb5e305e3fe",
+  "sourceCommit": "b71cf99398385faaa4d63638525100dfff4941b6",
   "sourcePR": 54,
   "sourceIndexBlob": "c02dc29ce0c02f19b0b6df334202a29d149536c1",
   "previewIndexBlob": "4dcb0a757bf5d0f1d6f4ac901b3635ec39d6738b",
   "previewDifference": "Only document title and visible build/version banner differ",
-  "ciRunId": 39068365393,
-  "ciRunUrl": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/39068365393",
+  "ciRunId": 39068895752,
+  "ciRunUrl": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/39068895752",
   "competitionVersion": "61.0",
   "guardrails": "same route, >=1200 overlap units, >=30 frames each, <=25 km/h mean speed delta, >=10 curve frames each; no causal winner",
   "privacy": "local File API only, max 8 MiB/file, manual import, no uploads, no persistence",
@@ -17,5 +17,8 @@
   "playableUrl": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v78-local-ab-compare-preview/",
   "deployedPageAcceptance": "must verify public CDN externally; CI tests local preview",
   "protectedVersions": "official, approved V60, all historic V61-V77 preview folders untouched",
-  "parentCommit": "3d2e861a44fbf785b518f7e56fa15db855a4a7d1"
+  "parentCommit": "3d2e861a44fbf785b518f7e56fa15db855a4a7d1",
+  "ciConclusion": "success",
+  "ciArtifactId": 12114542412,
+  "verification": "Real Chromium tested manual JSON download, two File input uploads, positive same-route comparison, rejected wrong-route and cleared in-memory data. Fixture V68/V69 was derived from one scripted keyboard capture; not independent human trials."
 }
