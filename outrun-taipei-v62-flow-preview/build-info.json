@@ -1,0 +1,24 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V62 FLOW CHAIN preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v62-flow-chain",
+  "sourceCommit": "ebb7552be528cd0e15ef99a88d331dcb0f84f49f",
+  "sourcePR": 38,
+  "stackedOnPR": 37,
+  "sourceBase": "feat/v61-apex-challenge",
+  "baselineCheckpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "competitionVersion": "56.0",
+  "sourceIndexBlob": "7c19d63b7219f9754785036f57e467d21e83b604",
+  "previewIndexBlob": "908273e2a012abb276b1e6f19c32c95b9cfb7ba1",
+  "notes": "Game logic identical to source commit. Preview HTML changes title and visible version banner only; dependencies reuse original renderer and Three.js blob SHAs.",
+  "productionPathUnchanged": "outrun-taipei/",
+  "v60PathUnchanged": "outrun-taipei-v60-corner-preview/",
+  "v61PathUnchanged": "outrun-taipei-v61-apex-preview/",
+  "previewPath": "outrun-taipei-v62-flow-preview/"
+}
