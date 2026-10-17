@@ -5468,7 +5468,7 @@ function v78ValidateClip(doc,mode){
  let previousZ=-Infinity;
  for(const r of doc.frames){
   if(!r||r.route!==route||r.mode!==mode||
-   !['grip','brake','entry','recover'].includes(r.state)||
+   !['grip','brake','entry','drift','recover'].includes(r.state)||
    typeof r.drift!=='boolean'||
    ['z','kmh','lat','steer','curve','x','rawSteer'].some(k=>!Number.isFinite(r[k]))||
    r.z<previousZ-0.1||r.kmh<0||r.kmh>400||Math.abs(r.z)>1e9||
