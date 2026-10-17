@@ -1,0 +1,36 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V70 DRIFT LAB A/B driving preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v70-drift-lab-ab",
+  "sourceCommit": "194be4ef83690122d8cb152a7b1ca416c893efd6",
+  "sourceGameplayCommit": "6d822cd86b7862ef9813a88ec42d2674c11934a6",
+  "sourcePR": 46,
+  "stackedOnPR": 45,
+  "competitionVersion": "61.0",
+  "ciRunId": 39037926479,
+  "sourceIndexBlob": "8fbb98a133aa706e3218eb83817315712d94123b",
+  "previewIndexBlob": "5b018558e1cebab6a6f74a36b36326f5e7ebd28c",
+  "difference": "HTML title and visible build banner only; full gameplay source exact same as feature branch HEAD.",
+  "mechanic": "K lab HUD in cruise, B toggles V68/V69 post-drift settle, closing restores V69; arcade/sprint fixed V69; scores unchanged.",
+  "checkpointV60": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/",
+    "outrun-taipei-v65-corner-drill/",
+    "outrun-taipei-v66-drift-line-preview/",
+    "outrun-taipei-v67-grip-catch-preview/",
+    "outrun-taipei-v68-regrip-preview/",
+    "outrun-taipei-v69-exit-settle-preview/"
+  ],
+  "previewPath": "outrun-taipei-v70-drift-lab-preview/"
+}
