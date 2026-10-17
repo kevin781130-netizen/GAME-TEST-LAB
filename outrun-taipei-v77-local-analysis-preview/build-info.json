@@ -1,0 +1,22 @@
+{
+  "project": "Taipei Driving",
+  "kind": "isolated V77 post-drive local analysis",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v77-local-driving-analysis",
+  "sourceCommit": "cd9625cccf012c4c8b86cbf3f0d8b78f7cf09ba7",
+  "sourcePR": 53,
+  "stackedOnPR": 52,
+  "competitionVersion": "61.0",
+  "ciRunId": 39066895192,
+  "ciRunUrl": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/39066895192",
+  "sourceIndexBlob": "7d6813e20aa71ecd6cda58a4bf4bee7647b2a5a9",
+  "previewIndexBlob": "1c02c838a8c95ed069b5f7d138dba50c53399e9e",
+  "difference": "Only HTML title and visible build banner differ from V77 source",
+  "assets": "Existing identical Three.js vendor/renderer/THREE_LICENSE Git object blobs",
+  "recordingPrivacy": "Explicit start, memory-only, 5400 frames max, manual download, no uploads",
+  "analysisPrivacy": "Computed locally once on stop, cached with clip, removed on delete; JSON manual export",
+  "playableUrl": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v77-local-analysis-preview/",
+  "visualAcceptance": "Public deployed URL and subjective appearance require separate in-browser check",
+  "protected": "Official outrun-taipei and V60–V76 separate preview folders unchanged",
+  "parentCommit": "4ac3fc0c2e44c9a0978e66a1226c9da0adee6e04"
+}
