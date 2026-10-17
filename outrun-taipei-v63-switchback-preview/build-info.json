@@ -1,0 +1,26 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V63 SWITCHBACK MASTER playable preview",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v63-switchback-master",
+  "sourceCommit": "682bd9f669e0c390032a751aff6ce6f60eea835e",
+  "sourcePR": 39,
+  "stackedOnPR": 38,
+  "competitionVersion": "57.0",
+  "sourceIndexBlob": "b9b134b3def19440f2d87fdabd204e95c0203767",
+  "previewIndexBlob": "083e49e766efa7110ec167bb0d4f5ecd1ceddb3a",
+  "previewDifference": "HTML title and footer build-banner only; gameplay physics/logic comes from source PR #39.",
+  "approvedV60Checkpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "pagesBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "pagesCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/"
+  ],
+  "previewPath": "outrun-taipei-v63-switchback-preview/"
+}
