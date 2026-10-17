@@ -1,0 +1,28 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V66 controlled drift line isolated preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v66-controlled-drift-line",
+  "sourceCommit": "64f7bc701e664f3cc7a0f793479bfed216a4d833",
+  "sourcePR": 42,
+  "competitionVersion": "58.0",
+  "sourceIndexBlob": "177981abdfd6ec20f8ba3321666750a44a6ba65e",
+  "previewIndexBlob": "901865647e010b74140bb8601101ab569d5de11b",
+  "notes": "Source physics/visual code unchanged in preview; HTML title and build banner only. This implementation uses player-supplied validation ideas, but no unverified arcade ROM formulas.",
+  "baselineCheckpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/",
+    "outrun-taipei-v65-corner-drill/"
+  ],
+  "previewPath": "outrun-taipei-v66-drift-line-preview/"
+}
