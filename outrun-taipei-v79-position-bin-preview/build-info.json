@@ -2,12 +2,16 @@
   "version": "V79",
   "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
   "sourceBranch": "feat/v79-position-binned-drive-analysis",
-  "sourceCommit": "ed95fdbef7a1a0ddb4d33fa80e3e30223e0f7652",
+  "sourceCommit": "bbd6c86c0bd1f3f3e6f2185260dddc937f2c4a01",
   "sourcePR": 55,
   "sourceIndexBlob": "98d2d67d025003bfa7dd8722d5addbf25870fdfe",
   "previewIndexBlob": "4d1802b3819e7cf6331b798cd863ec36e566219d",
-  "ciRunId": 39070565015,
+  "ciRunId": 39070864509,
   "ruleVersion": "61.0",
   "privacy": "local File API, no upload",
-  "url": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v79-position-bin-preview/"
+  "url": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v79-position-bin-preview/",
+  "ciUrl": "https://github.com/kevin781130-netizen/Outrun-Taipei/actions/runs/39070864509",
+  "ciConclusion": "success",
+  "ciArtifact": 12115610742,
+  "note": "85-frame actual Chromium keyboard recording duplicated into fixture modes for import plumbing only, not independent player experiments; route rejection checked 4D vs 5C"
 }
