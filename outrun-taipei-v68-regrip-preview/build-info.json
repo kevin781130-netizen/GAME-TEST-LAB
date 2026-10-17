@@ -1,0 +1,31 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V68 progressive drift-exit regrip isolated preview",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v68-progressive-drift-regrip",
+  "sourceCommit": "c096cebf01c73f80e3cf05887b39eb2da055e137",
+  "sourcePR": 44,
+  "stackedOnPR": 43,
+  "sourceIndexBlob": "d727cddcf6905e9a105807bd7002c48131d4ba8d",
+  "previewIndexBlob": "e4b745d28420b238caafcabe5347fde3e7999b74",
+  "competitionVersion": "60.0",
+  "previewDifference": "Title and build banner only; driving and rendering script identical to source commit.",
+  "v60Checkpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/",
+    "outrun-taipei-v65-corner-drill/",
+    "outrun-taipei-v66-drift-line-preview/",
+    "outrun-taipei-v67-grip-catch-preview/"
+  ],
+  "previewPath": "outrun-taipei-v68-regrip-preview/"
+}
