@@ -1,0 +1,28 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "isolated V65 Corner Drill playable preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v65-corner-practice-target",
+  "sourceCommit": "5ca3ed121867cb06cd956119a1d1e5fd774ed0e4",
+  "sourcePR": 41,
+  "stackedOnPR": 40,
+  "competitionVersion": "57.0",
+  "sourceIndexBlob": "352bd9bf2fc28e48107cd14112b9475f29260d79",
+  "previewIndexBlob": "9aa68a95d9a0ec400f82ecad3e5a3138c1849860",
+  "previewDifference": "HTML title and build banner only, gameplay is source PR #41",
+  "frozenV60Checkpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/",
+    "outrun-taipei-v64-corner-coach/"
+  ],
+  "previewPath": "outrun-taipei-v65-corner-drill/"
+}
