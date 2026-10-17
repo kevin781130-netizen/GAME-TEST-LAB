@@ -1,0 +1,3 @@
+# V79 position-binned player driving analysis
+
+Isolated, experimental build derived from Outrun-Taipei Draft PR #55. In free cruise, press K to open DRIFT LAB, scroll to V78, and load local V68 and V69 driving JSON files. V79 shows road-position intervals with strict local speed, curve, steering and drift-coverage gates. Reports are descriptive, not a causal handling ranking. Recording and import stay in your browser memory; no automatic upload. Official version and prior previews are untouched.

@@ -1,0 +1,13 @@
+{
+  "version": "V79",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v79-position-binned-drive-analysis",
+  "sourceCommit": "ed95fdbef7a1a0ddb4d33fa80e3e30223e0f7652",
+  "sourcePR": 55,
+  "sourceIndexBlob": "98d2d67d025003bfa7dd8722d5addbf25870fdfe",
+  "previewIndexBlob": "4d1802b3819e7cf6331b798cd863ec36e566219d",
+  "ciRunId": 39070565015,
+  "ruleVersion": "61.0",
+  "privacy": "local File API, no upload",
+  "url": "https://kevin781130-netizen.github.io/GAME-TEST-LAB/outrun-taipei-v79-position-bin-preview/"
+}
