@@ -1,0 +1,21 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V61 isolated Apex Challenge preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v61-apex-challenge",
+  "sourceCommit": "0bc28b32ca79b630d07d1a530b05c8dfda76d263",
+  "sourcePr": 37,
+  "baselineCheckpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "competitionVersion": "55.0",
+  "sourceIndexBlob": "d8ec7d773374827b3dd62365c4922068cdde25e8",
+  "previewIndexBlob": "84b501c37d4ab9732f11da88f0fc9452c8c27e21",
+  "notes": "Game logic identical to V61 source commit. Only title and build banner differ in deployed HTML. Rendering assets reuse the V60 stable blob SHAs.",
+  "productionPathUnchanged": "outrun-taipei/",
+  "v60PathUnchanged": "outrun-taipei-v60-corner-preview/",
+  "previewPath": "outrun-taipei-v61-apex-preview/"
+}
