@@ -1,0 +1,27 @@
+{
+  "project": "Outrun Taipei",
+  "kind": "V64 CORNER COACH isolated playable preview",
+  "sourceRepo": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "feat/v64-corner-coach",
+  "sourceCommit": "fbf123b161a7e8b0c33c732233c2035951329e43",
+  "sourcePR": 40,
+  "stackedOnPR": 39,
+  "competitionVersion": "57.0",
+  "sourceIndexBlob": "9f4c138cb90d766f88cb9cd090903b62cef66b61",
+  "previewIndexBlob": "e452d2a61d649887816c5ed49b03935d5ecb35c9",
+  "previewMarkupOnly": "HTML title and build banner differ; V64 gameplay matches source commit exactly.",
+  "frozenV60Checkpoint": {
+    "sourceBranch": "checkpoint/v60-user-approved-20261017",
+    "sourceCommit": "7dd64411e08143c355218dd57b5b01bf8b32db8a",
+    "previewBranch": "checkpoint/outrun-v60-user-approved-20261017",
+    "previewCommit": "95dc64fb73e74efd55c66d1d1b880f1c53609591"
+  },
+  "unchangedPreviewPaths": [
+    "outrun-taipei/",
+    "outrun-taipei-v60-corner-preview/",
+    "outrun-taipei-v61-apex-preview/",
+    "outrun-taipei-v62-flow-preview/",
+    "outrun-taipei-v63-switchback-preview/"
+  ],
+  "previewPath": "outrun-taipei-v64-corner-coach/"
+}
