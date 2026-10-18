@@ -1,0 +1,6 @@
+{
+  "build": "V80 WEB ART",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceCommit": "924c495b259d617118fe37308f5c150be4134c8a",
+  "browserVisualStatus": "not-verified: cloud browser cannot create WebGL context"
+}
