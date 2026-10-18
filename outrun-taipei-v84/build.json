@@ -1,0 +1,7 @@
+{
+  "build": "V84 DRIFT LINE",
+  "sourceCommit": "358ec80f3543b46a9070c0e9fef3c26103fc8ee6",
+  "rules": "84.0",
+  "visualScaleRelativeToV83": 0.97,
+  "validation": "npm test passed; 18 historical replay pairs with mirrors; input-led drift and recovery; actual feel/WebGL GPU verification remains player validation"
+}
