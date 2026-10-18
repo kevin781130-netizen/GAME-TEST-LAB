@@ -1,0 +1,8 @@
+{
+  "build": "V81 DRIFT HEADING",
+  "sourceCommit": "e01d987e46ce41475aab66d8a82f34addca9e60e",
+  "baseline": "924c495b259d617118fe37308f5c150be4134c8a",
+  "physics": "7 replay cases x 108 frames identical to V80",
+  "worldHeading": "12 cases passed; GPU mocked",
+  "visualStatus": "not-verified: cloud WebGL disabled"
+}
