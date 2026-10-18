@@ -1,0 +1,6 @@
+{
+  "build": "V90 DRIFT LINE",
+  "sourceCommit": "09db22a4900bee1cddb864d066ca8943a2c365dc",
+  "rules": "90.0",
+  "validation": "Full npm test passed (1,235 regression checks and V55-V90 suites). 18 old/new real-update correction replays; bounded requested heading assistance, raw-intent release, unchanged grip/counter/recovery and linked transfers. Actual play feel/GPU review not performed."
+}
