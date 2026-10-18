@@ -1,0 +1,6 @@
+{
+  "build": "V85 PAINT & LIGHT",
+  "sourceCommit": "431b2836b749d5f1ed2edf7134985e3ddecaadb4",
+  "rules": "84.0",
+  "validation": "npm test passed; seven 108-frame physical replays match V84 exactly; deterministic reflection texture/integration checks use mocked GPU; actual PBR appearance and FPS require player review"
+}
