@@ -1,0 +1,6 @@
+{
+  "build": "V83 SCULPTED GT",
+  "sourceCommit": "f29e547d27b959b7f0d8687100b5b617555c6fe7",
+  "rules": "82.0",
+  "validation": "npm test passed with exact V82 physics baseline comparison; CPU mesh review only; in-game WebGL PBR and FPS require player verification"
+}
