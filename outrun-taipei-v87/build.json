@@ -1,0 +1,6 @@
+{
+  "build": "V87 LINKED DRIFT",
+  "sourceCommit": "3df5d6054fc5c3a15cc1df41f401c3fec18427a9",
+  "rules": "87.0",
+  "validation": "npm test passed; linked chicane/held-drift transfers, bounded fine correction, normal counter exit, stage carry and 30/60/120 Hz replay checked; actual feel/GPU requires player review"
+}
