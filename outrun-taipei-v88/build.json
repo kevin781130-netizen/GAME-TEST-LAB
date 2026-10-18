@@ -1,0 +1,6 @@
+{
+  "build": "V88 DRIFT CONTROL",
+  "sourceCommit": "ff32d70e7fd3b8741ef4a9c17255adf06f2a4a8d",
+  "rules": "88.0",
+  "validation": "npm test passed; 18 old/new correction replays at 30/60/120 Hz, unchanged heading/grip, linked transfers, original traffic envelope/shared resource disposal and CPU silhouette review checked; actual feel/GPU appearance/FPS require player review"
+}
