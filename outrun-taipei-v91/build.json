@@ -1,0 +1,9 @@
+{
+  "build": "V91 OPEN ROAD",
+  "sourceCommit": "f10fa513e262256a9fc700ce1e5ef7969ea29cad",
+  "rules": "91.0",
+  "roadScale": 1.08,
+  "trafficMinGap": 2400,
+  "headingAidMax": 0.06,
+  "validation": "Full npm test passed (1,235 regression checks and V55-V91 suites); 46 seeded layouts, nine 75s traffic flow replays at 30/60/120Hz, safe/deferred recycle, real asphalt width and 12.02% reference inward correction vs V89. GPU appearance/FPS and subjective play feel require player review."
+}
