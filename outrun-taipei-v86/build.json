@@ -1,0 +1,7 @@
+{
+  "build": "V86 DRIFT RESPONSE",
+  "sourceCommit": "f92724fd22070b1592072d0f2e3f2694c6ba9ad1",
+  "rules": "86.0",
+  "responseRateGain": 1.12,
+  "validation": "npm test passed; 18 correction/release/counter replay pairs; sustained target preserved; real traffic avoidance/feel and GPU appearance require player validation"
+}
