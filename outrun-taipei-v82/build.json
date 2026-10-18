@@ -1,0 +1,6 @@
+{
+  "build": "V82 DRIFT TURN",
+  "sourceCommit": "c539ada89b3a383695282034c0a88c4c95a5e538",
+  "rules": "82.0",
+  "validation": "npm test checks passed; 18 mirrored trajectory comparisons; GPU rendering and driving feel require player verification"
+}
