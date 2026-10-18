@@ -1,0 +1,6 @@
+{
+  "build": "V89 CITY FACADES",
+  "sourceCommit": "637cfbd79a7bdb52b1dcbdbbf571c1ea7b70a7d7",
+  "rules": "88.0",
+  "validation": "Full npm test passed, including 1,235 regression checks and V55-V89 suites; deterministic facade maps, street-facing instance transforms, roof footprints, quality switches, disposal, V88 drift correction and linked-transfer replays; GPU appearance/FPS and player feel require in-game review"
+}
