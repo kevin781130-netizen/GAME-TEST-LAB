@@ -1,0 +1,10 @@
+{
+  "version": "V95",
+  "rules": "95.0",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v95-taipei-geography-landmarks-20261019",
+  "sourceCommit": "c814d647386619d689e1cf3d72724a4c3c935778",
+  "sourcePullRequest": "https://github.com/kevin781130-netizen/Outrun-Taipei/pull/72",
+  "validation": "npm test passed 1,241 regression checks and V55–V95 suites; final pylon change passed GLB/geography/winding/all-landmark clearance and bundle tests. GPU PBR/FPS/comfort unverified.",
+  "models": "28 independent GLBs committed to source assets/landmarks; race uses the same bundled geometry source."
+}
