@@ -1,0 +1,9 @@
+{
+  "version": "V93",
+  "rules": "93.0",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v93-drift-flow-20261019",
+  "sourceCommit": "2fba711e3af290c094cd222a76c071cc6bd5f922",
+  "validation": "npm test passed; final fade geometry/shader/continuity, V93 handling and bundle checks passed. GPU rendering/FPS/comfort not verified.",
+  "sourcePullRequest": "https://github.com/kevin781130-netizen/Outrun-Taipei/pull/70"
+}
