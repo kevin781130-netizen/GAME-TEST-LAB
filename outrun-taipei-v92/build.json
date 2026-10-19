@@ -1,0 +1,9 @@
+{
+  "build": "V92 SPEED BUILD",
+  "sourceCommit": "d7a4612a0ad42956fd9da7cfa0fc0a2b8bd5b5b7",
+  "rules": "92.0",
+  "nitroDuration": 7,
+  "nitroImpulse": 0,
+  "highSpeedRamp": "200 to displayed 300 in 6.9667 seconds on a flat straight",
+  "validation": "Full npm test passed (1,235 regression checks, V55-V92 suites), frame-rate ramps, stacked-thrust cap, crash rebuild (13.35 s), mirrored +5% correction, V91 road/traffic retained. Actual WebGL/FPS and subjective feel require player review."
+}
