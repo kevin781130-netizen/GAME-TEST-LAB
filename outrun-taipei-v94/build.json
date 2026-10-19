@@ -1,0 +1,9 @@
+{
+  "version": "V94",
+  "rules": "94.0",
+  "sourceRepository": "kevin781130-netizen/Outrun-Taipei",
+  "sourceBranch": "fix/v94-fine-control-street-art-20261019",
+  "sourceCommit": "901d8025fe9eee07d3a67a15fdc4118fa6865e71",
+  "sourcePullRequest": "https://github.com/kevin781130-netizen/Outrun-Taipei/pull/71",
+  "validation": "npm test passed, including 96 handling pairs, 8 keyboard taps and art geometry/material/resource tests. GPU appearance, FPS and comfort not verified."
+}
